@@ -1,0 +1,99 @@
+{
+  "project_info": {
+    "project_number": "254121985181",
+    "firebase_url": "https://setnote-pacesovilla.firebaseio.com",
+    "project_id": "setnote-pacesovilla",
+    "storage_bucket": "setnote-pacesovilla.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254121985181:android:e69e22a4e9c01ff4",
+        "android_client_info": {
+          "package_name": "pacesovilla.setnote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254121985181-187hf5q0ledm5unvq0170r1bpiuk6p6t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pacesovilla.setnote",
+            "certificate_hash": "e59ca7c0d89e02e1b791f38c895ea7f8f7cc0259"
+          }
+        },
+        {
+          "client_id": "254121985181-55eqr0qdnk8p1vqjppu02cmjv2p9o50n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjFnXCOmBjoG2pdLQABPD0R0Tp7IHrurs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254121985181-55eqr0qdnk8p1vqjppu02cmjv2p9o50n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254121985181:android:9bd79135ae3ade03",
+        "android_client_info": {
+          "package_name": "pacesovilla.setnoteflutter.setnoteflutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254121985181-uu5bbjcmikkc7vl84rrss0bj6q81jk0e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pacesovilla.setnoteflutter.setnoteflutter",
+            "certificate_hash": "e59ca7c0d89e02e1b791f38c895ea7f8f7cc0259"
+          }
+        },
+        {
+          "client_id": "254121985181-55eqr0qdnk8p1vqjppu02cmjv2p9o50n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjFnXCOmBjoG2pdLQABPD0R0Tp7IHrurs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254121985181-55eqr0qdnk8p1vqjppu02cmjv2p9o50n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
