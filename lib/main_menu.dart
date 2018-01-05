@@ -6,7 +6,7 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(title: new Text("Setnote")),
+        appBar: new AppBar(title: new Text(constant.app_name)),
         body: new ListView(
           shrinkWrap: true,
           padding: const EdgeInsets.all(10.0),
