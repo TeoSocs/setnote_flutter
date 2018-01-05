@@ -6,7 +6,7 @@ import 'mypage.dart';
 
 void main() {
   runApp(new MaterialApp(
-    title: app_name,
+    title: constant.app_name,
     home: new MainMenu(), // becomes the route named '/'
     routes: <String, WidgetBuilder>{
       '/match': (BuildContext context) =>
