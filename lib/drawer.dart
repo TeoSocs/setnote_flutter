@@ -19,8 +19,13 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListView(
       children: <Widget>[
-        new UserAccountsDrawerHeader(accountName: new Text("TeoSocs"), accountEmail: new Text("teo.sovi@gmail.com")),
-        new DrawerEntry(label: "Nuova partita", address: "/match",),
+        new UserAccountsDrawerHeader(
+            accountName: new Text("TeoSocs"),
+            accountEmail: new Text("teo.sovi@gmail.com")),
+        new DrawerEntry(
+          label: "Nuova partita",
+          address: "/match",
+        ),
         new DrawerEntry(label: "Gestione squadra", address: "/team"),
         new DrawerEntry(label: "Statistiche squadra", address: "/stats"),
         new DrawerEntry(label: "Archivio partite", address: "/history"),
