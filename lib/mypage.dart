@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart' as constant;
 import 'drawer.dart';
 import 'google_auth.dart';
+import 'setnote_widgets.dart';
 
 class MyPage extends StatefulWidget {
   MyPage({this.title});
@@ -16,7 +17,6 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> {
   _MyPageState({this.title});
-
   final String title;
 
   @override
@@ -29,23 +29,20 @@ class _MyPageState extends State<MyPage> {
       body: new Center(
         child: new ListView(
           shrinkWrap: true,
-          padding: new EdgeInsets.all(10.0),
+          padding: constant.standard_margin,
           children: <Widget>[
-            new Center(child: new CircularProgressIndicator()),
             new Center(
-              child: new RaisedButton(
-                child: new Padding(
-                    padding: new EdgeInsets.all(10.0),
-                    child: new Text("Login")),
+              child: (googleSignIn.currentUser != null
+                  ? new Text("Sei connesso come: " +
+                      googleSignIn.currentUser.displayName)
+                  : new Center(child: new CircularProgressIndicator())),
+            ),
+            new Center(
+              child: new SetnoteButton(
+                label: "Login",
                 onPressed: () => login(),
               ),
             ),
-            new Center(
-              child: (googleSignIn.currentUser != null
-                  ? new Text("Sei connesso come: " + googleSignIn.currentUser.displayName)
-                  : new Text("Non sei ancora connesso")
-              ),
-            )
           ],
         ),
       ),

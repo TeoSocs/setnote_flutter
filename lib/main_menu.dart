@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
+import 'setnote_widgets.dart';
 
 class MainMenu extends StatelessWidget {
   @override
@@ -12,35 +13,17 @@ class MainMenu extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 420.0),
             child: new ListView(
               shrinkWrap: true,
-              padding: const EdgeInsets.all(10.0),
+              padding: constant.standard_margin,
               children: <Widget>[
-                new MenuButton(label: constant.match_label, address: "/match"),
-                new MenuButton(label: constant.team_label, address: "/team"),
-                new MenuButton(label: constant.stats_label, address: "/stats"),
-                new MenuButton(label: constant.history_label, address: "/history"),
-                new MenuButton(
-                    label: constant.settings_label, address: "/settings"),
+                new SetnoteButton(label: constant.match_label, onPressed: () => Navigator.of(context).pushNamed("/match")),
+                new SetnoteButton(label: constant.team_label, onPressed: () => Navigator.of(context).pushNamed("/team")),
+                new SetnoteButton(label: constant.stats_label, onPressed: () => Navigator.of(context).pushNamed("/stats")),
+                new SetnoteButton(label: constant.history_label, onPressed: () => Navigator.of(context).pushNamed("/history")),
+                new SetnoteButton(
+                    label: constant.settings_label, onPressed: () => Navigator.of(context).pushNamed("/settings")),
               ],
             ),
           ),
         ));
-  }
-}
-
-class MenuButton extends StatelessWidget {
-  MenuButton({this.label, this.address});
-  final String label;
-  final String address;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Padding(
-      padding: new EdgeInsets.all(10.0),
-      child: new RaisedButton(
-        child: new Padding(
-            padding: new EdgeInsets.all(10.0), child: new Text(label)),
-        onPressed: () => Navigator.of(context).pushNamed(address),
-      ),
-    );
   }
 }

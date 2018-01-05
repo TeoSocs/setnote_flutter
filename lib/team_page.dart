@@ -39,7 +39,6 @@ class _TeamPageState extends State<TeamPage> {
                   query: teamDB,
                   sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
                   padding: new EdgeInsets.all(8.0),
-                  // reverse: true,
                   itemBuilder:
                       (_, DataSnapshot snapshot, Animation<double> animation) {
                     return new TeamListEntry(
@@ -51,7 +50,7 @@ class _TeamPageState extends State<TeamPage> {
               new Center(
                 child: new RaisedButton(
                   child: new Padding(
-                      padding: new EdgeInsets.all(10.0),
+                      padding: constant.standard_margin,
                       child: new Text("Carica squadre di prova")),
                   onPressed: () => creaEntryDiProva(),
                 ),
