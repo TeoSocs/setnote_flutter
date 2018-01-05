@@ -8,4 +8,6 @@ const stats_label = "Statistiche squadra";
 const history_label = "Archivio partite";
 const settings_label = "Impostazioni";
 
+const formations_label = "Formazioni";
+
 const standard_margin = const EdgeInsets.all(10.0);
