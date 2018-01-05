@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart';
+import 'constants.dart' as constant;
 
 class MainMenu extends StatelessWidget {
   @override
@@ -11,11 +11,12 @@ class MainMenu extends StatelessWidget {
           shrinkWrap: true,
           padding: const EdgeInsets.all(10.0),
           children: <Widget>[
-            new MenuButton(label: match_label, address: "/match"),
-            new MenuButton(label: team_label, address: "/team"),
-            new MenuButton(label: stats_label, address: "/stats"),
-            new MenuButton(label: history_label, address: "/history"),
-            new MenuButton(label: settings_label, address: "/settings"),
+            new MenuButton(label: constant.match_label, address: "/match"),
+            new MenuButton(label: constant.team_label, address: "/team"),
+            new MenuButton(label: constant.stats_label, address: "/stats"),
+            new MenuButton(label: constant.history_label, address: "/history"),
+            new MenuButton(
+                label: constant.settings_label, address: "/settings"),
           ],
         ));
   }
