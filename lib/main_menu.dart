@@ -7,17 +7,22 @@ class MainMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(title: new Text(constant.app_name)),
-        body: new ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(10.0),
-          children: <Widget>[
-            new MenuButton(label: constant.match_label, address: "/match"),
-            new MenuButton(label: constant.team_label, address: "/team"),
-            new MenuButton(label: constant.stats_label, address: "/stats"),
-            new MenuButton(label: constant.history_label, address: "/history"),
-            new MenuButton(
-                label: constant.settings_label, address: "/settings"),
-          ],
+        body: new Center(
+          child: new ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 420.0),
+            child: new ListView(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(10.0),
+              children: <Widget>[
+                new MenuButton(label: constant.match_label, address: "/match"),
+                new MenuButton(label: constant.team_label, address: "/team"),
+                new MenuButton(label: constant.stats_label, address: "/stats"),
+                new MenuButton(label: constant.history_label, address: "/history"),
+                new MenuButton(
+                    label: constant.settings_label, address: "/settings"),
+              ],
+            ),
+          ),
         ));
   }
 }
