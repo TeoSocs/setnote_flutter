@@ -1,6 +1,4 @@
-import 'package:google_sign_in/google_sign_in.dart';
-
-final googleSignIn = new GoogleSignIn();
+import 'package:flutter/material.dart';
 
 const app_name = "Setnote";
 
@@ -9,5 +7,7 @@ const team_label = "Gestione squadra";
 const stats_label = "Statistiche squadra";
 const history_label = "Archivio partite";
 const settings_label = "Impostazioni";
+
 const formations_label = "Formazioni";
 
+const standard_margin = const EdgeInsets.all(10.0);

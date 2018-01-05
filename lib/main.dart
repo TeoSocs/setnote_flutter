@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
 import 'main_menu.dart';
-import 'mypage.dart';
 import 'match_page.dart';
+import 'mypage.dart';
+import 'team_page.dart';
+
 
 void main() {
   runApp(new MaterialApp(
@@ -21,7 +23,6 @@ void main() {
           new MyPage(title: constant.settings_label),
       '/formations': (BuildContext context) =>
       new MyPage(title: constant.formations_label),
-
     },
   ));
 }
