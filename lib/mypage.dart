@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import 'constants.dart' as constant;
 import 'drawer.dart';
@@ -19,7 +18,6 @@ class _MyPageState extends State<MyPage> {
   _MyPageState({this.title});
 
   final String title;
-  GoogleSignInAccount user;
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +41,8 @@ class _MyPageState extends State<MyPage> {
               ),
             ),
             new Center(
-              child: (user != null
-                  ? new Text("Sei connesso come: " + user.displayName)
+              child: (googleSignIn.currentUser != null
+                  ? new Text("Sei connesso come: " + googleSignIn.currentUser.displayName)
                   : new Text("Non sei ancora connesso")
               ),
             )
@@ -56,8 +54,6 @@ class _MyPageState extends State<MyPage> {
 
   Future<Null> login() async {
     await ensureGoogleLogin();
-    setState(() {
-      user = googleSignIn.currentUser;
-    });
+    setState(() => null);
   }
 }
