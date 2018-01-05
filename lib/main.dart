@@ -14,7 +14,7 @@ void main() {
     routes: <String, WidgetBuilder>{
       '/match': (BuildContext context) =>
           new MatchPage(title: constant.match_label),
-      '/team': (BuildContext context) => new MyPage(title: constant.team_label),
+      '/team': (BuildContext context) => new TeamPage(title: constant.team_label),
       '/stats': (BuildContext context) =>
           new MyPage(title: constant.stats_label),
       '/history': (BuildContext context) =>
