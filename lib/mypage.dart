@@ -53,7 +53,7 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<Null> login() async {
-    await ensureGoogleLogin();
+    await ensureLoggedIn();
     setState(() => null);
   }
 }

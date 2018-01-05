@@ -9,7 +9,7 @@ class MainMenu extends StatelessWidget {
         appBar: new AppBar(title: new Text(constant.app_name)),
         body: new Center(
           child: new ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 468.0),
+            constraints: const BoxConstraints(maxWidth: 420.0),
             child: new ListView(
               shrinkWrap: true,
               padding: const EdgeInsets.all(10.0),
