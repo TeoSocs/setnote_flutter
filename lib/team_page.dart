@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:setnote_flutter/setnote_widgets.dart';
 
 import 'constants.dart' as constant;
-import 'drawer.dart';
 import 'google_auth.dart';
 
 final teamDB = FirebaseDatabase.instance.reference().child('squadre');
@@ -27,18 +27,17 @@ class _TeamPageState extends State<TeamPage> {
   @override
   Widget build(BuildContext context) {
     login();
-    return new Scaffold(
-      appBar: new AppBar(title: new Text(constant.app_name + " - " + title)),
-      drawer: new Drawer(
-        child: new MyDrawer(),
-      ),
-      body: (logged
-          ? new Column(children: <Widget>[
+    return new SetnoteBaseLayout(
+      title: title,
+      child: new LoadingWidget(
+          condition: logged,
+          child: new Column(
+            children: <Widget>[
               new Flexible(
                 child: new FirebaseAnimatedList(
                   query: teamDB,
                   sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
-                  padding: new EdgeInsets.all(8.0),
+                  padding: constant.standard_margin,
                   itemBuilder:
                       (_, DataSnapshot snapshot, Animation<double> animation) {
                     return new TeamListEntry(
@@ -47,16 +46,14 @@ class _TeamPageState extends State<TeamPage> {
                   },
                 ),
               ),
-              new Center(
-                child: new RaisedButton(
+              new RaisedButton(
                   child: new Padding(
                       padding: constant.standard_margin,
                       child: new Text("Carica squadre di prova")),
                   onPressed: () => creaEntryDiProva(),
                 ),
-              ),
-            ])
-          : new Center(child: new CircularProgressIndicator())),
+            ],
+          )),
     );
   }
 
@@ -93,6 +90,10 @@ class TeamListEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Text(snapshot.value['nome'] + ' ' + snapshot.value['categoria'] + ' ' + snapshot.value['stagione']);
+    return new Text(snapshot.value['nome'] +
+        ' ' +
+        snapshot.value['categoria'] +
+        ' ' +
+        snapshot.value['stagione']);
   }
 }

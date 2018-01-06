@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'constants.dart' as constant;
-import 'drawer.dart';
 import 'google_auth.dart';
 import 'setnote_widgets.dart';
 
@@ -21,27 +19,20 @@ class _MyPageState extends State<MyPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(title: new Text(constant.app_name + " - " + title)),
-      drawer: new Drawer(
-        child: new MyDrawer(),
-      ),
-      body: new Center(
-        child: new ListView(
-          shrinkWrap: true,
-          padding: constant.standard_margin,
+    return new SetnoteBaseLayout(
+      title: title,
+      child: new Align(
+        alignment: Alignment.center,
+        child: new Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            new Center(
-              child: (googleSignIn.currentUser != null
-                  ? new Text("Sei connesso come: " +
-                      googleSignIn.currentUser.displayName)
-                  : new Center(child: new CircularProgressIndicator())),
-            ),
-            new Center(
-              child: new SetnoteButton(
-                label: "Login",
-                onPressed: () => login(),
-              ),
+            (googleSignIn.currentUser != null
+                ? new Text("Sei connesso come: " +
+                    googleSignIn.currentUser.displayName)
+                : new CircularProgressIndicator()),
+            new SetnoteButton(
+              label: "Login",
+              onPressed: () => login(),
             ),
           ],
         ),
