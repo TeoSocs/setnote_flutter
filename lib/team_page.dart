@@ -30,30 +30,31 @@ class _TeamPageState extends State<TeamPage> {
     return new SetnoteBaseLayout(
       title: title,
       child: new LoadingWidget(
-          condition: logged,
-          child: new Column(
-            children: <Widget>[
-              new Flexible(
-                child: new FirebaseAnimatedList(
-                  query: teamDB,
-                  sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
-                  padding: constant.standard_margin,
-                  itemBuilder:
-                      (_, DataSnapshot snapshot, Animation<double> animation) {
-                    return new TeamListEntry(
-                      snapshot: snapshot,
-                    );
-                  },
-                ),
+        condition: logged,
+        child: new Column(
+          children: <Widget>[
+            new Flexible(
+              child: new FirebaseAnimatedList(
+                query: teamDB,
+                sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
+                padding: constant.standard_margin,
+                itemBuilder:
+                    (_, DataSnapshot snapshot, Animation<double> animation) {
+                  return new TeamListEntry(
+                    snapshot: snapshot,
+                  );
+                },
               ),
-              new RaisedButton(
-                  child: new Padding(
-                      padding: constant.standard_margin,
-                      child: new Text("Carica squadre di prova")),
-                  onPressed: () => creaEntryDiProva(),
-                ),
-            ],
-          )),
+            ),
+            new RaisedButton(
+              child: new Padding(
+                  padding: constant.standard_margin,
+                  child: new Text("Carica squadre di prova")),
+              onPressed: () => creaEntryDiProva(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
