@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'constants.dart' as constant;
 import 'google_auth.dart';
 import 'setnote_widgets.dart';
 
@@ -21,7 +20,7 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return new SetnoteBaseLayout(
-      title: constant.app_name + ' - ' + title,
+      title: title,
       child: new Align(
         alignment: Alignment.center,
         child: new Column(

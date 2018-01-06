@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'google_auth.dart';
+import 'constants.dart' as constant;
 
 class DrawerEntry extends StatelessWidget {
   DrawerEntry({this.label, this.address});
@@ -21,16 +21,15 @@ class MyDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return new ListView(
       children: <Widget>[
-        (googleSignIn.currentUser != null
-            ? new UserAccountsDrawerHeader(
-                currentAccountPicture: new CircleAvatar(
-                  backgroundImage: new NetworkImage(googleSignIn.currentUser.photoUrl),
-                ),
-                accountName: new Text(googleSignIn.currentUser.displayName),
-                accountEmail: new Text(googleSignIn.currentUser.email))
-            : new UserAccountsDrawerHeader(
-                accountName: new Text("Non sei ancora loggato"),
-                accountEmail: new Text(""))),
+        new DrawerHeader(
+          child: new Align(
+            alignment: Alignment.bottomLeft,
+            child: new Text(constant.app_name, style: Theme.of(context).primaryTextTheme.headline,),
+          ),
+          decoration: new BoxDecoration(
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
         new DrawerEntry(
           label: "Nuova partita",
           address: "/match",
