@@ -31,28 +31,23 @@ class _TeamPageState extends State<TeamPage> {
       title: title,
       child: new LoadingWidget(
         condition: logged,
-        child: new Column(
-          children: <Widget>[
-            new Flexible(
-              child: new FirebaseAnimatedList(
-                query: teamDB,
-                sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
-                padding: constant.standard_margin,
-                itemBuilder:
-                    (_, DataSnapshot snapshot, Animation<double> animation) {
-                  return new TeamListEntry(
-                    snapshot: snapshot,
-                  );
-                },
-              ),
-            ),
-            new RaisedButton(
-              child: new Padding(
-                  padding: constant.standard_margin,
-                  child: new Text("Carica squadre di prova")),
-              onPressed: () => creaEntryDiProva(),
-            ),
-          ],
+        child: new Scaffold(
+          body: new FirebaseAnimatedList(
+            query: teamDB,
+            sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
+            padding: constant.standard_margin,
+            itemBuilder:
+                (_, DataSnapshot snapshot, Animation<double> animation) {
+              return new TeamListEntry(
+                snapshot: snapshot,
+              );
+            },
+          ),
+          floatingActionButton: new FloatingActionButton(
+            onPressed: () => Navigator.of(context).pushNamed("/add_team"),
+            tooltip: 'Aggiungi', // used by assistive technologies
+            child: new Icon(Icons.add),
+          ),
         ),
       ),
     );
