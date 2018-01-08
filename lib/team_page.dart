@@ -8,7 +8,7 @@ import 'package:setnote_flutter/setnote_widgets.dart';
 import 'constants.dart' as constant;
 import 'google_auth.dart';
 
-final teamDB = FirebaseDatabase.instance.reference().child('squadre');
+
 
 class TeamPage extends StatefulWidget {
   TeamPage({this.title});
@@ -33,7 +33,7 @@ class _TeamPageState extends State<TeamPage> {
         condition: logged,
         child: new Scaffold(
           body: new FirebaseAnimatedList(
-            query: teamDB,
+            query: constant.teamDB,
             sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
             padding: constant.standard_margin,
             itemBuilder:
@@ -56,27 +56,6 @@ class _TeamPageState extends State<TeamPage> {
   Future<Null> login() async {
     await ensureLoggedIn();
     setState(() => logged = true);
-  }
-
-  void creaEntryDiProva() {
-    //TODO: elimina alla fine dei test
-    teamDB.push().set({
-      'id': 'cas18CM',
-      'nome': 'Casier',
-      'stagione': '2018',
-      'categoria': 'Serie C Maschile',
-      'giocatori': {
-        'pincopallo': 'schifo',
-      },
-    });
-    analytics.logEvent(name: 'Aggiunta squadra');
-    teamDB.push().set({
-      'id': 'mog18IM',
-      'nome': 'Mogliano',
-      'stagione': '2018',
-      'categoria': 'Prima divisione Maschile',
-    });
-    analytics.logEvent(name: 'Aggiunta squadra');
   }
 }
 
