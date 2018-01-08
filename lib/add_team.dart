@@ -33,7 +33,9 @@ class AddTeamState extends State<AddTeam> {
                     hintText: 'CAME Casier',
                   ),
                 ),
-                new SetnoteColorSelectorButton(child: new Text("Colore di maglia"),),
+                new SetnoteColorSelectorButton(
+                  child: new Text("Colore di maglia"),
+                ),
               ],
             ),
             new Row(
