@@ -24,7 +24,6 @@ class AddTeamState extends State<AddTeam> {
   bool _whiteButtonText = false;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
     if (_coloreMaglia == null) {
@@ -40,12 +39,14 @@ class AddTeamState extends State<AddTeam> {
           children: <Widget>[
             new Row(
               children: <Widget>[
-                new MyTextFormField(
+                new MyTabletTextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Nome squadra',
                     hintText: 'CAME Casier',
                   ),
-                  onSaved: (String value) { _nomeSquadra = value; },
+                  onSaved: (String value) {
+                    _nomeSquadra = value;
+                  },
                 ),
                 new RaisedButton(
                   color: _coloreMaglia,
@@ -74,14 +75,16 @@ class AddTeamState extends State<AddTeam> {
             ),
             new Row(
               children: <Widget>[
-                new MyTextFormField(
+                new MyTabletTextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Allenatore',
                     hintText: 'G. Povia',
                   ),
-                  onSaved: (String value) { _allenatore = value; },
+                  onSaved: (String value) {
+                    _allenatore = value;
+                  },
                 ),
-                new MyTextFormField(
+                new MyTabletTextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Assistente',
                     hintText: 'A. Uscolo',
@@ -91,32 +94,119 @@ class AddTeamState extends State<AddTeam> {
             ),
             new Row(
               children: <Widget>[
-                new MyTextFormField(
+                new MyTabletTextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Categoria',
                     hintText: 'Serie C Maschile',
                   ),
-                  onSaved: (String value) { _categoria = value; },
+                  onSaved: (String value) {
+                    _categoria = value;
+                  },
                 ),
-                new MyTextFormField(
+                new MyTabletTextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Stagione',
                     hintText: '2018',
                   ),
-                  onSaved: (String value) { _stagione = value; },
+                  onSaved: (String value) {
+                    _stagione = value;
+                  },
                 ),
               ],
             ),
-            new SetnoteButton(label: "Aggiungi squadra",
-            onPressed: submit,)
+            new SetnoteButton(
+              label: "Aggiungi squadra",
+              onPressed: submit,
+            )
           ],
         ),
       ),
-      smallScreen: new Text("Non ancora ottimizzato per schermi piccoli"),
+      smallScreen: new Form(
+        key: _formKey,
+        autovalidate: true,
+        child: new ListView(
+          padding: constant.standard_margin,
+          children: <Widget>[
+            new MyPhoneTextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Nome squadra',
+                hintText: 'CAME Casier',
+              ),
+              onSaved: (String value) {
+                _nomeSquadra = value;
+              },
+            ),
+            new Center(
+              child: new Padding(
+                padding: constant.standard_margin,
+                child: new RaisedButton(
+                  color: _coloreMaglia,
+                  child: new Text(
+                    "Colore di maglia",
+                    style: new TextStyle(
+                        color: (_whiteButtonText ? Colors.white : Colors.black)),
+                  ),
+                  onPressed: () {
+                    showDialog<Color>(
+                      context: context,
+                      child: new SetnoteColorSelector(),
+                    )
+                        .then((Color newColor) => setState(() {
+                              _coloreMaglia = newColor;
+                              if (newColor.computeLuminance() > 0.179) {
+                                _whiteButtonText = false;
+                              } else {
+                                _whiteButtonText = true;
+                              }
+                            }));
+                  },
+                ),
+              ),
+            ),
+            new MyPhoneTextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Allenatore',
+                hintText: 'G. Povia',
+              ),
+              onSaved: (String value) {
+                _allenatore = value;
+              },
+            ),
+            new MyPhoneTextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Assistente',
+                hintText: 'A. Uscolo',
+              ),
+            ),
+            new MyPhoneTextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Categoria',
+                hintText: 'Serie C Maschile',
+              ),
+              onSaved: (String value) {
+                _categoria = value;
+              },
+            ),
+            new MyPhoneTextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Stagione',
+                hintText: '2018',
+              ),
+              onSaved: (String value) {
+                _stagione = value;
+              },
+            ),
+            new SetnoteButton(
+              label: "Aggiungi squadra",
+              onPressed: submit,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  void submit(){
+  void submit() {
     final FormState form = _formKey.currentState;
     form.save();
     constant.teamDB.push().set({
