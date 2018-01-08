@@ -59,6 +59,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "254121985181-1jt0hrs3ader9odhnj6fcs5nppnkgimg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pacesovilla.setnoteflutter.setnoteflutter",
+            "certificate_hash": "330e09e82c5a8bb77d5057ffe83b5f7040630ea6"
+          }
+        },
+        {
           "client_id": "254121985181-uu5bbjcmikkc7vl84rrss0bj6q81jk0e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
