@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:material_color_picker/material_color_picker.dart';
 import 'package:setnote_flutter/form_items.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
 
@@ -36,12 +33,7 @@ class AddTeamState extends State<AddTeam> {
                     hintText: 'CAME Casier',
                   ),
                 ),
-                new MyTextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Categoria',
-                    hintText: 'Serie C Maschile',
-                  ),
-                ),
+                new SetnoteColorSelectorButton(child: new Text("Colore di maglia"),),
               ],
             ),
             new Row(
@@ -64,28 +56,14 @@ class AddTeamState extends State<AddTeam> {
               children: <Widget>[
                 new MyTextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Stagione',
-                    hintText: '2018',
+                    labelText: 'Categoria',
+                    hintText: 'Serie C Maschile',
                   ),
                 ),
-                new RaisedButton(
-                  child: new Text(
-                    'Colore maglia',
-                    style: Theme.of(context).primaryTextTheme.button,
-                  ),
-                  onPressed: () => showDialog(
-                    context: context,
-                    child: new SimpleDialog(
-                      title: const Text('Scegli il colore'),
-                      children: <Widget>[
-                        new ColorPicker(
-                          type: MaterialType.transparency,
-                          onColor: (color) {
-                            Navigator.pop(context, color);
-                          },
-                        ),
-                      ],
-                    ),
+                new MyTextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Stagione',
+                    hintText: '2018',
                   ),
                 ),
               ],
@@ -97,19 +75,3 @@ class AddTeamState extends State<AddTeam> {
     );
   }
 }
-
-Future<Color> askedToLead(BuildContext context) async => await showDialog(
-      context: context,
-      child: new SimpleDialog(
-        title: const Text('Scegli il colore'),
-        children: <Widget>[
-          new ColorPicker(
-            type: MaterialType.transparency,
-            onColor: (color) {
-              Navigator.pop(context, color);
-            },
-            currentColor: Theme.of(context).buttonColor,
-          ),
-        ],
-      ),
-    );
