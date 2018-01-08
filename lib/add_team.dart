@@ -34,7 +34,7 @@ class AddTeamState extends State<AddTeam> {
                   ),
                 ),
                 new SetnoteColorSelectorButton(
-                  child: new Text("Colore di maglia"),
+                  label: "Colore di maglia",
                 ),
               ],
             ),

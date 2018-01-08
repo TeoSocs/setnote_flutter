@@ -154,18 +154,19 @@ class SetnoteColorSelectorState extends State<SetnoteColorSelector> {
 }
 
 class SetnoteColorSelectorButton extends StatefulWidget {
-  SetnoteColorSelectorButton({this.child});
-  final Widget child;
+  SetnoteColorSelectorButton({this.label});
+  final String label;
 
   @override
-  SetnoteColorSelectorButtonState createState() => new SetnoteColorSelectorButtonState(child: child);
+  SetnoteColorSelectorButtonState createState() => new SetnoteColorSelectorButtonState(label: label);
 }
 
 class SetnoteColorSelectorButtonState extends State<SetnoteColorSelectorButton> {
-  SetnoteColorSelectorButtonState({this.child});
-  Widget child;
+  SetnoteColorSelectorButtonState({this.label});
+  String label;
   SetnoteColorSelector selector = new SetnoteColorSelector();
   Color _buttonColor;
+  bool _whiteText=false;
 
   @override
   Widget build(BuildContext context) {
@@ -174,12 +175,19 @@ class SetnoteColorSelectorButtonState extends State<SetnoteColorSelectorButton> 
     }
     return new RaisedButton(
       color: _buttonColor,
-      child: child,
+      child: new Text(label, style: new TextStyle(color: (_whiteText ? Colors.white : Colors.black)),),
       onPressed: () {
         showDialog<Color>(
           context: context,
           child: selector,
-        ).then((Color newColor) => setState(() => _buttonColor = newColor));
+        ).then((Color newColor) => setState(() {
+          _buttonColor = newColor;
+          if (newColor.computeLuminance() > 0.179) {
+            _whiteText = false;
+          } else {
+            _whiteText = true;
+          }
+        }));
       },
     );
   }
