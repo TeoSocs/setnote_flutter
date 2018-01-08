@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:setnote_flutter/form_items.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
 
 import 'constants.dart' as constant;
