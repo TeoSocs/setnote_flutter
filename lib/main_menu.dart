@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
-import 'setnote_widgets.dart';
 
 class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    MediaQueryData media = MediaQuery.of(context);
     return new Scaffold(
       appBar: new AppBar(title: new Text(constant.app_name)),
       body: new Center(
         child: new ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420.0),
           child: new ListView(
+            shrinkWrap: media.orientation == Orientation.landscape && media.size.width >= 950.00,
             children: <Widget>[
               new Card(
                 child: new FlatButton(
