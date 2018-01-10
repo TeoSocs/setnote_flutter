@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'add_team.dart';
 import 'constants.dart' as constant;
 import 'main_menu.dart';
+import 'manage_team.dart';
 import 'match_page.dart';
 import 'mypage.dart';
 import 'team_page.dart';
@@ -24,8 +24,8 @@ void main() {
           new MyPage(title: constant.settings_label),
       '/formations': (BuildContext context) =>
       new MyPage(title: constant.formations_label),
-      '/add_team': (BuildContext context) =>
-      new AddTeam(title: constant.add_team_label),
+      '/manage_team': (BuildContext context) =>
+      new ManageTeam(),
     },
   ));
 }

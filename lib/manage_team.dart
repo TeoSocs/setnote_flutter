@@ -4,17 +4,14 @@ import 'package:setnote_flutter/setnote_widgets.dart';
 import 'constants.dart' as constant;
 import 'google_auth.dart';
 
-class AddTeam extends StatefulWidget {
-  AddTeam({this.title});
-  final String title;
-
+class ManageTeam extends StatefulWidget {
   @override
-  AddTeamState createState() => new AddTeamState(title: title);
+  ManageTeamState createState() => new ManageTeamState();
 }
 
-class AddTeamState extends State<AddTeam> {
-  AddTeamState({this.title});
-  String title;
+class ManageTeamState extends State<ManageTeam> {
+  ManageTeamState();
+  String title = (constant.selectedTeam.nomeSquadra == null ? "Aggiungi squadra" : constant.selectedTeam.nomeSquadra);
   String _nomeSquadra;
   String _allenatore;
   String _assistente;
@@ -26,6 +23,7 @@ class AddTeamState extends State<AddTeam> {
 
   @override
   Widget build(BuildContext context) {
+    _coloreMaglia = constant.selectedTeam.coloreMaglia;
     if (_coloreMaglia == null) {
       _coloreMaglia = Theme.of(context).buttonColor;
     }
@@ -40,6 +38,9 @@ class AddTeamState extends State<AddTeam> {
             new Row(
               children: <Widget>[
                 new MyTabletTextFormField(
+                  initialValue: (constant.selectedTeam.nomeSquadra != null
+                      ? constant.selectedTeam.nomeSquadra
+                      : ''),
                   decoration: const InputDecoration(
                     labelText: 'Nome squadra',
                     hintText: 'CAME Casier',
@@ -76,6 +77,9 @@ class AddTeamState extends State<AddTeam> {
             new Row(
               children: <Widget>[
                 new MyTabletTextFormField(
+                  initialValue: (constant.selectedTeam.allenatore != null
+                      ? constant.selectedTeam.allenatore
+                      : ''),
                   decoration: const InputDecoration(
                     labelText: 'Allenatore',
                     hintText: 'G. Povia',
@@ -85,6 +89,9 @@ class AddTeamState extends State<AddTeam> {
                   },
                 ),
                 new MyTabletTextFormField(
+                  initialValue: (constant.selectedTeam.assistente != null
+                      ? constant.selectedTeam.assistente
+                      : ''),
                   decoration: const InputDecoration(
                     labelText: 'Assistente',
                     hintText: 'A. Uscolo',
@@ -95,6 +102,9 @@ class AddTeamState extends State<AddTeam> {
             new Row(
               children: <Widget>[
                 new MyTabletTextFormField(
+                  initialValue: (constant.selectedTeam.categoria != null
+                      ? constant.selectedTeam.categoria
+                      : ''),
                   decoration: const InputDecoration(
                     labelText: 'Categoria',
                     hintText: 'Serie C Maschile',
@@ -104,6 +114,9 @@ class AddTeamState extends State<AddTeam> {
                   },
                 ),
                 new MyTabletTextFormField(
+                  initialValue: (constant.selectedTeam.stagione != null
+                      ? constant.selectedTeam.stagione
+                      : ''),
                   decoration: const InputDecoration(
                     labelText: 'Stagione',
                     hintText: '2018',
@@ -114,10 +127,15 @@ class AddTeamState extends State<AddTeam> {
                 ),
               ],
             ),
-            new SetnoteButton(
-              label: "Aggiungi squadra",
-              onPressed: submit,
-            )
+            (constant.selectedTeam.key == null
+                ? new SetnoteButton(
+                    label: "Aggiungi squadra",
+                    onPressed: submit,
+                  )
+                : new SetnoteButton(
+                    label: "Aggiorna squadra",
+                    onPressed: update,
+                  )),
           ],
         ),
       ),
@@ -128,6 +146,9 @@ class AddTeamState extends State<AddTeam> {
           padding: constant.standard_margin,
           children: <Widget>[
             new MyPhoneTextFormField(
+              initialValue: (constant.selectedTeam.nomeSquadra != null
+                  ? constant.selectedTeam.nomeSquadra
+                  : ''),
               decoration: const InputDecoration(
                 labelText: 'Nome squadra',
                 hintText: 'CAME Casier',
@@ -144,7 +165,8 @@ class AddTeamState extends State<AddTeam> {
                   child: new Text(
                     "Colore di maglia",
                     style: new TextStyle(
-                        color: (_whiteButtonText ? Colors.white : Colors.black)),
+                        color:
+                            (_whiteButtonText ? Colors.white : Colors.black)),
                   ),
                   onPressed: () {
                     showDialog<Color>(
@@ -164,6 +186,9 @@ class AddTeamState extends State<AddTeam> {
               ),
             ),
             new MyPhoneTextFormField(
+              initialValue: (constant.selectedTeam.allenatore != null
+                  ? constant.selectedTeam.allenatore
+                  : ''),
               decoration: const InputDecoration(
                 labelText: 'Allenatore',
                 hintText: 'G. Povia',
@@ -173,12 +198,18 @@ class AddTeamState extends State<AddTeam> {
               },
             ),
             new MyPhoneTextFormField(
+              initialValue: (constant.selectedTeam.assistente != null
+                  ? constant.selectedTeam.assistente
+                  : ''),
               decoration: const InputDecoration(
                 labelText: 'Assistente',
                 hintText: 'A. Uscolo',
               ),
             ),
             new MyPhoneTextFormField(
+              initialValue: (constant.selectedTeam.categoria != null
+                  ? constant.selectedTeam.categoria
+                  : ''),
               decoration: const InputDecoration(
                 labelText: 'Categoria',
                 hintText: 'Serie C Maschile',
@@ -188,6 +219,9 @@ class AddTeamState extends State<AddTeam> {
               },
             ),
             new MyPhoneTextFormField(
+              initialValue: (constant.selectedTeam.stagione != null
+                  ? constant.selectedTeam.stagione
+                  : ''),
               decoration: const InputDecoration(
                 labelText: 'Stagione',
                 hintText: '2018',
@@ -196,10 +230,15 @@ class AddTeamState extends State<AddTeam> {
                 _stagione = value;
               },
             ),
-            new SetnoteButton(
-              label: "Aggiungi squadra",
-              onPressed: submit,
-            ),
+            (constant.selectedTeam.key == null
+                ? new SetnoteButton(
+                    label: "Aggiungi squadra",
+                    onPressed: submit,
+                  )
+                : new SetnoteButton(
+                    label: "Aggiorna squadra",
+                    onPressed: update,
+                  )),
           ],
         ),
       ),
@@ -217,7 +256,22 @@ class AddTeamState extends State<AddTeam> {
       'categoria': _categoria,
       'colore_maglia': _coloreMaglia.toString(),
     });
-    analytics.logEvent(name: 'Aggiunta squadra');
-    Navigator.of(context).pushReplacementNamed("/team");
+    analytics.logEvent(name: 'aggiunta_squadra');
+    Navigator.of(context).pop();
+  }
+  
+  void update() {
+    final FormState form = _formKey.currentState;
+    form.save();
+    constant.teamDB.child(constant.selectedTeam.key).set({
+      'nome': _nomeSquadra,
+      'allenatore': _allenatore,
+      'assistente': _assistente,
+      'stagione': _stagione,
+      'categoria': _categoria,
+      'colore_maglia': _coloreMaglia.toString(),
+    });
+    analytics.logEvent(name: 'modificata_squadra');
+    Navigator.of(context).pop();
   }
 }

@@ -8,8 +8,6 @@ import 'package:setnote_flutter/setnote_widgets.dart';
 import 'constants.dart' as constant;
 import 'google_auth.dart';
 
-
-
 class TeamPage extends StatefulWidget {
   TeamPage({this.title});
   final String title;
@@ -44,7 +42,10 @@ class _TeamPageState extends State<TeamPage> {
             },
           ),
           floatingActionButton: new FloatingActionButton(
-            onPressed: () => Navigator.of(context).pushNamed("/add_team"),
+            onPressed: () {
+              constant.selectedTeam.clear();
+              Navigator.of(context).pushNamed("/manage_team");
+            },
             tooltip: 'Aggiungi', // used by assistive technologies
             child: new Icon(Icons.add),
           ),
@@ -65,10 +66,25 @@ class TeamListEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Text(snapshot.value['nome'] +
-        ' ' +
-        snapshot.value['categoria'] +
-        ' ' +
-        snapshot.value['stagione']);
+    return new Card(
+        child: new FlatButton(
+          onPressed: () {
+            constant.selectedTeam.key = snapshot.key;
+            constant.selectedTeam.nomeSquadra = snapshot.value['nome'];
+            constant.selectedTeam.allenatore = snapshot.value['allenatore'];
+            constant.selectedTeam.assistente = snapshot.value['assistente'];
+            constant.selectedTeam.categoria = snapshot.value['stagione'];
+            constant.selectedTeam.stagione = snapshot.value['categoria'];
+            constant.selectedTeam.coloreMaglia = new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16));
+            Navigator.of(context).pushNamed("/manage_team");
+          },
+      child: new ListTile(
+            leading: new Icon(Icons.android, color: new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16)),),
+        title: new Text(snapshot.value['nome']),
+        subtitle: new Text(
+            snapshot.value['categoria'] + ' - ' + snapshot.value['stagione']),
+      ),
+    ));
   }
 }
+
