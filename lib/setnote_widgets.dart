@@ -43,10 +43,7 @@ class SetnoteBaseLayout extends StatelessWidget {
                   child: new MyDrawer(),
                 ),
                 new Expanded(
-                  child: new Padding(
-                    padding: constant.standard_margin,
-                    child: child,
-                  ),
+                  child: child,
                 ),
               ],
             ),
@@ -57,10 +54,7 @@ class SetnoteBaseLayout extends StatelessWidget {
             drawer: new Drawer(
               child: new MyDrawer(),
             ),
-            body: new Padding(
-              padding: constant.standard_margin,
-              child: child,
-            ),
+            body: child,
           );
         }
       },
@@ -102,10 +96,7 @@ class SetnoteFormLayout extends StatelessWidget {
               title: new Text(title),
             ),
             body: new Center(
-              child: new Padding(
-                padding: constant.form_page_margin,
-                child: largeScreen,
-              ),
+              child: largeScreen,
             ),
           );
         } else {
@@ -114,10 +105,7 @@ class SetnoteFormLayout extends StatelessWidget {
               title: new Text(title),
             ),
             body: new Center(
-              child: new Padding(
-                padding: constant.standard_margin,
-                child: smallScreen,
-              ),
+              child:smallScreen,
             ),
           );
         }
