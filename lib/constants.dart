@@ -13,4 +13,8 @@ const formations_label = "Formazioni";
 
 const standard_margin = const EdgeInsets.all(10.0);
 const lateral_margin = const EdgeInsets.symmetric(horizontal: 16.0);
+<<<<<<< HEAD
 const form_page_margin = const EdgeInsets.symmetric(horizontal: 100.0);
+=======
+const form_page_margin = const EdgeInsets.symmetric(horizontal: 100.0);
+>>>>>>> static_pages
