@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:setnote_flutter/manage_team_model.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
 
 import 'constants.dart' as constant;
@@ -43,7 +44,7 @@ class _TeamPageState extends State<TeamPage> {
           ),
           floatingActionButton: new FloatingActionButton(
             onPressed: () {
-              constant.selectedTeam.clear();
+              selectedTeam.clear();
               Navigator.of(context).pushNamed("/manage_team");
             },
             tooltip: 'Aggiungi', // used by assistive technologies
@@ -61,7 +62,14 @@ class _TeamPageState extends State<TeamPage> {
 }
 
 class TeamListEntry extends StatelessWidget {
-  TeamListEntry({this.snapshot});
+  TeamListEntry({this.snapshot}) {
+    if (snapshot.value['colore_maglia'] != null) {
+      coloreMaglia = new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16));
+    } else {
+      coloreMaglia = Colors.green[400];
+    }
+  }
+  Color coloreMaglia;
   final DataSnapshot snapshot;
 
   @override
@@ -69,17 +77,17 @@ class TeamListEntry extends StatelessWidget {
     return new Card(
         child: new FlatButton(
           onPressed: () {
-            constant.selectedTeam.key = snapshot.key;
-            constant.selectedTeam.nomeSquadra = snapshot.value['nome'];
-            constant.selectedTeam.allenatore = snapshot.value['allenatore'];
-            constant.selectedTeam.assistente = snapshot.value['assistente'];
-            constant.selectedTeam.categoria = snapshot.value['stagione'];
-            constant.selectedTeam.stagione = snapshot.value['categoria'];
-            constant.selectedTeam.coloreMaglia = new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16));
+            selectedTeam.key = snapshot.key;
+            selectedTeam.nomeSquadra = snapshot.value['nome'];
+            selectedTeam.allenatore = snapshot.value['allenatore'];
+            selectedTeam.assistente = snapshot.value['assistente'];
+            selectedTeam.categoria = snapshot.value['stagione'];
+            selectedTeam.stagione = snapshot.value['categoria'];
+            selectedTeam.coloreMaglia = coloreMaglia;
             Navigator.of(context).pushNamed("/manage_team");
           },
       child: new ListTile(
-            leading: new Icon(Icons.android, color: new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16)),),
+            leading: new Icon(Icons.android, color: coloreMaglia,),
         title: new Text(snapshot.value['nome']),
         subtitle: new Text(
             snapshot.value['categoria'] + ' - ' + snapshot.value['stagione']),

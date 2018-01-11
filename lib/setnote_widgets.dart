@@ -80,43 +80,6 @@ class LoadingWidget extends StatelessWidget {
   }
 }
 
-class SetnoteFormLayout extends StatelessWidget {
-  SetnoteFormLayout({this.smallScreen, this.largeScreen, this.title});
-
-  final Widget smallScreen;
-  final Widget largeScreen;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return new LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        MediaQueryData media = MediaQuery.of(context);
-        if (media.orientation == Orientation.landscape &&
-            media.size.width >= 950.00) {
-          return new Scaffold(
-            appBar: new AppBar(
-              title: new Text(title),
-            ),
-            body: new Center(
-              child: largeScreen,
-            ),
-          );
-        } else {
-          return new Scaffold(
-            appBar: new AppBar(
-              title: new Text(title),
-            ),
-            body: new Center(
-              child:smallScreen,
-            ),
-          );
-        }
-      },
-    );
-  }
-}
-
 class MyTabletTextFormField extends StatelessWidget {
   MyTabletTextFormField({
     this.key,
