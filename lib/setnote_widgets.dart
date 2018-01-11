@@ -43,7 +43,10 @@ class SetnoteBaseLayout extends StatelessWidget {
                   child: new MyDrawer(),
                 ),
                 new Expanded(
-                  child: child,
+                  child: new Padding(
+                    padding: const EdgeInsets.only(left:3.0),
+                    child: child,
+                  ),
                 ),
               ],
             ),
