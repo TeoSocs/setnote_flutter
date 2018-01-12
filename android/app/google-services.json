@@ -59,6 +59,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "254121985181-qi31ngtd62pvbdn28gijh8pj2f82j9oq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pacesovilla.setnoteflutter.setnoteflutter",
+            "certificate_hash": "78366c62368e9ca24fa297cf70afd5774f865bc5"
+          }
+        },
+        {
+          "client_id": "254121985181-h3c0464gh3i2fm8b7qcduef95be3692s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pacesovilla.setnoteflutter.setnoteflutter",
+            "certificate_hash": "87fdd7d40af7bbc7ac204f69134033091b329951"
+          }
+        },
+        {
           "client_id": "254121985181-1jt0hrs3ader9odhnj6fcs5nppnkgimg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
