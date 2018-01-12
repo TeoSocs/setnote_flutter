@@ -63,7 +63,7 @@ class _TeamPageState extends State<TeamPage> {
 
 class TeamListEntry extends StatelessWidget {
   TeamListEntry({this.snapshot}) {
-    if (snapshot.value['colore_maglia'] != null) {
+    if ((snapshot.value['colore_maglia'] != null) && (snapshot.value['colore_maglia'] != 'null')) {
       coloreMaglia = new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16));
     } else {
       coloreMaglia = Colors.green[400];
