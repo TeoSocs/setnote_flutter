@@ -14,12 +14,11 @@ class ManageTeamState extends State<ManageTeam> {
     model = new ManageTeamModel();
   }
   ManageTeamModel model;
-  Color _coloreMaglia;
+  Color _coloreMaglia = selectedTeam.coloreMaglia;
   bool _whiteButtonText = false;
 
   @override
   Widget build(BuildContext context) {
-    _coloreMaglia = selectedTeam.coloreMaglia;
     if (_coloreMaglia == null) {
       _coloreMaglia = Theme.of(context).buttonColor;
     }
