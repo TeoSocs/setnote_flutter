@@ -95,12 +95,13 @@ class ManageTeamState extends State<ManageTeam> {
       context: context,
       child: new SetnoteColorSelector(),
     ).then((Color newColor) {
-      setState(() => _coloreMaglia = newColor);
+      setState(() {_coloreMaglia = newColor;
+      model.coloreMaglia = newColor;
       if (newColor.computeLuminance() > 0.179) {
         _whiteButtonText = false;
       } else {
         _whiteButtonText = true;
-      }
+      }});
     });
   }
 
