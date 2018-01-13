@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:setnote_flutter/manage_team_model.dart';
+import 'package:setnote_flutter/roster_manager.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
 
 import 'constants.dart' as constant;
@@ -18,6 +19,7 @@ class ManageTeamState extends State<ManageTeam> {
     _coloreMaglia = selectedTeam.coloreMaglia;
     checkTextColor(selectedTeam.coloreMaglia);
   }
+
   TeamInstance selectedTeam;
   ManageTeamModel model;
   Color _coloreMaglia;
@@ -39,61 +41,61 @@ class ManageTeamState extends State<ManageTeam> {
       body: new Center(
         child: new LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-          MediaQueryData media = MediaQuery.of(context);
-          if (media.orientation == Orientation.landscape &&
-              media.size.width >= 950.00) {
-            return new Form(
-              key: model.formKey,
-              autovalidate: true,
-              child: new ListView(
-                padding: constant.standard_margin,
-                children: <Widget>[
-                  new Row(
+              MediaQueryData media = MediaQuery.of(context);
+              if (media.orientation == Orientation.landscape &&
+                  media.size.width >= 950.00) {
+                return new Form(
+                  key: model.formKey,
+                  autovalidate: true,
+                  child: new ListView(
+                    padding: constant.standard_margin,
+                    children: <Widget>[
+                      new Row(
+                        children: <Widget>[
+                          _newInputNomeSquadra(),
+                          _newPulsanteColoreMaglia(),
+                        ],
+                      ),
+                      new Row(
+                        children: <Widget>[
+                          _newInputAllenatore(),
+                          _newInputAssistente(),
+                        ],
+                      ),
+                      new Row(
+                        children: <Widget>[
+                          _newInputCategoria(),
+                          _newInputStagione(),
+                        ],
+                      ),
+                      _newGestisciFormazione(),
+                    ],
+                  ),
+                );
+              } else {
+                return new Form(
+                  key: model.formKey,
+                  autovalidate: true,
+                  child: new ListView(
+                    padding: constant.standard_margin,
                     children: <Widget>[
                       _newInputNomeSquadra(),
-                      _newPulsanteColoreMaglia(),
-                    ],
-                  ),
-                  new Row(
-                    children: <Widget>[
+                      new Center(
+                        child: new Padding(
+                          padding: constant.standard_margin,
+                          child: _newPulsanteColoreMaglia(),
+                        ),
+                      ),
                       _newInputAllenatore(),
                       _newInputAssistente(),
-                    ],
-                  ),
-                  new Row(
-                    children: <Widget>[
                       _newInputCategoria(),
                       _newInputStagione(),
+                      _newGestisciFormazione(),
                     ],
                   ),
-                  _newGestisciFormazione(),
-                ],
-              ),
-            );
-          } else {
-            return new Form(
-              key: model.formKey,
-              autovalidate: true,
-              child: new ListView(
-                padding: constant.standard_margin,
-                children: <Widget>[
-                  _newInputNomeSquadra(),
-                  new Center(
-                    child: new Padding(
-                      padding: constant.standard_margin,
-                      child: _newPulsanteColoreMaglia(),
-                    ),
-                  ),
-                  _newInputAllenatore(),
-                  _newInputAssistente(),
-                  _newInputCategoria(),
-                  _newInputStagione(),
-                  _newGestisciFormazione(),
-                ],
-              ),
-            );
-          }
-        }),
+                );
+              }
+            }),
       ),
     );
   }
@@ -260,13 +262,20 @@ class ManageTeamState extends State<ManageTeam> {
   }
 
   Widget _newGestisciFormazione() {
+    if (selectedTeam.key == null) {
+      return const Text("");
+    }
     return new Padding(
       padding: constant.standard_margin,
       child: new Center(
           child: new RaisedButton(
-        child: const Text('Gestisci formazione'),
-        onPressed: null,
-      )),
+            child: const Text('Gestisci formazione'),
+            onPressed: () async {
+              await Navigator.of(context).push(new MaterialPageRoute<Null>(
+                  builder: (BuildContext context) =>
+                  new RosterManager(teamKey: selectedTeam.key)));
+            },
+          )),
     );
   }
 }
