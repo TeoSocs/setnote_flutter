@@ -63,6 +63,7 @@ class ManageTeamState extends State<ManageTeam> {
                       _newInputStagione(),
                     ],
                   ),
+                  _newGestisciFormazione(),
                 ],
               ),
             );
@@ -84,6 +85,7 @@ class ManageTeamState extends State<ManageTeam> {
                   _newInputAssistente(),
                   _newInputCategoria(),
                   _newInputStagione(),
+                  _newGestisciFormazione(),
                 ],
               ),
             );
@@ -252,5 +254,16 @@ class ManageTeamState extends State<ManageTeam> {
         child: content,
       );
     }
+  }
+
+  Widget _newGestisciFormazione() {
+    return new Padding(
+      padding: constant.standard_margin,
+      child: new Center(
+        child: new RaisedButton(
+            child: const Text('Gestisci formazione'),
+            onPressed: null,)
+      ),
+    );
   }
 }
