@@ -22,7 +22,8 @@ class ManageTeamState extends State<ManageTeam> {
   @override
   Widget build(BuildContext context) {
     if (_coloreMaglia == null) {
-      _coloreMaglia = Theme.of(context).buttonColor;
+      _coloreMaglia = Colors.blue[400];
+      model.coloreMaglia = Colors.blue[400];
     }
     return new Scaffold(
       appBar: new AppBar(title: new Text(model.title)),

@@ -63,7 +63,7 @@ class _TeamPageState extends State<TeamPage> {
     if ((snapshot.value['colore_maglia'] != null) && (snapshot.value['colore_maglia'] != 'null')) {
       coloreMaglia = new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16));
     } else {
-      coloreMaglia = Colors.green[400];
+      coloreMaglia = Colors.blue[400];
     }
     return new Card(
         child: new FlatButton(

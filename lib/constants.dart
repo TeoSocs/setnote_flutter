@@ -17,4 +17,3 @@ const lateral_margin = const EdgeInsets.symmetric(horizontal: 16.0);
 const form_page_margin = const EdgeInsets.symmetric(horizontal: 100.0);
 
 final teamDB = FirebaseDatabase.instance.reference().child('squadre');
-
