@@ -12,10 +12,12 @@ class ManageTeam extends StatefulWidget {
 class ManageTeamState extends State<ManageTeam> {
   ManageTeamState() {
     model = new ManageTeamModel();
+    checkTextColor(selectedTeam.coloreMaglia);
   }
   ManageTeamModel model;
   Color _coloreMaglia = selectedTeam.coloreMaglia;
-  bool _whiteButtonText = false;
+  bool _whiteButtonText;
+
 
   @override
   Widget build(BuildContext context) {
@@ -95,14 +97,22 @@ class ManageTeamState extends State<ManageTeam> {
       context: context,
       child: new SetnoteColorSelector(),
     ).then((Color newColor) {
-      setState(() {_coloreMaglia = newColor;
+      _coloreMaglia = newColor;
       model.coloreMaglia = newColor;
-      if (newColor.computeLuminance() > 0.179) {
+      checkTextColor(newColor);
+    });
+  }
+
+  void checkTextColor(color) {
+    if (color == null) {
+      _whiteButtonText = false;
+    } else {
+      if (color.computeLuminance() > 0.179) {
         _whiteButtonText = false;
       } else {
         _whiteButtonText = true;
-      }});
-    });
+      }
+    }
   }
 
   Widget _newPulsanteColoreMaglia() {

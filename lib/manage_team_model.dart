@@ -46,6 +46,7 @@ class ManageTeamModel {
     });
     analytics.logEvent(name: 'modificata_squadra');
     Navigator.of(context).pop();
+    Navigator.of(context).pushReplacementNamed('/team');
   }
 }
 

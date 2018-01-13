@@ -37,9 +37,7 @@ class _TeamPageState extends State<TeamPage> {
             padding: constant.standard_margin,
             itemBuilder:
                 (_, DataSnapshot snapshot, Animation<double> animation) {
-              return new TeamListEntry(
-                snapshot: snapshot,
-              );
+              return _newListEntry(snapshot);
             },
           ),
           floatingActionButton: new FloatingActionButton(
@@ -59,21 +57,14 @@ class _TeamPageState extends State<TeamPage> {
     await ensureLoggedIn();
     setState(() => logged = true);
   }
-}
 
-class TeamListEntry extends StatelessWidget {
-  TeamListEntry({this.snapshot}) {
+  Widget _newListEntry(DataSnapshot snapshot) {
+    Color coloreMaglia;
     if ((snapshot.value['colore_maglia'] != null) && (snapshot.value['colore_maglia'] != 'null')) {
       coloreMaglia = new Color(int.parse(snapshot.value['colore_maglia'].substring(8,16), radix: 16));
     } else {
       coloreMaglia = Colors.green[400];
     }
-  }
-  Color coloreMaglia;
-  final DataSnapshot snapshot;
-
-  @override
-  Widget build(BuildContext context) {
     return new Card(
         child: new FlatButton(
           onPressed: () {
@@ -86,13 +77,16 @@ class TeamListEntry extends StatelessWidget {
             selectedTeam.coloreMaglia = coloreMaglia;
             Navigator.of(context).pushNamed("/manage_team");
           },
-      child: new ListTile(
+          child: new ListTile(
             leading: new Icon(Icons.android, color: coloreMaglia,),
-        title: new Text(snapshot.value['nome']),
-        subtitle: new Text(
-            snapshot.value['categoria'] + ' - ' + snapshot.value['stagione']),
-      ),
-    ));
+            title: new Text(snapshot.value['nome']),
+            subtitle: new Text(
+                snapshot.value['categoria'] + ' - ' + snapshot.value['stagione']),
+          ),
+        ));
   }
 }
+
+
+
 
