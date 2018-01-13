@@ -4,30 +4,20 @@ import 'constants.dart' as constant;
 import 'google_auth.dart';
 
 class ManageTeamModel {
-  String title = (selectedTeam.nomeSquadra == null ? "Aggiungi squadra" : selectedTeam.nomeSquadra);
-  String nomeSquadra;
-  String nomeSquadraInitial = (selectedTeam.nomeSquadra != null ? selectedTeam.nomeSquadra : '');
-  String allenatore;
-  String allenatoreInitial = (selectedTeam.allenatore != null ? selectedTeam.allenatore : '');
-  String assistente;
-  String assistenteInitial = (selectedTeam.assistente != null ? selectedTeam.assistente : '');
-  String categoria;
-  String categoriaInitial = (selectedTeam.categoria != null ? selectedTeam.categoria : '');
-  String stagione;
-  String stagioneInitial = (selectedTeam.stagione != null ? selectedTeam.stagione : '');
-  Color coloreMaglia;
+  ManageTeamModel({this.selectedTeam});
+  TeamInstance selectedTeam;
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
   void submit(BuildContext context) {
     final FormState form = formKey.currentState;
     form.save();
     constant.teamDB.push().set({
-      'nome': nomeSquadra,
-      'allenatore': allenatore,
-      'assistente': assistente,
-      'stagione': stagione,
-      'categoria': categoria,
-      'colore_maglia': coloreMaglia.toString(),
+      'nome': selectedTeam.nomeSquadra,
+      'allenatore': selectedTeam.allenatore,
+      'assistente': selectedTeam.assistente,
+      'stagione': selectedTeam.stagione,
+      'categoria': selectedTeam.categoria,
+      'colore_maglia': selectedTeam.coloreMaglia.toString(),
     });
     analytics.logEvent(name: 'aggiunta_squadra');
     Navigator.of(context).pop();
@@ -37,12 +27,12 @@ class ManageTeamModel {
     final FormState form = formKey.currentState;
     form.save();
     constant.teamDB.child(selectedTeam.key).set({
-      'nome': nomeSquadra,
-      'allenatore': allenatore,
-      'assistente': assistente,
-      'stagione': stagione,
-      'categoria': categoria,
-      'colore_maglia': coloreMaglia.toString(),
+      'nome': selectedTeam.nomeSquadra,
+      'allenatore': selectedTeam.allenatore,
+      'assistente': selectedTeam.assistente,
+      'stagione': selectedTeam.stagione,
+      'categoria': selectedTeam.categoria,
+      'colore_maglia': selectedTeam.coloreMaglia.toString(),
     });
     analytics.logEvent(name: 'modificata_squadra');
     Navigator.of(context).pop();
@@ -52,13 +42,17 @@ class ManageTeamModel {
 
 class TeamInstance {
   TeamInstance({
-    this.nomeSquadra,
-    this.allenatore,
-    this.assistente,
-    this.categoria,
-    this.stagione,
+    this.nomeSquadra: '',
+    this.allenatore: '',
+    this.assistente: '',
+    this.categoria: '',
+    this.stagione: '',
     this.coloreMaglia,
-  });
+  }) {
+    if (coloreMaglia == null) {
+      coloreMaglia = Colors.blue[400];
+    }
+  }
   String nomeSquadra;
   String allenatore;
   String assistente;
@@ -95,5 +89,3 @@ class TeamInstance {
     key = null;
   }
 }
-
-final TeamInstance selectedTeam = new TeamInstance();

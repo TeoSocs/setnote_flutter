@@ -5,28 +5,35 @@ import 'package:setnote_flutter/setnote_widgets.dart';
 import 'constants.dart' as constant;
 
 class ManageTeam extends StatefulWidget {
+  ManageTeam({this.selectedTeam});
+  final TeamInstance selectedTeam;
   @override
-  ManageTeamState createState() => new ManageTeamState();
+  ManageTeamState createState() => new ManageTeamState(
+      selectedTeam: selectedTeam,
+      model: new ManageTeamModel(selectedTeam: selectedTeam));
 }
 
 class ManageTeamState extends State<ManageTeam> {
-  ManageTeamState() {
-    model = new ManageTeamModel();
+  ManageTeamState({this.selectedTeam, this.model}) {
+    _coloreMaglia = selectedTeam.coloreMaglia;
     checkTextColor(selectedTeam.coloreMaglia);
   }
+  TeamInstance selectedTeam;
   ManageTeamModel model;
-  Color _coloreMaglia = selectedTeam.coloreMaglia;
+  Color _coloreMaglia;
   bool _whiteButtonText;
-
 
   @override
   Widget build(BuildContext context) {
-    if (_coloreMaglia == null) {
+    /*if (_coloreMaglia == null) {
       _coloreMaglia = Colors.blue[400];
-      model.coloreMaglia = Colors.blue[400];
-    }
+      model.selectedTeam.coloreMaglia = Colors.blue[400];
+    }*/
     return new Scaffold(
-      appBar: new AppBar(title: new Text(model.title)),
+      appBar: new AppBar(
+          title: new Text((selectedTeam.key == null
+              ? "Nuova squadra"
+              : "Aggiorna squadra"))),
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.check),
         onPressed: (selectedTeam.key == null
@@ -101,7 +108,7 @@ class ManageTeamState extends State<ManageTeam> {
       child: new SetnoteColorSelector(),
     ).then((Color newColor) {
       _coloreMaglia = newColor;
-      model.coloreMaglia = newColor;
+      model.selectedTeam.coloreMaglia = newColor;
       checkTextColor(newColor);
     });
   }
@@ -132,13 +139,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputNomeSquadra() {
     Widget content = new TextFormField(
-      initialValue: model.nomeSquadraInitial,
+      initialValue: model.selectedTeam.nomeSquadra,
       decoration: const InputDecoration(
         labelText: 'Nome squadra',
         hintText: 'CAME Casier',
       ),
       onSaved: (String value) {
-        model.nomeSquadra = value;
+        model.selectedTeam.nomeSquadra = value;
       },
     );
 
@@ -158,13 +165,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputAllenatore() {
     Widget content = new TextFormField(
-      initialValue: model.allenatoreInitial,
+      initialValue: model.selectedTeam.allenatore,
       decoration: const InputDecoration(
         labelText: 'Allenatore',
         hintText: 'G. Povia',
       ),
       onSaved: (String value) {
-        model.allenatore = value;
+        model.selectedTeam.allenatore = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -183,13 +190,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputAssistente() {
     Widget content = new TextFormField(
-      initialValue: model.assistenteInitial,
+      initialValue: model.selectedTeam.assistente,
       decoration: const InputDecoration(
         labelText: 'Assistente',
         hintText: 'A. Uscolo',
       ),
       onSaved: (String value) {
-        model.assistente = value;
+        model.selectedTeam.assistente = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -208,13 +215,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputCategoria() {
     Widget content = new TextFormField(
-      initialValue: model.categoriaInitial,
+      initialValue: model.selectedTeam.categoria,
       decoration: const InputDecoration(
         labelText: 'Categoria',
         hintText: 'Serie C Maschile',
       ),
       onSaved: (String value) {
-        model.categoria = value;
+        model.selectedTeam.categoria = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -233,13 +240,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputStagione() {
     Widget content = new TextFormField(
-      initialValue: model.stagioneInitial,
+      initialValue: model.selectedTeam.stagione,
       decoration: const InputDecoration(
         labelText: 'Stagione',
         hintText: '2018',
       ),
       onSaved: (String value) {
-        model.stagione = value;
+        model.selectedTeam.stagione = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -260,10 +267,10 @@ class ManageTeamState extends State<ManageTeam> {
     return new Padding(
       padding: constant.standard_margin,
       child: new Center(
-        child: new RaisedButton(
-            child: const Text('Gestisci formazione'),
-            onPressed: null,)
-      ),
+          child: new RaisedButton(
+        child: const Text('Gestisci formazione'),
+        onPressed: null,
+      )),
     );
   }
 }
