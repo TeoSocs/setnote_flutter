@@ -5,7 +5,7 @@ import 'main_menu.dart';
 import 'manage_team.dart';
 import 'match_page.dart';
 import 'mypage.dart';
-import 'team_page.dart';
+import 'my_team_page.dart';
 
 
 void main() {
@@ -15,7 +15,7 @@ void main() {
     routes: <String, WidgetBuilder>{
       '/match': (BuildContext context) =>
           new MatchPage(title: constant.match_label),
-      '/team': (BuildContext context) => new TeamPage(title: constant.team_label),
+      '/team': (BuildContext context) => new MyTeamPage(),
       '/stats': (BuildContext context) =>
           new MyPage(title: constant.stats_label),
       '/history': (BuildContext context) =>
