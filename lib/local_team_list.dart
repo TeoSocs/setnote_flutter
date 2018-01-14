@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 
-class LocalDB {
-  static final teams = new List<TeamInstance>();
+abstract class LocalDB {
+  static List<TeamInstance> teams = new List<TeamInstance>();
 
   static bool has(String key) {
     for (var team in teams) {
@@ -20,6 +22,19 @@ class LocalDB {
 
   static Future<Null> add(TeamInstance newTeam) async {
     teams.add(newTeam);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = new File('$dir/localTeams.snt');
+    file.writeAsString(JSON.encode(teams));
+  }
+
+  static Future<Null> readFromFile() async {
+    try {
+      String dir = (await getApplicationDocumentsDirectory()).path;
+      File file = new File('$dir/localTeams.snt');
+      teams = JSON.decode(file.readAsStringSync());
+    } on FileSystemException {
+      print('Errore nella lettura del file');
+    }
   }
 }
 

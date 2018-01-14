@@ -6,9 +6,11 @@ import 'manage_team.dart';
 import 'match_page.dart';
 import 'mypage.dart';
 import 'my_team_page.dart';
+import 'package:setnote_flutter/local_team_list.dart';
 
 
 void main() {
+  LocalDB.readFromFile();
   runApp(new MaterialApp(
     title: constant.app_name,
     home: new MainMenu(), // becomes the route named '/'
