@@ -21,9 +21,14 @@ class SetnoteButton extends StatelessWidget {
 }
 
 class SetnoteBaseLayout extends StatelessWidget {
-  SetnoteBaseLayout({this.child, this.title});
+  SetnoteBaseLayout({this.child, this.title, this.drawer}) {
+    if (drawer == null) {
+      drawer = new MyDrawer();
+    }
+  }
   final Widget child;
   final String title;
+  Widget drawer;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class SetnoteBaseLayout extends StatelessWidget {
             body: new Row(
               children: <Widget>[
                 new Drawer(
-                  child: new MyDrawer(),
+                  child: drawer,
                 ),
                 new Expanded(
                   child: new Padding(

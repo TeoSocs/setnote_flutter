@@ -27,75 +27,76 @@ class ManageTeamState extends State<ManageTeam> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-          title: new Text((selectedTeam.key == null
-              ? "Nuova squadra"
-              : "Aggiorna squadra"))),
-      floatingActionButton: new FloatingActionButton(
-        child: const Icon(Icons.check),
-        onPressed: (selectedTeam.key == null
-            ? () => model.submit(context)
-            : () => model.update(context)),
-      ),
-      body: new Center(
-        child: new LayoutBuilder(
-            builder: (BuildContext context, BoxConstraints constraints) {
-              MediaQueryData media = MediaQuery.of(context);
-              if (media.orientation == Orientation.landscape &&
-                  media.size.width >= 950.00) {
-                return new Form(
-                  key: model.formKey,
-                  autovalidate: true,
-                  child: new ListView(
-                    padding: constant.standard_margin,
-                    children: <Widget>[
-                      new Row(
-                        children: <Widget>[
-                          _newInputNomeSquadra(),
-                          _newPulsanteColoreMaglia(),
-                        ],
-                      ),
-                      new Row(
-                        children: <Widget>[
-                          _newInputAllenatore(),
-                          _newInputAssistente(),
-                        ],
-                      ),
-                      new Row(
-                        children: <Widget>[
-                          _newInputCategoria(),
-                          _newInputStagione(),
-                        ],
-                      ),
-                      _newGestisciFormazione(),
-                    ],
-                  ),
-                );
-              } else {
-                return new Form(
-                  key: model.formKey,
-                  autovalidate: true,
-                  child: new ListView(
-                    padding: constant.standard_margin,
-                    children: <Widget>[
-                      _newInputNomeSquadra(),
-                      new Center(
-                        child: new Padding(
-                          padding: constant.standard_margin,
-                          child: _newPulsanteColoreMaglia(),
+    return new SetnoteBaseLayout(
+      title: (selectedTeam.key == null
+          ? "Nuova squadra"
+          : "Aggiorna squadra"),
+      child: new Scaffold(
+        floatingActionButton: new FloatingActionButton(
+          child: const Icon(Icons.check),
+          onPressed: (selectedTeam.key == null
+              ? () => model.submit(context)
+              : () => model.update(context)),
+        ),
+        body: new Center(
+          child: new LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+                MediaQueryData media = MediaQuery.of(context);
+                if (media.orientation == Orientation.landscape &&
+                    media.size.width >= 950.00) {
+                  return new Form(
+                    key: model.formKey,
+                    autovalidate: true,
+                    child: new ListView(
+                      padding: constant.standard_margin,
+                      children: <Widget>[
+                        new Row(
+                          children: <Widget>[
+                            _newInputNomeSquadra(),
+                            _newPulsanteColoreMaglia(),
+                          ],
                         ),
-                      ),
-                      _newInputAllenatore(),
-                      _newInputAssistente(),
-                      _newInputCategoria(),
-                      _newInputStagione(),
-                      _newGestisciFormazione(),
-                    ],
-                  ),
-                );
-              }
-            }),
+                        new Row(
+                          children: <Widget>[
+                            _newInputAllenatore(),
+                            _newInputAssistente(),
+                          ],
+                        ),
+                        new Row(
+                          children: <Widget>[
+                            _newInputCategoria(),
+                            _newInputStagione(),
+                          ],
+                        ),
+                        _newGestisciFormazione(),
+                      ],
+                    ),
+                  );
+                } else {
+                  return new Form(
+                    key: model.formKey,
+                    autovalidate: true,
+                    child: new ListView(
+                      padding: constant.standard_margin,
+                      children: <Widget>[
+                        _newInputNomeSquadra(),
+                        new Center(
+                          child: new Padding(
+                            padding: constant.standard_margin,
+                            child: _newPulsanteColoreMaglia(),
+                          ),
+                        ),
+                        _newInputAllenatore(),
+                        _newInputAssistente(),
+                        _newInputCategoria(),
+                        _newInputStagione(),
+                        _newGestisciFormazione(),
+                      ],
+                    ),
+                  );
+                }
+              }),
+        ),
       ),
     );
   }
@@ -273,7 +274,7 @@ class ManageTeamState extends State<ManageTeam> {
             onPressed: () async {
               await Navigator.of(context).push(new MaterialPageRoute<Null>(
                   builder: (BuildContext context) =>
-                  new RosterManager(teamKey: selectedTeam.key)));
+                  new RosterManager(team: selectedTeam)));
             },
           )),
     );
