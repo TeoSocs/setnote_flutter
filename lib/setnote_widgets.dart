@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'constants.dart' as constant;
 import 'drawer.dart';
@@ -22,9 +21,14 @@ class SetnoteButton extends StatelessWidget {
 }
 
 class SetnoteBaseLayout extends StatelessWidget {
-  SetnoteBaseLayout({this.child, this.title});
+  SetnoteBaseLayout({this.child, this.title, this.drawer}) {
+    if (drawer == null) {
+      drawer = new MyDrawer();
+    }
+  }
   final Widget child;
   final String title;
+  Widget drawer;
 
   @override
   Widget build(BuildContext context) {
@@ -40,11 +44,11 @@ class SetnoteBaseLayout extends StatelessWidget {
             body: new Row(
               children: <Widget>[
                 new Drawer(
-                  child: new MyDrawer(),
+                  child: drawer,
                 ),
                 new Expanded(
                   child: new Padding(
-                    padding: constant.standard_margin,
+                    padding: const EdgeInsets.only(left:3.0),
                     child: child,
                   ),
                 ),
@@ -57,10 +61,7 @@ class SetnoteBaseLayout extends StatelessWidget {
             drawer: new Drawer(
               child: new MyDrawer(),
             ),
-            body: new Padding(
-              padding: constant.standard_margin,
-              child: child,
-            ),
+            body: child,
           );
         }
       },
@@ -80,186 +81,6 @@ class LoadingWidget extends StatelessWidget {
     } else {
       return new Center(child: new CircularProgressIndicator());
     }
-  }
-}
-
-class SetnoteFormLayout extends StatelessWidget {
-  SetnoteFormLayout({this.smallScreen, this.largeScreen, this.title});
-
-  final Widget smallScreen;
-  final Widget largeScreen;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return new LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        MediaQueryData media = MediaQuery.of(context);
-        if (media.orientation == Orientation.landscape &&
-            media.size.width >= 950.00) {
-          return new Scaffold(
-            appBar: new AppBar(
-              title: new Text(title),
-            ),
-            body: new Center(
-              child: new Padding(
-                padding: constant.form_page_margin,
-                child: largeScreen,
-              ),
-            ),
-          );
-        } else {
-          return new Scaffold(
-            appBar: new AppBar(
-              title: new Text(title),
-            ),
-            body: new Center(
-              child: new Padding(
-                padding: constant.standard_margin,
-                child: smallScreen,
-              ),
-            ),
-          );
-        }
-      },
-    );
-  }
-}
-
-class MyTabletTextFormField extends StatelessWidget {
-  MyTabletTextFormField({
-    this.key,
-    this.controller,
-    this.initialValue: '',
-    this.focusNode,
-    this.decoration: const InputDecoration(),
-    this.keyboardType: TextInputType.text,
-    this.style,
-    this.textAlign: TextAlign.start,
-    this.autofocus: false,
-    this.obscureText: false,
-    this.autocorrect: true,
-    this.maxLines: 1,
-    this.onSaved,
-    this.validator,
-    this.inputFormatters,
-  });
-
-  final TextEditingController controller;
-  final Key key;
-  final String initialValue;
-  final FocusNode focusNode;
-  final InputDecoration decoration;
-  final TextInputType keyboardType;
-  final TextStyle style;
-  final TextAlign textAlign;
-  final bool autofocus;
-  final bool obscureText;
-  final bool autocorrect;
-  final int maxLines;
-  final FormFieldSetter<String> onSaved;
-  final FormFieldValidator<String> validator;
-  final List<TextInputFormatter> inputFormatters;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Flexible(
-      child: new Padding(
-        padding: constant.lateral_margin,
-        child: new TextFormField(
-          controller: controller,
-          key: key,
-          initialValue: initialValue,
-          focusNode: focusNode,
-          decoration: decoration,
-          keyboardType: keyboardType,
-          style: style,
-          textAlign: textAlign,
-          autofocus: autofocus,
-          obscureText: obscureText,
-          autocorrect: autocorrect,
-          maxLines: maxLines,
-          onSaved: onSaved,
-          validator: validator,
-          inputFormatters: inputFormatters,
-        ),
-      ),
-    );
-  }
-}
-
-class MyPhoneTextFormField extends StatelessWidget {
-  MyPhoneTextFormField({
-    this.key,
-    this.controller,
-    this.initialValue: '',
-    this.focusNode,
-    this.decoration: const InputDecoration(),
-    this.keyboardType: TextInputType.text,
-    this.style,
-    this.textAlign: TextAlign.start,
-    this.autofocus: false,
-    this.obscureText: false,
-    this.autocorrect: true,
-    this.maxLines: 1,
-    this.onSaved,
-    this.validator,
-    this.inputFormatters,
-  });
-
-  final TextEditingController controller;
-  final Key key;
-  final String initialValue;
-  final FocusNode focusNode;
-  final InputDecoration decoration;
-  final TextInputType keyboardType;
-  final TextStyle style;
-  final TextAlign textAlign;
-  final bool autofocus;
-  final bool obscureText;
-  final bool autocorrect;
-  final int maxLines;
-  final FormFieldSetter<String> onSaved;
-  final FormFieldValidator<String> validator;
-  final List<TextInputFormatter> inputFormatters;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Padding(
-      padding: constant.lateral_margin,
-      child: new TextFormField(
-        controller: controller,
-        key: key,
-        initialValue: initialValue,
-        focusNode: focusNode,
-        decoration: decoration,
-        keyboardType: keyboardType,
-        style: style,
-        textAlign: textAlign,
-        autofocus: autofocus,
-        obscureText: obscureText,
-        autocorrect: autocorrect,
-        maxLines: maxLines,
-        onSaved: onSaved,
-        validator: validator,
-        inputFormatters: inputFormatters,
-      ),
-    );
-  }
-}
-
-class UseAsMyField extends StatelessWidget {
-  UseAsMyField(this.item);
-  final Widget item;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Flexible(
-      child: new Padding(
-        padding: constant.lateral_margin,
-        child: item,
-      ),
-    );
   }
 }
 
