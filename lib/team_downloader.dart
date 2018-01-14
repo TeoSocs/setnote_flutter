@@ -21,7 +21,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   Widget build(BuildContext context) {
     login();
     return new SetnoteBaseLayout(
-      title: "Team Downloader",
+      title: "Squadre nel cloud",
       child: new LoadingWidget(
         condition: logged && updated,
         child: new FirebaseAnimatedList(
@@ -45,7 +45,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     Color coloreMaglia;
     String state;
     if (LocalDB.has(snapshot.key)) {
-      if (int.parse(snapshot.value['ultimaModifica']) > int.parse(LocalDB.getByKey(snapshot.key).ultimaModifica)) {
+      if (int.parse(snapshot.value['ultima_modifica']) > int.parse(LocalDB.getByKey(snapshot.key).ultimaModifica)) {
         state = 'outdated';
       } else {
         state = 'updated';
@@ -64,11 +64,25 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         child: new FlatButton(
           onPressed: () async {
             setState(() => updated = false);
-            // snapshot.value
+            if (state == 'absent') {
+              TeamInstance newTeam = new TeamInstance();
+              newTeam.ultimaModifica = snapshot.value['ultima_modifica'];
+              newTeam.key = snapshot.key;
+              newTeam.stagione = snapshot.value['stagione'];
+              newTeam.categoria = snapshot.value['categoria'];
+              newTeam.nome = snapshot.value['nome'];
+              newTeam.coloreMaglia = snapshot.value['colore_maglia'];
+              newTeam.allenatore = snapshot.value['allenatore'];
+              newTeam.assistente = snapshot.value['assistente'];
+              await newTeam.aggiornaGiocatori();
+
+              LocalDB.teams.add(newTeam);
+            }
+            Navigator.of(context).pop();
           },
           child: new ListTile(
             leading: new Icon(
-              Icons.android,
+              Icons.group,
               color: coloreMaglia,
             ),
             title: new Text(snapshot.value['nome']),

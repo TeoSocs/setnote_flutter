@@ -2,7 +2,7 @@ import 'local_team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
 import 'team_downloader.dart';
-import 'dart:async';
+import 'package:setnote_flutter/constants.dart' as constant;
 
 class MyTeamPage extends StatefulWidget {
   @override
@@ -18,15 +18,17 @@ class _MyTeamPageState extends State<MyTeamPage> {
     for (TeamInstance team in LocalDB.teams) {
       teamList.add(new Card(
         child: new ListTile(
-          leading: const Icon(Icons.group),
-          title: new Text(team.nomeSquadra),
+          leading: new Icon(Icons.group, color: new Color(int
+              .parse(team.coloreMaglia.substring(8, 16), radix: 16)),),
+          title: new Text(team.nome),
           subtitle: new Text(team.categoria + ' - ' + team.stagione),
         ),
       ));
     }
     return new SetnoteBaseLayout(
-      title: 'MyTeamPage',
+      title: 'Squadre salvate',
       child: new ListView(
+        padding: constant.standard_margin,
         children: reloadNeeded ? [] : teamList,
       ),
       floatingActionButton: new FloatingActionButton(

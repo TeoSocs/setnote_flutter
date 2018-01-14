@@ -1,3 +1,5 @@
+import 'dart:async';
+
 class LocalDB {
   static final teams = new List<TeamInstance>();
 
@@ -17,7 +19,7 @@ class LocalDB {
 }
 
 class TeamInstance {
-  String nomeSquadra = '';
+  String nome = '';
   String allenatore = '';
   String assistente = '';
   String categoria = '';
@@ -26,6 +28,10 @@ class TeamInstance {
   String key = '';
   String ultimaModifica;
   List<PlayerInstance> giocatori;
+
+  Future<Null> aggiornaGiocatori() async {
+    return null;
+  }
 }
 
 class PlayerInstance {
