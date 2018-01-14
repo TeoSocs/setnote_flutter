@@ -1,5 +1,6 @@
 import 'local_team_list.dart' as local;
 import 'package:flutter/material.dart';
+import 'package:setnote_flutter/setnote_widgets.dart';
 
 
 class MyTeamPage extends StatefulWidget {
@@ -22,9 +23,9 @@ class _MyTeamPageState extends State<MyTeamPage> {
         ),
       ));
     }
-    return new Scaffold(
-      appBar: new AppBar(title: const Text('MyTeamPage'),),
-      body: new ListView(
+    return new SetnoteBaseLayout(
+      title:'MyTeamPage',
+      child: new ListView(
         children: reloadNeeded?[]:teamList,
       ),
     );
