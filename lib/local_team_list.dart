@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 
 class LocalDB {
   static final teams = new List<TeamInstance>();
@@ -15,6 +16,10 @@ class LocalDB {
       if (team.key == key) return team;
     }
     return null;
+  }
+
+  static Future<Null> add(TeamInstance newTeam) async {
+    teams.add(newTeam);
   }
 }
 

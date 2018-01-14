@@ -76,7 +76,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
               newTeam.assistente = snapshot.value['assistente'];
               await newTeam.aggiornaGiocatori();
 
-              LocalDB.teams.add(newTeam);
+              LocalDB.add(newTeam);
             }
             Navigator.of(context).pop();
           },
