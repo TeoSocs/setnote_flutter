@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:setnote_flutter/manage_team_model.dart';
+import 'package:setnote_flutter/local_team_list.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
 
 import 'constants.dart' as constant;

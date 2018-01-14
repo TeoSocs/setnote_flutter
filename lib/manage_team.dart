@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:setnote_flutter/manage_team_model.dart';
+import 'package:setnote_flutter/local_team_list.dart';
 import 'package:setnote_flutter/roster_manager.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
 
@@ -9,21 +9,20 @@ class ManageTeam extends StatefulWidget {
   ManageTeam({this.selectedTeam});
   final TeamInstance selectedTeam;
   @override
-  ManageTeamState createState() => new ManageTeamState(
-      selectedTeam: selectedTeam,
-      model: new ManageTeamModel(selectedTeam: selectedTeam));
+  _ManageTeamState createState() => new _ManageTeamState(selectedTeam: selectedTeam);
 }
 
-class ManageTeamState extends State<ManageTeam> {
-  ManageTeamState({this.selectedTeam, this.model}) {
-    _coloreMaglia = selectedTeam.coloreMaglia;
-    checkTextColor(selectedTeam.coloreMaglia);
+class _ManageTeamState extends State<ManageTeam> {
+  _ManageTeamState({this.selectedTeam}) {
+    _coloreMaglia = new Color(int
+        .parse(selectedTeam.coloreMaglia.substring(8, 16), radix: 16));
+    checkTextColor(_coloreMaglia);
   }
 
   TeamInstance selectedTeam;
-  ManageTeamModel model;
   Color _coloreMaglia;
   bool _whiteButtonText;
+  final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +30,8 @@ class ManageTeamState extends State<ManageTeam> {
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.check),
         onPressed: (selectedTeam.key == null
-            ? () => model.submit(context)
-            : () => model.update(context)),
+            ? () => submit(context)
+            : () => update(context)),
       ),
       title: (selectedTeam.key == null ? "Nuova squadra" : "Aggiorna squadra"),
       child: new Center(
@@ -42,7 +41,7 @@ class ManageTeamState extends State<ManageTeam> {
           if (media.orientation == Orientation.landscape &&
               media.size.width >= 950.00) {
             return new Form(
-              key: model.formKey,
+              key: formKey,
               autovalidate: true,
               child: new ListView(
                 padding: constant.standard_margin,
@@ -71,7 +70,7 @@ class ManageTeamState extends State<ManageTeam> {
             );
           } else {
             return new Form(
-              key: model.formKey,
+              key: formKey,
               autovalidate: true,
               child: new ListView(
                 padding: constant.standard_margin,
@@ -97,18 +96,28 @@ class ManageTeamState extends State<ManageTeam> {
     );
   }
 
+  void submit(BuildContext context) {
+
+  }
+
+  void update(BuildContext context) {
+    final FormState form = formKey.currentState;
+    form.save();
+    Navigator.of(context).pop();
+  }
+
   void _selectColor() {
     showDialog<Color>(
       context: context,
       child: new SetnoteColorSelector(),
     ).then((Color newColor) {
       _coloreMaglia = newColor;
-      model.selectedTeam.coloreMaglia = newColor;
+      selectedTeam.coloreMaglia = newColor.toString();
       checkTextColor(newColor);
     });
   }
 
-  void checkTextColor(color) {
+  void checkTextColor(Color color) {
     if (color == null) {
       _whiteButtonText = false;
     } else {
@@ -134,13 +143,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputNomeSquadra() {
     Widget content = new TextFormField(
-      initialValue: model.selectedTeam.nomeSquadra,
+      initialValue: selectedTeam.nome,
       decoration: const InputDecoration(
         labelText: 'Nome squadra',
         hintText: 'CAME Casier',
       ),
       onSaved: (String value) {
-        model.selectedTeam.nomeSquadra = value;
+        selectedTeam.nome = value;
       },
     );
 
@@ -160,13 +169,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputAllenatore() {
     Widget content = new TextFormField(
-      initialValue: model.selectedTeam.allenatore,
+      initialValue: selectedTeam.allenatore,
       decoration: const InputDecoration(
         labelText: 'Allenatore',
         hintText: 'G. Povia',
       ),
       onSaved: (String value) {
-        model.selectedTeam.allenatore = value;
+        selectedTeam.allenatore = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -185,13 +194,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputAssistente() {
     Widget content = new TextFormField(
-      initialValue: model.selectedTeam.assistente,
+      initialValue: selectedTeam.assistente,
       decoration: const InputDecoration(
         labelText: 'Assistente',
         hintText: 'A. Uscolo',
       ),
       onSaved: (String value) {
-        model.selectedTeam.assistente = value;
+        selectedTeam.assistente = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -210,13 +219,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputCategoria() {
     Widget content = new TextFormField(
-      initialValue: model.selectedTeam.categoria,
+      initialValue: selectedTeam.categoria,
       decoration: const InputDecoration(
         labelText: 'Categoria',
         hintText: 'Serie C Maschile',
       ),
       onSaved: (String value) {
-        model.selectedTeam.categoria = value;
+        selectedTeam.categoria = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -235,13 +244,13 @@ class ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputStagione() {
     Widget content = new TextFormField(
-      initialValue: model.selectedTeam.stagione,
+      initialValue: selectedTeam.stagione,
       decoration: const InputDecoration(
         labelText: 'Stagione',
         hintText: '2018',
       ),
       onSaved: (String value) {
-        model.selectedTeam.stagione = value;
+        selectedTeam.stagione = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
