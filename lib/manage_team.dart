@@ -14,8 +14,10 @@ class ManageTeam extends StatefulWidget {
 
 class _ManageTeamState extends State<ManageTeam> {
   _ManageTeamState({this.selectedTeam}) {
-    _coloreMaglia = new Color(int
-        .parse(selectedTeam.coloreMaglia.substring(8, 16), radix: 16));
+    if (selectedTeam.coloreMaglia != 'null') {
+      _coloreMaglia = new Color(int
+          .parse(selectedTeam.coloreMaglia.substring(8, 16), radix: 16));
+    }
     checkTextColor(_coloreMaglia);
   }
 
@@ -106,17 +108,6 @@ class _ManageTeamState extends State<ManageTeam> {
     Navigator.of(context).pop();
   }
 
-  void _selectColor() {
-    showDialog<Color>(
-      context: context,
-      child: new SetnoteColorSelector(),
-    ).then((Color newColor) {
-      _coloreMaglia = newColor;
-      selectedTeam.coloreMaglia = newColor.toString();
-      checkTextColor(newColor);
-    });
-  }
-
   void checkTextColor(Color color) {
     if (color == null) {
       _whiteButtonText = false;
@@ -137,7 +128,14 @@ class _ManageTeamState extends State<ManageTeam> {
         style: new TextStyle(
             color: (_whiteButtonText ? Colors.white : Colors.black)),
       ),
-      onPressed: _selectColor,
+      onPressed: () => showDialog<Color>(
+        context: context,
+        child: new SetnoteColorSelector(),
+      ).then((Color newColor) {
+        _coloreMaglia = newColor;
+        selectedTeam.coloreMaglia = newColor.toString();
+        checkTextColor(newColor);
+      }),
     );
   }
 

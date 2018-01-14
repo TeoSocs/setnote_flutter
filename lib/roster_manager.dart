@@ -19,7 +19,7 @@ class RosterManager extends StatefulWidget {
 
 class _RosterManagerState extends State<RosterManager> {
   _RosterManagerState({this.team}) {
-    rosterDB = constant.teamDB.child(team.key + '/giocatori');
+    rosterDB = FirebaseDatabase.instance.reference().child('squadre/' + team.key + '/giocatori');
   }
   TeamInstance team;
   bool logged = false;
@@ -34,14 +34,14 @@ class _RosterManagerState extends State<RosterManager> {
       title: (media.orientation == Orientation.landscape &&
               media.size.width >= 950.00
           ? "Gestisci formazione"
-          : team.nomeSquadra),
+          : team.nome),
       drawer: new Drawer(
         child: new ListView(children: <Widget>[
           new DrawerHeader(
             child: new Align(
               alignment: Alignment.bottomLeft,
               child: new Text(
-                team.nomeSquadra,
+                team.nome,
                 style: Theme.of(context).primaryTextTheme.headline,
               ),
             ),

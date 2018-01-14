@@ -28,8 +28,10 @@ class _MyTeamPageState extends State<MyTeamPage> {
           child: new ListTile(
             leading: new Icon(
               Icons.group,
-              color: new Color(
-                  int.parse(team.coloreMaglia.substring(8, 16), radix: 16)),
+              color: (team.coloreMaglia != 'null'
+              ? new Color(
+                  int.parse(team.coloreMaglia.substring(8, 16), radix: 16))
+              : Theme.of(context).buttonColor),
             ),
             title: new Text(team.nome),
             subtitle: new Text(team.categoria + ' - ' + team.stagione),
