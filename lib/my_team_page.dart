@@ -11,6 +11,9 @@ class MyTeamPage extends StatefulWidget {
 }
 
 class _MyTeamPageState extends State<MyTeamPage> {
+  _MyTeamPageState() {
+    LocalDB.readFromFile();
+  }
   bool reloadNeeded = false;
 
   @override

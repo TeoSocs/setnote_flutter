@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 abstract class LocalDB {
@@ -21,20 +21,18 @@ abstract class LocalDB {
 
   static Future<Null> add(TeamInstance newTeam) async {
     teams.add(newTeam);
-    // String dir = (await getApplicationDocumentsDirectory()).path;
-    // File file = new File('$dir/localTeams.snt');
-    // file.writeAsString(JSON.encode(teams));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('localTeams', JSON.encode(teams));
   }
 
-  // static Future<Null> readFromFile() async {
-  //   try {
-  //     String dir = (await getApplicationDocumentsDirectory()).path;
-  //     File file = new File('$dir/localTeams.snt');
-  //     teams = JSON.decode(file.readAsStringSync());
-  //   } on FileSystemException {
-  //     print('Errore nella lettura del file');
-  //   }
-  // }
+  static Future<Null> readFromFile() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      teams = JSON.decode(prefs.getString('localTeams'));
+    } catch(exception) {
+      print("Errore nella lettura del file");
+    }
+  }
 }
 
 class TeamInstance {
