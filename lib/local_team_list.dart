@@ -1,4 +1,20 @@
-final myTeams = new List<TeamInstance>();
+class LocalDB {
+  static final teams = new List<TeamInstance>();
+
+  static bool has(String key) {
+    for (var team in teams) {
+      if (team.key == key) return true;
+    }
+    return false;
+  }
+
+  static TeamInstance getByKey(String key) {
+    for (var team in teams) {
+      if (team.key == key) return team;
+    }
+    return null;
+  }
+}
 
 class TeamInstance {
   String nomeSquadra = '';
@@ -8,6 +24,7 @@ class TeamInstance {
   String stagione = '';
   String coloreMaglia = '';
   String key = '';
+  String ultimaModifica;
   List<PlayerInstance> giocatori;
 }
 

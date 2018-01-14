@@ -1,7 +1,8 @@
-import 'local_team_list.dart' as local;
+import 'local_team_list.dart';
 import 'package:flutter/material.dart';
 import 'package:setnote_flutter/setnote_widgets.dart';
-
+import 'team_downloader.dart';
+import 'dart:async';
 
 class MyTeamPage extends StatefulWidget {
   @override
@@ -14,7 +15,7 @@ class _MyTeamPageState extends State<MyTeamPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> teamList = new List<Widget>();
-    for (local.TeamInstance team in local.myTeams) {
+    for (TeamInstance team in LocalDB.teams) {
       teamList.add(new Card(
         child: new ListTile(
           leading: const Icon(Icons.group),
@@ -24,9 +25,19 @@ class _MyTeamPageState extends State<MyTeamPage> {
       ));
     }
     return new SetnoteBaseLayout(
-      title:'MyTeamPage',
+      title: 'MyTeamPage',
       child: new ListView(
-        children: reloadNeeded?[]:teamList,
+        children: reloadNeeded ? [] : teamList,
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: () async {
+          reloadNeeded = true;
+          await Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) =>
+              new TeamDownloader()));
+          setState(() => reloadNeeded = false);
+        },
+        child: const Icon(Icons.cloud_download),
       ),
     );
   }

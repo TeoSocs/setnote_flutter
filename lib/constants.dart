@@ -1,4 +1,3 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 const app_name = "Setnote";
@@ -15,5 +14,3 @@ const formations_label = "Formazioni";
 const standard_margin = const EdgeInsets.all(10.0);
 const lateral_margin = const EdgeInsets.symmetric(horizontal: 16.0);
 const form_page_margin = const EdgeInsets.symmetric(horizontal: 100.0);
-
-final teamDB = FirebaseDatabase.instance.reference().child('squadre');
