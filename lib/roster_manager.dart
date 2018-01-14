@@ -25,6 +25,7 @@ class _RosterManagerState extends State<RosterManager> {
   bool logged = false;
   DatabaseReference rosterDB;
 
+
   @override
   Widget build(BuildContext context) {
     login();
@@ -64,8 +65,8 @@ class _RosterManagerState extends State<RosterManager> {
                     query: rosterDB,
                     sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
                     padding: constant.standard_margin,
-                    itemBuilder:
-                        (_, DataSnapshot snapshot, Animation<double> animation) {
+                    itemBuilder: (_, DataSnapshot snapshot,
+                        Animation<double> animation) {
                       return _newListEntry(snapshot);
                     },
                   ),
@@ -79,17 +80,16 @@ class _RosterManagerState extends State<RosterManager> {
             ),
             new Expanded(
               child: new Scaffold(
-                body: new Center(
-                  child: new ListView(
-                    shrinkWrap: true,
-                    children: <Widget>[
-                      new Text("qui ci andranno i giocatori selezionati"),
-                      new Text("qui ci andranno i giocatori selezionati"),
-                      new Text("qui ci andranno i giocatori selezionati"),
-                    ],
-                  ),
-                )
-              ),
+                  body: new Center(
+                child: new ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    new Text("qui ci andranno i giocatori selezionati"),
+                    new Text("qui ci andranno i giocatori selezionati"),
+                    new Text("qui ci andranno i giocatori selezionati"),
+                  ],
+                ),
+              )),
             ),
           ],
         ),
@@ -103,16 +103,25 @@ class _RosterManagerState extends State<RosterManager> {
   }
 
   Widget _newListEntry(DataSnapshot snapshot) {
+    bool _titolare = false;
     return new Card(
-        child: new FlatButton(
-      onPressed: null,
-      child: new ListTile(
-        leading: new Icon(
-          Icons.android,
-        ),
-        title: new Text(snapshot.value['nome']),
-        subtitle: new Text(snapshot.value['ruolo']),
-      ),
-    ));
+      child: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new FlatButton(
+              onPressed: null,
+              child: new ListTile(
+                leading: new Icon(
+                  Icons.android,
+                ),
+                title: new Text(snapshot.value['nome']),
+                subtitle: new Text(snapshot.value['ruolo']),
+              ),
+            ),
+          ),
+          new Checkbox(value: _titolare, onChanged: (bool newValue) => setState(() => _titolare = newValue)),
+        ],
+      )
+    );
   }
 }
