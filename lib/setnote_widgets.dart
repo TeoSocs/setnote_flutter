@@ -21,7 +21,7 @@ class SetnoteButton extends StatelessWidget {
 }
 
 class SetnoteBaseLayout extends StatelessWidget {
-  SetnoteBaseLayout({this.child, this.title, this.drawer}) {
+  SetnoteBaseLayout({this.child, this.title, this.drawer, this.floatingActionButton}) {
     if (drawer == null) {
       drawer = new MyDrawer();
     }
@@ -29,6 +29,7 @@ class SetnoteBaseLayout extends StatelessWidget {
   final Widget child;
   final String title;
   Widget drawer;
+  Widget floatingActionButton;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +42,7 @@ class SetnoteBaseLayout extends StatelessWidget {
             appBar: new AppBar(
               title: new Text(title),
             ),
+            floatingActionButton: floatingActionButton,
             body: new Row(
               children: <Widget>[
                 new Drawer(
@@ -58,6 +60,7 @@ class SetnoteBaseLayout extends StatelessWidget {
         } else {
           return new Scaffold(
             appBar: new AppBar(title: new Text(title)),
+            floatingActionButton: floatingActionButton,
             drawer: new Drawer(
               child: new MyDrawer(),
             ),

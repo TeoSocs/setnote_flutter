@@ -31,25 +31,24 @@ class _TeamPageState extends State<TeamPage> {
       title: title,
       child: new LoadingWidget(
         condition: logged,
-        child: new Scaffold(
-          body: new FirebaseAnimatedList(
-            query: constant.teamDB,
-            sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
-            padding: constant.standard_margin,
-            itemBuilder:
-                (_, DataSnapshot snapshot, Animation<double> animation) {
-              return _newListEntry(snapshot);
-            },
-          ),
-          floatingActionButton: new FloatingActionButton(
-            onPressed: () async {
-              await Navigator.of(context).push(new MaterialPageRoute<Null>(
-                  builder: (BuildContext context) => new ManageTeam(selectedTeam: new TeamInstance(),)));
-            },
-            tooltip: 'Aggiungi', // used by assistive technologies
-            child: new Icon(Icons.add),
-          ),
+        child: new FirebaseAnimatedList(
+          query: constant.teamDB,
+          sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
+          padding: constant.standard_margin,
+          itemBuilder: (_, DataSnapshot snapshot, Animation<double> animation) {
+            return _newListEntry(snapshot);
+          },
         ),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: () async {
+          await Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) => new ManageTeam(
+                    selectedTeam: new TeamInstance(),
+                  )));
+        },
+        tooltip: 'Aggiungi', // used by assistive technologies
+        child: new Icon(Icons.add),
       ),
     );
   }
@@ -80,9 +79,8 @@ class _TeamPageState extends State<TeamPage> {
         selectedTeam.stagione = snapshot.value['categoria'];
         selectedTeam.coloreMaglia = coloreMaglia;
         await Navigator.of(context).push(new MaterialPageRoute<Null>(
-            builder: (BuildContext context) => new ManageTeam(
-              selectedTeam: selectedTeam
-            )));
+            builder: (BuildContext context) =>
+                new ManageTeam(selectedTeam: selectedTeam)));
       },
       child: new ListTile(
         leading: new Icon(
