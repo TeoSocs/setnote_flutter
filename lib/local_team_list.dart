@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 abstract class LocalDB {
+  static const String prefKey = 'localTeams';
   static List<Map<String,dynamic>> teams = new List<Map<String,dynamic>>();
 
   static bool has(String key) {
@@ -21,17 +22,17 @@ abstract class LocalDB {
 
   static Future<Null> add(Map<String,dynamic> newTeam) async {
     teams.add(newTeam);
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setString('localTeams', JSON.encode(teams));
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(prefKey, JSON.encode(teams));
   }
 
   static Future<Null> readFromFile() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // try {
-    //   teams = JSON.decode(prefs.getString('localTeams'));
-    // } catch(exception) {
-    //   print("Errore nella lettura del file");
-    // }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      teams = JSON.decode(prefs.getString(prefKey));
+    } catch(exception) {
+      print("Errore nella lettura del file");
+    }
   }
 }
 
