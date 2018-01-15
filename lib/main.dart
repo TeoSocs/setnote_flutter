@@ -11,7 +11,8 @@ import 'my_team_page.dart';
 
 
 void main() {
-  SharedPreferences.setMockInitialValues({'flutter.localTeams':'[{"ultima_modifica":"123455","key":"chiavesecondasquadra","stagione":"2018","categoria":"Serie X Femminile","nome":"Vattelapesca","colore_maglia":"Color(0xff214d82)","allenatore":"allenatore2","assistente":"assistente2"}]'});
+  // SharedPreferences.setMockInitialValues({'flutter.localTeams':'[{"ultima_modifica":"123455","key":"chiavesecondasquadra","stagione":"2018","categoria":"Serie X Femminile","nome":"Vattelapesca","colore_maglia":"Color(0xff214d82)","allenatore":"allenatore2","assistente":"assistente2"}]'});
+  // SharedPreferences.setMockInitialValues({});
   runApp(new MaterialApp(
     title: constant.app_name,
     home: new MainMenu(), // becomes the route named '/'

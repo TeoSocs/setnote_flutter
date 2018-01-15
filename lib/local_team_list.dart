@@ -4,7 +4,7 @@ import 'dart:convert';
 
 abstract class LocalDB {
   static const String prefKey = 'localTeams';
-  static List<Map<String,dynamic>> teams = new List<Map<String,dynamic>>();
+  static List<Map<String, dynamic>> teams = new List<Map<String, dynamic>>();
 
   static bool has(String key) {
     for (var team in teams) {
@@ -13,14 +13,14 @@ abstract class LocalDB {
     return false;
   }
 
-  static Map<String,dynamic> getByKey(String key) {
+  static Map<String, dynamic> getByKey(String key) {
     for (var team in teams) {
       if (team['key'] == key) return team;
     }
     return null;
   }
 
-  static Future<Null> add(Map<String,dynamic> newTeam) async {
+  static Future<Null> add(Map<String, dynamic> newTeam) async {
     teams.add(newTeam);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(prefKey, JSON.encode(teams));
@@ -30,8 +30,9 @@ abstract class LocalDB {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       teams = JSON.decode(prefs.getString(prefKey));
-    } catch(exception) {
-      print("Errore nella lettura del file");
+    } on NoSuchMethodError{
+      print(
+          "Errore nella lettura delle sharedPreferences, probabilmente non sono ancora state create");
     }
   }
 }
@@ -46,7 +47,7 @@ abstract class LocalDB {
 //   String key = '';
 //   String ultimaModifica;
 //   List<PlayerInstance> giocatori;
-// 
+//
 //   Future<Null> aggiornaGiocatori() async {
 //     return null;
 //   }
@@ -64,13 +65,13 @@ abstract class LocalDB {
 //   String peso = '';
 //   String ruolo = '';
 // }
-// 
+//
 // class PlayerData {
 //   List<FundamentalData> battute;
 //   List<FundamentalData> ricezioni;
 //   List<FundamentalData> attacchi;
 // }
-// 
+//
 // class FundamentalData {
 //   int doppiopiu;
 //   int piu;
