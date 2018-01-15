@@ -7,7 +7,6 @@ import 'dart:async';
 import 'constants.dart' as constant;
 import 'local_team_list.dart';
 
-
 class TeamDownloader extends StatefulWidget {
   @override
   State createState() => new _TeamDownloaderState();
@@ -45,7 +44,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     Color coloreMaglia;
     String state;
     if (LocalDB.has(snapshot.key)) {
-      if (int.parse(snapshot.value['ultima_modifica']) > int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica'])) {
+      if (int.parse(snapshot.value['ultima_modifica']) >
+          int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica'])) {
         state = 'outdated';
       } else {
         state = 'updated';
@@ -53,7 +53,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     } else {
       state = 'absent';
     }
-    if ((snapshot.value['colore_maglia'] != null) &&
+    if ((snapshot.value['colore_maglia'] != null) ||
         (snapshot.value['colore_maglia'] != 'null')) {
       coloreMaglia = new Color(int
           .parse(snapshot.value['colore_maglia'].substring(8, 16), radix: 16));
@@ -62,40 +62,37 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     }
     return new Card(
         child: new FlatButton(
-          onPressed: () async {
-            setState(() => updated = false);
-            if (state == 'absent') {
-              Map<String,dynamic> newTeam = new Map<String,dynamic>();
-              newTeam['ultima_modifica'] = snapshot.value['ultima_modifica'];
-              newTeam['key'] = snapshot.key;
-              newTeam['stagione'] = snapshot.value['stagione'];
-              newTeam['categoria'] = snapshot.value['categoria'];
-              newTeam['nome'] = snapshot.value['nome'];
-              newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
-              newTeam['allenatore'] = snapshot.value['allenatore'];
-              newTeam['assistente'] = snapshot.value['assistente'];
-              // await newTeam.aggiornaGiocatori();
+            onPressed: () async {
+              setState(() => updated = false);
+              if (state == 'absent') {
+                Map<String, dynamic> newTeam = new Map<String, dynamic>();
+                newTeam['ultima_modifica'] = snapshot.value['ultima_modifica'];
+                newTeam['key'] = snapshot.key;
+                newTeam['stagione'] = snapshot.value['stagione'];
+                newTeam['categoria'] = snapshot.value['categoria'];
+                newTeam['nome'] = snapshot.value['nome'];
+                newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
+                newTeam['allenatore'] = snapshot.value['allenatore'];
+                newTeam['assistente'] = snapshot.value['assistente'];
+                // await newTeam.aggiornaGiocatori();
 
-              LocalDB.add(newTeam);
-            }
-            Navigator.of(context).pop();
-          },
-          child: new ListTile(
-            leading: new Icon(
-              Icons.group,
-              color: coloreMaglia,
-            ),
-            title: new Text(snapshot.value['nome']),
-            subtitle: new Text(
-                snapshot.value['categoria'] + ' - ' + snapshot.value['stagione']),
-            trailing: (state == 'absent'
-            ? const Icon(Icons.cloud_off)
-            : (state == 'updated'
-                ? const Icon(Icons.cloud_done)
-                : const Icon(Icons.cloud)
-            ))
-          )
-        ));
+                LocalDB.add(newTeam);
+              }
+              Navigator.of(context).pop();
+            },
+            child: new ListTile(
+                leading: new Icon(
+                  Icons.group,
+                  color: coloreMaglia,
+                ),
+                title: new Text(snapshot.value['nome']),
+                subtitle: new Text(snapshot.value['categoria'] +
+                    ' - ' +
+                    snapshot.value['stagione']),
+                trailing: (state == 'absent'
+                    ? const Icon(Icons.cloud_off)
+                    : (state == 'updated'
+                        ? const Icon(Icons.cloud_done)
+                        : const Icon(Icons.cloud))))));
   }
-
 }

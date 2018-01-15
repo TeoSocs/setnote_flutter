@@ -7,14 +7,14 @@ abstract class LocalDB {
 
   static bool has(String key) {
     for (var team in teams) {
-      if (team[key] == key) return true;
+      if (team['key'] == key) return true;
     }
     return false;
   }
 
   static Map<String,dynamic> getByKey(String key) {
     for (var team in teams) {
-      if (team[key] == key) return team;
+      if (team['key'] == key) return team;
     }
     return null;
   }
