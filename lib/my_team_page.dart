@@ -19,7 +19,7 @@ class _MyTeamPageState extends State<MyTeamPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> teamList = new List<Widget>();
-    for (TeamInstance team in LocalDB.teams) {
+    for (Map<String,dynamic> team in LocalDB.teams) {
       teamList.add(new Card(
         child: new FlatButton(
           onPressed: () async {
@@ -31,13 +31,13 @@ class _MyTeamPageState extends State<MyTeamPage> {
           child: new ListTile(
             leading: new Icon(
               Icons.group,
-              color: (team.coloreMaglia != 'null'
+              color: (team['colore_maglia'] != 'null'
               ? new Color(
-                  int.parse(team.coloreMaglia.substring(8, 16), radix: 16))
+                  int.parse(team['colore_maglia'].substring(8, 16), radix: 16))
               : Theme.of(context).buttonColor),
             ),
-            title: new Text(team.nome),
-            subtitle: new Text(team.categoria + ' - ' + team.stagione),
+            title: new Text(team['nome']),
+            subtitle: new Text(team['categoria'] + ' - ' + team['stagione']),
           ),
         ),
       ));

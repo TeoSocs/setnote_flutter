@@ -7,21 +7,21 @@ import 'constants.dart' as constant;
 
 class ManageTeam extends StatefulWidget {
   ManageTeam({this.selectedTeam});
-  final TeamInstance selectedTeam;
+  final Map<String,dynamic> selectedTeam;
   @override
   _ManageTeamState createState() => new _ManageTeamState(selectedTeam: selectedTeam);
 }
 
 class _ManageTeamState extends State<ManageTeam> {
   _ManageTeamState({this.selectedTeam}) {
-    if (selectedTeam.coloreMaglia != 'null') {
+    if (selectedTeam['colore_maglia'] != 'null') {
       _coloreMaglia = new Color(int
-          .parse(selectedTeam.coloreMaglia.substring(8, 16), radix: 16));
+          .parse(selectedTeam['colore_maglia'].substring(8, 16), radix: 16));
     }
     checkTextColor(_coloreMaglia);
   }
 
-  TeamInstance selectedTeam;
+  Map<String,dynamic> selectedTeam;
   Color _coloreMaglia;
   bool _whiteButtonText;
   final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
@@ -31,11 +31,11 @@ class _ManageTeamState extends State<ManageTeam> {
     return new SetnoteBaseLayout(
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.check),
-        onPressed: (selectedTeam.key == null
+        onPressed: (selectedTeam['key'] == null
             ? () => submit(context)
             : () => update(context)),
       ),
-      title: (selectedTeam.key == null ? "Nuova squadra" : "Aggiorna squadra"),
+      title: (selectedTeam['key'] == null ? "Nuova squadra" : "Aggiorna squadra"),
       child: new Center(
         child: new LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
@@ -133,7 +133,7 @@ class _ManageTeamState extends State<ManageTeam> {
         child: new SetnoteColorSelector(),
       ).then((Color newColor) {
         _coloreMaglia = newColor;
-        selectedTeam.coloreMaglia = newColor.toString();
+        selectedTeam['colore_maglia'] = newColor.toString();
         checkTextColor(newColor);
       }),
     );
@@ -141,13 +141,13 @@ class _ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputNomeSquadra() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam.nome,
+      initialValue: selectedTeam['nome'],
       decoration: const InputDecoration(
         labelText: 'Nome squadra',
         hintText: 'CAME Casier',
       ),
       onSaved: (String value) {
-        selectedTeam.nome = value;
+        selectedTeam['nome'] = value;
       },
     );
 
@@ -167,13 +167,13 @@ class _ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputAllenatore() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam.allenatore,
+      initialValue: selectedTeam['allenatore'],
       decoration: const InputDecoration(
         labelText: 'Allenatore',
         hintText: 'G. Povia',
       ),
       onSaved: (String value) {
-        selectedTeam.allenatore = value;
+        selectedTeam['allenatore'] = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -192,13 +192,13 @@ class _ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputAssistente() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam.assistente,
+      initialValue: selectedTeam['assistente'],
       decoration: const InputDecoration(
         labelText: 'Assistente',
         hintText: 'A. Uscolo',
       ),
       onSaved: (String value) {
-        selectedTeam.assistente = value;
+        selectedTeam['assistente'] = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -217,13 +217,13 @@ class _ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputCategoria() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam.categoria,
+      initialValue: selectedTeam['categoria'],
       decoration: const InputDecoration(
         labelText: 'Categoria',
         hintText: 'Serie C Maschile',
       ),
       onSaved: (String value) {
-        selectedTeam.categoria = value;
+        selectedTeam['categoria'] = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -242,13 +242,13 @@ class _ManageTeamState extends State<ManageTeam> {
 
   Widget _newInputStagione() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam.stagione,
+      initialValue: selectedTeam['stagione'],
       decoration: const InputDecoration(
         labelText: 'Stagione',
         hintText: '2018',
       ),
       onSaved: (String value) {
-        selectedTeam.stagione = value;
+        selectedTeam['stagione'] = value;
       },
     );
     MediaQueryData media = MediaQuery.of(context);
@@ -266,7 +266,7 @@ class _ManageTeamState extends State<ManageTeam> {
   }
 
   Widget _newGestisciFormazione() {
-    if (selectedTeam.key == null) {
+    if (selectedTeam['key'] == null) {
       return const Text("");
     }
     return new Padding(

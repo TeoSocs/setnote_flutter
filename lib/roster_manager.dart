@@ -11,7 +11,7 @@ import 'google_auth.dart';
 
 class RosterManager extends StatefulWidget {
   RosterManager({this.team});
-  final TeamInstance team;
+  final Map<String,dynamic> team;
 
   @override
   State createState() => new _RosterManagerState(team: team);
@@ -19,9 +19,9 @@ class RosterManager extends StatefulWidget {
 
 class _RosterManagerState extends State<RosterManager> {
   _RosterManagerState({this.team}) {
-    rosterDB = FirebaseDatabase.instance.reference().child('squadre/' + team.key + '/giocatori');
+    rosterDB = FirebaseDatabase.instance.reference().child('squadre/' + team['key'] + '/giocatori');
   }
-  TeamInstance team;
+  Map<String,dynamic> team;
   bool logged = false;
   DatabaseReference rosterDB;
 
@@ -34,14 +34,14 @@ class _RosterManagerState extends State<RosterManager> {
       title: (media.orientation == Orientation.landscape &&
               media.size.width >= 950.00
           ? "Gestisci formazione"
-          : team.nome),
+          : team['nome']),
       drawer: new Drawer(
         child: new ListView(children: <Widget>[
           new DrawerHeader(
             child: new Align(
               alignment: Alignment.bottomLeft,
               child: new Text(
-                team.nome,
+                team['nome'],
                 style: Theme.of(context).primaryTextTheme.headline,
               ),
             ),
@@ -50,7 +50,7 @@ class _RosterManagerState extends State<RosterManager> {
             ),
           ),
           new ListTile(
-            title: new Text(team.categoria + ' - ' + team.stagione),
+            title: new Text(team['categoria'] + ' - ' + team['stagione']),
           ),
         ]),
       ),

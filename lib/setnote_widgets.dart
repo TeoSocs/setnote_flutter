@@ -28,8 +28,8 @@ class SetnoteBaseLayout extends StatelessWidget {
   }
   final Widget child;
   final String title;
+  final Widget floatingActionButton;
   Widget drawer;
-  Widget floatingActionButton;
 
   @override
   Widget build(BuildContext context) {

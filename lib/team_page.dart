@@ -44,7 +44,7 @@ class _TeamPageState extends State<TeamPage> {
         onPressed: () async {
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) => new ManageTeam(
-                    selectedTeam: new TeamInstance(),
+                    selectedTeam: new Map<String,dynamic>(),
                   )));
         },
         tooltip: 'Aggiungi', // used by assistive technologies

@@ -45,7 +45,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     Color coloreMaglia;
     String state;
     if (LocalDB.has(snapshot.key)) {
-      if (int.parse(snapshot.value['ultima_modifica']) > int.parse(LocalDB.getByKey(snapshot.key).ultimaModifica)) {
+      if (int.parse(snapshot.value['ultima_modifica']) > int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica'])) {
         state = 'outdated';
       } else {
         state = 'updated';
@@ -65,16 +65,16 @@ class _TeamDownloaderState extends State<TeamDownloader> {
           onPressed: () async {
             setState(() => updated = false);
             if (state == 'absent') {
-              TeamInstance newTeam = new TeamInstance();
-              newTeam.ultimaModifica = snapshot.value['ultima_modifica'];
-              newTeam.key = snapshot.key;
-              newTeam.stagione = snapshot.value['stagione'];
-              newTeam.categoria = snapshot.value['categoria'];
-              newTeam.nome = snapshot.value['nome'];
-              newTeam.coloreMaglia = snapshot.value['colore_maglia'];
-              newTeam.allenatore = snapshot.value['allenatore'];
-              newTeam.assistente = snapshot.value['assistente'];
-              await newTeam.aggiornaGiocatori();
+              Map<String,dynamic> newTeam = new Map<String,dynamic>();
+              newTeam['ultima_modifica'] = snapshot.value['ultima_modifica'];
+              newTeam['key'] = snapshot.key;
+              newTeam['stagione'] = snapshot.value['stagione'];
+              newTeam['categoria'] = snapshot.value['categoria'];
+              newTeam['nome'] = snapshot.value['nome'];
+              newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
+              newTeam['allenatore'] = snapshot.value['allenatore'];
+              newTeam['assistente'] = snapshot.value['assistente'];
+              // await newTeam.aggiornaGiocatori();
 
               LocalDB.add(newTeam);
             }
