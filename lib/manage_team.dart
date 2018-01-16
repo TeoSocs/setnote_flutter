@@ -14,10 +14,15 @@ class ManageTeam extends StatefulWidget {
 
 class _ManageTeamState extends State<ManageTeam> {
   _ManageTeamState({this.selectedTeam}) {
-    if (selectedTeam['colore_maglia'] != 'null') {
+    if (selectedTeam['colore_maglia'] != 'null' && selectedTeam['colore_maglia'] != null) {
       _coloreMaglia = new Color(int
           .parse(selectedTeam['colore_maglia'].substring(8, 16), radix: 16));
     }
+    if (selectedTeam['nome'] == null) selectedTeam['nome'] = '';
+    if (selectedTeam['allenatore'] == null) selectedTeam['allenatore'] = '';
+    if (selectedTeam['assistente'] == null) selectedTeam['assistente'] = '';
+    if (selectedTeam['categoria'] == null) selectedTeam['categoria'] = '';
+    if (selectedTeam['stagione'] == null) selectedTeam['stagione'] = '';
     checkTextColor(_coloreMaglia);
   }
 
@@ -31,9 +36,7 @@ class _ManageTeamState extends State<ManageTeam> {
     return new SetnoteBaseLayout(
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.check),
-        onPressed: (selectedTeam['key'] == null
-            ? () => submit(context)
-            : () => update(context)),
+        onPressed: () => update(context),
       ),
       title: (selectedTeam['key'] == null ? "Nuova squadra" : "Aggiorna squadra"),
       child: new Center(
@@ -96,10 +99,6 @@ class _ManageTeamState extends State<ManageTeam> {
         }),
       ),
     );
-  }
-
-  void submit(BuildContext context) {
-
   }
 
   void update(BuildContext context) {

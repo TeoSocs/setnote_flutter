@@ -14,7 +14,6 @@ class TeamDownloader extends StatefulWidget {
 
 class _TeamDownloaderState extends State<TeamDownloader> {
   bool logged = false;
-  bool updated = true;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     return new SetnoteBaseLayout(
       title: "Squadre nel cloud",
       child: new LoadingWidget(
-        condition: logged && updated,
+        condition: logged,
         child: new FirebaseAnimatedList(
           query: FirebaseDatabase.instance.reference().child('squadre'),
           sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
@@ -31,6 +30,12 @@ class _TeamDownloaderState extends State<TeamDownloader> {
             return _newListEntry(snapshot);
           },
         ),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        child: const Icon(Icons.person_add),
+        onPressed: () async => await Navigator.of(context).push(
+            new MaterialPageRoute<Null>(
+                builder: (BuildContext context) => new TeamUploader())),
       ),
     );
   }
@@ -49,9 +54,10 @@ class _TeamDownloaderState extends State<TeamDownloader> {
 
       if (remote > local) {
         state = 'outdated';
-      } else if (remote == local){
+      } else if (remote == local) {
         state = 'updated';
-      } else { // if remote < local
+      } else {
+        // if remote < local
         state = 'ahead';
       }
     } else {
@@ -95,7 +101,6 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   }
 
   Future<Null> _clickedTeam(String state, DataSnapshot snapshot) async {
-    setState(() => updated = false);
     switch (state) {
       case 'absent':
         Map<String, dynamic> newTeam = new Map<String, dynamic>();
@@ -112,27 +117,27 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         break;
       case 'outdated':
         bool agree = await showDialog<bool>(
-          context: context,
-          child: new AlertDialog(
-            content: const Text('Questo sovrascriverà i dati locali di questa squadra, sei sicuro?'),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('Annulla'),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              ),
-              new FlatButton(
-                child: new Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-            ],
-          )
-        );
+            context: context,
+            child: new AlertDialog(
+              content: const Text(
+                  'Questo sovrascriverà i dati locali di questa squadra, sei sicuro?'),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text('Annulla'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                new FlatButton(
+                  child: new Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            ));
         if (agree) {
-          Map<String,dynamic> team = LocalDB.getByKey(snapshot.key);
+          Map<String, dynamic> team = LocalDB.getByKey(snapshot.key);
           team['ultima_modifica'] = snapshot.value['ultima_modifica'];
           team['key'] = snapshot.key;
           team['stagione'] = snapshot.value['stagione'];
@@ -148,7 +153,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         bool agree = await showDialog<bool>(
             context: context,
             child: new AlertDialog(
-              content: const Text('Questo caricherà i tuoi dati locali nel database, sei sicuro?'),
+              content: const Text(
+                  'Questo caricherà i tuoi dati locali nel database, sei sicuro?'),
               actions: <Widget>[
                 new FlatButton(
                   child: new Text('Annulla'),
@@ -163,11 +169,14 @@ class _TeamDownloaderState extends State<TeamDownloader> {
                   },
                 ),
               ],
-            )
-        );
+            ));
         if (agree) {
-          Map<String,dynamic> team = LocalDB.getByKey(snapshot.key);
-          FirebaseDatabase.instance.reference().child('squadre').child(snapshot.key).set({
+          Map<String, dynamic> team = LocalDB.getByKey(snapshot.key);
+          FirebaseDatabase.instance
+              .reference()
+              .child('squadre')
+              .child(snapshot.key)
+              .set({
             'ultima_modifica': team['ultima_modifica'],
             'key': team['key'],
             'stagione': team['stagione'],
@@ -184,5 +193,90 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         break;
     }
     Navigator.of(context).pop();
+  }
+}
+
+class TeamUploader extends StatefulWidget {
+  @override
+  State createState() => new _TeamUploaderState();
+}
+
+class _TeamUploaderState extends State<TeamUploader> {
+  _TeamUploaderState() {
+    LocalDB.readFromFile();
+  }
+  bool reloadNeeded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> teamList = new List<Widget>();
+    for (Map<String, dynamic> team in LocalDB.teams) {
+      teamList.add(new Card(
+        child: new FlatButton(
+          onPressed: () async {
+            reloadNeeded = true;
+            bool agree = await showDialog<bool>(
+                context: context,
+                child: new AlertDialog(
+                  content: const Text(
+                      'Questo caricherà i tuoi dati locali nel database, sei sicuro?'),
+                  actions: <Widget>[
+                    new FlatButton(
+                      child: new Text('Annulla'),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                    new FlatButton(
+                      child: new Text('Ok'),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ],
+                ));
+            if (agree) {
+              DatabaseReference newTeam = FirebaseDatabase.instance
+                  .reference()
+                  .child('squadre')
+                  .push();
+              team['key']=newTeam.key;
+              LocalDB.store();
+              newTeam.set({
+                'ultima_modifica': team['ultima_modifica'],
+                'key': team['key'],
+                'stagione': team['stagione'],
+                'categoria': team['categoria'],
+                'nome': team['nome'],
+                'colore_maglia': team['colore_maglia'],
+                'allenatore': team['allenatore'],
+                'assistente': team['assistente'],
+              });
+              analytics.logEvent(name: 'aggiunta_squadra');
+            }
+            Navigator.of(context).pop();
+          },
+          child: new ListTile(
+            leading: new Icon(
+              Icons.group,
+              color: (team['colore_maglia'] != 'null' &&
+                      team['colore_maglia'] != null
+                  ? new Color(int.parse(team['colore_maglia'].substring(8, 16),
+                      radix: 16))
+                  : Theme.of(context).buttonColor),
+            ),
+            title: new Text(team['nome']),
+            subtitle: new Text(team['categoria'] + ' - ' + team['stagione']),
+          ),
+        ),
+      ));
+    }
+    return new SetnoteBaseLayout(
+      title: 'Squadre salvate',
+      child: new ListView(
+        padding: constant.standard_margin,
+        children: reloadNeeded ? [] : teamList,
+      ),
+    );
   }
 }
