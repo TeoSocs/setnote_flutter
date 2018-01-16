@@ -145,6 +145,40 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         }
         break;
       case 'ahead':
+        bool agree = await showDialog<bool>(
+            context: context,
+            child: new AlertDialog(
+              content: const Text('Questo caricherà i tuoi dati locali nel database, sei sicuro?'),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text('Annulla'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                new FlatButton(
+                  child: new Text('Ok'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            )
+        );
+        if (agree) {
+          Map<String,dynamic> team = LocalDB.getByKey(snapshot.key);
+          FirebaseDatabase.instance.reference().child('squadre').child(snapshot.key).set({
+            'ultima_modifica': team['ultima_modifica'],
+            'key': team['key'],
+            'stagione': team['stagione'],
+            'categoria': team['categoria'],
+            'nome': team['nome'],
+            'colore_maglia': team['colore_maglia'],
+            'allenatore': team['allenatore'],
+            'assistente': team['assistente'],
+          });
+          analytics.logEvent(name: 'modificata_squadra');
+        }
         break;
       case 'updated':
         break;

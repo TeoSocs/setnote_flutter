@@ -55,7 +55,7 @@ class _MyTeamPageState extends State<MyTeamPage> {
               builder: (BuildContext context) => new TeamDownloader()));
           setState(() => reloadNeeded = false);
         },
-        child: const Icon(Icons.cloud_download),
+        child: const Icon(Icons.cloud),
       ),
     );
   }
