@@ -78,28 +78,10 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       case 'ahead':
         cloudIcon = const Icon(Icons.cloud_upload);
         break;
-
     }
     return new Card(
         child: new FlatButton(
-            onPressed: () async {
-              setState(() => updated = false);
-              if (state == 'absent') {
-                Map<String, dynamic> newTeam = new Map<String, dynamic>();
-                newTeam['ultima_modifica'] = snapshot.value['ultima_modifica'];
-                newTeam['key'] = snapshot.key;
-                newTeam['stagione'] = snapshot.value['stagione'];
-                newTeam['categoria'] = snapshot.value['categoria'];
-                newTeam['nome'] = snapshot.value['nome'];
-                newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
-                newTeam['allenatore'] = snapshot.value['allenatore'];
-                newTeam['assistente'] = snapshot.value['assistente'];
-                // await newTeam.aggiornaGiocatori();
-
-                LocalDB.add(newTeam);
-              }
-              Navigator.of(context).pop();
-            },
+            onPressed: () => _clickedTeam(state, snapshot),
             child: new ListTile(
                 leading: new Icon(
                   Icons.group,
@@ -110,5 +92,63 @@ class _TeamDownloaderState extends State<TeamDownloader> {
                     ' - ' +
                     snapshot.value['stagione']),
                 trailing: cloudIcon)));
+  }
+
+  Future<Null> _clickedTeam(String state, DataSnapshot snapshot) async {
+    setState(() => updated = false);
+    switch (state) {
+      case 'absent':
+        Map<String, dynamic> newTeam = new Map<String, dynamic>();
+        newTeam['ultima_modifica'] = snapshot.value['ultima_modifica'];
+        newTeam['key'] = snapshot.key;
+        newTeam['stagione'] = snapshot.value['stagione'];
+        newTeam['categoria'] = snapshot.value['categoria'];
+        newTeam['nome'] = snapshot.value['nome'];
+        newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
+        newTeam['allenatore'] = snapshot.value['allenatore'];
+        newTeam['assistente'] = snapshot.value['assistente'];
+        // newTeam['giocatori'];
+        LocalDB.add(newTeam);
+        break;
+      case 'outdated':
+        bool agree = await showDialog<bool>(
+          context: context,
+          child: new AlertDialog(
+            content: const Text('Questo sovrascriverà i dati locali di questa squadra, sei sicuro?'),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('Annulla'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              ),
+              new FlatButton(
+                child: new Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+            ],
+          )
+        );
+        if (agree) {
+          Map<String,dynamic> team = LocalDB.getByKey(snapshot.key);
+          team['ultima_modifica'] = snapshot.value['ultima_modifica'];
+          team['key'] = snapshot.key;
+          team['stagione'] = snapshot.value['stagione'];
+          team['categoria'] = snapshot.value['categoria'];
+          team['nome'] = snapshot.value['nome'];
+          team['colore_maglia'] = snapshot.value['colore_maglia'];
+          team['allenatore'] = snapshot.value['allenatore'];
+          team['assistente'] = snapshot.value['assistente'];
+          LocalDB.store();
+        }
+        break;
+      case 'ahead':
+        break;
+      case 'updated':
+        break;
+    }
+    Navigator.of(context).pop();
   }
 }
