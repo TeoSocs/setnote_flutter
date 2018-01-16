@@ -44,11 +44,15 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     Color coloreMaglia;
     String state;
     if (LocalDB.has(snapshot.key)) {
-      if (int.parse(snapshot.value['ultima_modifica']) >
-          int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica'])) {
+      int local = int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica']);
+      int remote = int.parse(snapshot.value['ultima_modifica']);
+
+      if (remote > local) {
         state = 'outdated';
-      } else {
+      } else if (remote == local){
         state = 'updated';
+      } else { // if remote < local
+        state = 'ahead';
       }
     } else {
       state = 'absent';
@@ -59,6 +63,22 @@ class _TeamDownloaderState extends State<TeamDownloader> {
           .parse(snapshot.value['colore_maglia'].substring(8, 16), radix: 16));
     } else {
       coloreMaglia = Colors.blue[400];
+    }
+    Icon cloudIcon;
+    switch (state) {
+      case 'outdated':
+        cloudIcon = const Icon(Icons.cloud_download);
+        break;
+      case 'updated':
+        cloudIcon = const Icon(Icons.cloud_done);
+        break;
+      case 'absent':
+        cloudIcon = const Icon(Icons.cloud_off);
+        break;
+      case 'ahead':
+        cloudIcon = const Icon(Icons.cloud_upload);
+        break;
+
     }
     return new Card(
         child: new FlatButton(
@@ -89,10 +109,6 @@ class _TeamDownloaderState extends State<TeamDownloader> {
                 subtitle: new Text(snapshot.value['categoria'] +
                     ' - ' +
                     snapshot.value['stagione']),
-                trailing: (state == 'absent'
-                    ? const Icon(Icons.cloud_off)
-                    : (state == 'updated'
-                        ? const Icon(Icons.cloud_done)
-                        : const Icon(Icons.cloud))))));
+                trailing: cloudIcon)));
   }
 }
