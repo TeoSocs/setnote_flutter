@@ -26,6 +26,11 @@ abstract class LocalDB {
     prefs.setString(prefKey, JSON.encode(teams));
   }
 
+  static Future<Null> store() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(prefKey, JSON.encode(teams));
+  }
+
   static Future<Null> readFromFile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
