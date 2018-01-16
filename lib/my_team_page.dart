@@ -12,9 +12,9 @@ class MyTeamPage extends StatefulWidget {
 
 class _MyTeamPageState extends State<MyTeamPage> {
   _MyTeamPageState() {
-    LocalDB.readFromFile();
+    LocalDB.readFromFile().then((x) => setState(()=> reloadNeeded = false));
   }
-  bool reloadNeeded = false;
+  bool reloadNeeded = true;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +61,7 @@ class _MyTeamPageState extends State<MyTeamPage> {
         ),
       ),
     ));
+    setState(() => reloadNeeded = false);
     return new SetnoteBaseLayout(
       title: 'Squadre salvate',
       child: new ListView(
