@@ -103,6 +103,7 @@ class _ManageTeamState extends State<ManageTeam> {
             ],
           ),
           _newGestisciFormazione(),
+          _newDeleteTeam(),
         ],
       ),
     );
@@ -333,7 +334,7 @@ class _ManageTeamState extends State<ManageTeam> {
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newGestisciFormazione() {
     if (selectedTeam['key'] == null) {
-      return const Text("");
+      return new Container(width: 0.0, height: 0.0);
     }
     return new Padding(
       padding: constant.standard_margin,
@@ -347,5 +348,28 @@ class _ManageTeamState extends State<ManageTeam> {
         },
       )),
     );
+  }
+
+  /// Genera un nuovo pulsante per eliminare la squadra correntemente 
+  /// selezionata dal database locale.
+  Widget _newDeleteTeam() {
+    if (selectedTeam['key'] == null) {
+      return new Container(width: 0.0, height: 0.0);
+    }
+    return new Padding(
+      padding: constant.standard_margin,
+      child: new Center(
+        child: new RaisedButton(
+          child: const Text('Elimina squadra'),
+          onPressed: _deleteTeam,
+        ),
+      ),
+    );
+  }
+
+  /// Elimina la squadra correntemente selezionata dal database locale.
+  void _deleteTeam() {
+    LocalDB.remove(selectedTeam['key']);
+    Navigator.of(context).pop();
   }
 }
