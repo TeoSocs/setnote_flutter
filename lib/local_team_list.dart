@@ -8,7 +8,8 @@ import 'dart:convert';
 /// I dati sono memorizzati in una lista [teams] di squadre in cui ogni
 /// squadra è una mappa chiave-valore.
 abstract class LocalDB {
-  static const String prefKey = 'localTeams';
+  static const String prefTeamsKey = 'localTeams';
+  static const String prefPlayersKey = 'localPlayers';
 
   /// Elenco delle squadre.
   ///
@@ -151,7 +152,8 @@ abstract class LocalDB {
   /// Salva le modifiche nelle SharedPrederences.
   static Future<Null> store() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(prefKey, JSON.encode(teams));
+    prefs.setString(prefTeamsKey, JSON.encode(teams));
+    prefs.setString(prefPlayersKey, JSON.encode(players));
   }
 
   /// Legge le SharedPreferences.
@@ -160,7 +162,8 @@ abstract class LocalDB {
   static Future<Null> readFromFile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
-      teams = JSON.decode(prefs.getString(prefKey));
+      teams = JSON.decode(prefs.getString(prefTeamsKey));
+      players = JSON.decode(prefs.getString(prefPlayersKey));
     } on NoSuchMethodError {
       print("Errore nella lettura delle sharedPreferences, " +
           "probabilmente non sono ancora state create");
