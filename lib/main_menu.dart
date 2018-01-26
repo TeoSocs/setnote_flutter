@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
 
+/// Costruisce il menù principale
 class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
