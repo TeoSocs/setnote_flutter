@@ -85,7 +85,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Calcola il valore della variabile temporanea state in base al rapporto
   /// tra copia locale del dato e firebase.
   String _computeStateForListEntryIcon(DataSnapshot snapshot) {
-    if (LocalDB.has(snapshot.key)) {
+    if (LocalDB.hasTeam(snapshot.key)) {
       int _local = int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica']);
       int _remote = int.parse(snapshot.value['ultima_modifica']);
 
@@ -168,7 +168,11 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         .orderByChild('squadra')
         .equalTo(teamKey);
     players.onValue.listen((e) {
-      print(e.snapshot.value);
+      Map<String, dynamic> playerMap = e.snapshot.value;
+      for (String key in playerMap.keys) {
+        LocalDB.addPlayer(playerMap[key]);
+        print(playerMap[key]);
+      }
     });
   }
 

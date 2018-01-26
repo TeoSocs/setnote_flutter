@@ -43,10 +43,17 @@ abstract class LocalDB {
   /// }
   static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
 
-  /// Controlla se la chiave è presente nella lista.
-  static bool has(String key) {
+  /// Controlla se la squadra con la chiave indicata è presente nella lista.
+  static bool hasTeam(String key) {
     for (var team in teams) {
       if (team['key'] == key) return true;
+    }
+    return false;
+  }
+  /// Controlla se il giocatore con la chiave indicata è presente nella lista.
+  static bool hasPlayer(String key) {
+    for (var player in players) {
+      if (player['key'] == key) return true;
     }
     return false;
   }
@@ -73,8 +80,24 @@ abstract class LocalDB {
   ///
   /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
   static Future<Null> addTeam(Map<String, dynamic> newTeam) async {
-    teams.add(newTeam);
-    store();
+    if (!hasTeam(newTeam['key'])) {
+      teams.add(newTeam);
+      store();
+    } else {
+      print('Squadra già presente nella lista');
+    }
+  }
+
+  /// Aggiunge un giocatore alla lista.
+  /// 
+  /// Si occupa di aggiornare sia la lista [players] che le SharedPreferences.
+  static Future<Null> addPlayer(Map<String, dynamic> newPlayer) async {
+    if (!hasPlayer(newPlayer['key'])) {
+      players.add(newPlayer);
+      store();
+    } else {
+      print('Giocatore già presente nella lista');
+    }
   }
 
   /// Elimina una squadra dalla lista.
