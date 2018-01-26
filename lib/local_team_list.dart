@@ -11,7 +11,7 @@ abstract class LocalDB {
   static const String prefKey = 'localTeams';
 
   /// Elenco delle squadre.
-  /// 
+  ///
   /// Template di squadra inserita:
   /// {
   ///   String key;
@@ -26,7 +26,7 @@ abstract class LocalDB {
   static List<Map<String, dynamic>> teams = new List<Map<String, dynamic>>();
 
   /// Elenco dei giocatori.
-  /// 
+  ///
   /// Template di giocatore inserito:
   /// {
   ///   String key;
@@ -50,6 +50,7 @@ abstract class LocalDB {
     }
     return false;
   }
+
   /// Controlla se il giocatore con la chiave indicata è presente nella lista.
   static bool hasPlayer(String key) {
     for (var player in players) {
@@ -59,9 +60,17 @@ abstract class LocalDB {
   }
 
   /// Ritorna un'istanza di una squadra (oppure null) cercandola per chiave.
-  static Map<String, dynamic> getByKey(String key) {
+  static Map<String, dynamic> getTeamByKey(String key) {
     for (var team in teams) {
       if (team['key'] == key) return team;
+    }
+    return null;
+  }
+
+  /// Ritorna un'istanza di un giocatore (oppure null) cercandola per chiave.
+  static Map<String, dynamic> getPlayerByKey(String key) {
+    for (var player in players) {
+      if (player['key'] == key) return player;
     }
     return null;
   }
@@ -80,34 +89,53 @@ abstract class LocalDB {
   ///
   /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
   static Future<Null> addTeam(Map<String, dynamic> newTeam) async {
-    if (!hasTeam(newTeam['key'])) {
-      teams.add(newTeam);
-      store();
-    } else {
-      print('Squadra già presente nella lista');
-    }
-  }
-
-  /// Aggiunge un giocatore alla lista.
-  /// 
-  /// Si occupa di aggiornare sia la lista [players] che le SharedPreferences.
-  static Future<Null> addPlayer(Map<String, dynamic> newPlayer) async {
-    if (!hasPlayer(newPlayer['key'])) {
-      players.add(newPlayer);
-      store();
-    } else {
-      print('Giocatore già presente nella lista');
-    }
-  }
-
-  /// Elimina una squadra dalla lista.
-  /// 
-  /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
-  static Future<Null> remove(String key) async {
-    teams.remove(LocalDB.getByKey(key));
+    if (hasTeam(newTeam['key']))
+      throw new ArgumentError(
+          "Tentativo di aggiungere una squadra già presente in lista");
+    teams.add(newTeam);
     store();
   }
 
+  /// Aggiunge un giocatore alla lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [players] che le SharedPreferences.
+  static Future<Null> addPlayer(Map<String, dynamic> newPlayer) async {
+    if (hasPlayer(newPlayer['key']))
+      throw new ArgumentError(
+          "Tentativo di aggiungere un giocatore già presente in lista");
+    players.add(newPlayer);
+    store();
+  }
+
+  /// Aggiorna un giocatore in lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [players] che le SharedPreferences.
+  static Future<Null> updatePlayer(Map<String, dynamic> newPlayer) async {
+    if (!hasPlayer(newPlayer['key']))
+      throw new ArgumentError(
+          "Tentativo di modificare un giocatore non presente in lista");
+    Map<String, dynamic> player = getPlayerByKey(newPlayer['key']);
+    player['key'] = newPlayer['key'];
+    player['altezza'] = newPlayer['altezza'];
+    player['capitano'] = newPlayer['capitano'];
+    player['cognome'] = newPlayer['cognome'];
+    player['mancino'] = newPlayer['mancino'];
+    player['nascita'] = newPlayer['nascita'];
+    player['nazionalita'] = newPlayer['nazionalita'];
+    player['nome'] = newPlayer['nome'];
+    player['peso'] = newPlayer['peso'];
+    player['ruolo'] = newPlayer['ruolo'];
+    player['squadra'] = newPlayer['squadra'];
+    store();
+  }
+
+  /// Elimina una squadra dalla lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
+  static Future<Null> remove(String key) async {
+    teams.remove(getTeamByKey(key));
+    store();
+  }
 
   /// Salva le modifiche nelle SharedPrederences.
   static Future<Null> store() async {
@@ -123,9 +151,8 @@ abstract class LocalDB {
     try {
       teams = JSON.decode(prefs.getString(prefKey));
     } on NoSuchMethodError {
-      print(
-          "Errore nella lettura delle sharedPreferences, "
-              + "probabilmente non sono ancora state create");
+      print("Errore nella lettura delle sharedPreferences, " +
+          "probabilmente non sono ancora state create");
     }
   }
 }

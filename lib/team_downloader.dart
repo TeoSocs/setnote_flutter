@@ -86,7 +86,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// tra copia locale del dato e firebase.
   String _computeStateForListEntryIcon(DataSnapshot snapshot) {
     if (LocalDB.hasTeam(snapshot.key)) {
-      int _local = int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica']);
+      int _local = int.parse(LocalDB.getTeamByKey(snapshot.key)['ultima_modifica']);
       int _remote = int.parse(snapshot.value['ultima_modifica']);
 
       if (_remote > _local) {
@@ -136,8 +136,6 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         _clickedAheadTeam(snapshot);
         break;
       case 'updated':
-        // TODO: rimuovere questo codice
-        _downloadPlayers(teamKey: snapshot.key);
         break;
     }
     Navigator.of(context).pop();
@@ -161,7 +159,6 @@ class _TeamDownloaderState extends State<TeamDownloader> {
 
   /// Scarica in locale i giocatori della squadra passata in input
   static Future<Null> _downloadPlayers({String teamKey}) async {
-    // TODO
     Query players = FirebaseDatabase.instance
         .reference()
         .child('giocatori')
@@ -170,8 +167,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     players.onValue.listen((e) {
       Map<String, dynamic> playerMap = e.snapshot.value;
       for (String key in playerMap.keys) {
-        LocalDB.addPlayer(playerMap[key]);
-        print(playerMap[key]);
+        if (!LocalDB.hasPlayer(key)) LocalDB.addPlayer(playerMap[key]);
+        else LocalDB.updatePlayer(playerMap[key]);
       }
     });
   }
@@ -203,7 +200,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       ),
     );
     if (agree) {
-      Map<String, dynamic> team = LocalDB.getByKey(snapshot.key);
+      Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
       team['ultima_modifica'] = snapshot.value['ultima_modifica'];
       team['key'] = snapshot.key;
       team['stagione'] = snapshot.value['stagione'];
@@ -243,7 +240,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       ),
     );
     if (agree) {
-      Map<String, dynamic> team = LocalDB.getByKey(snapshot.key);
+      Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
       FirebaseDatabase.instance
           .reference()
           .child('squadre')
