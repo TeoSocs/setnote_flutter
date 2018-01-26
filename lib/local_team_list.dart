@@ -39,6 +39,7 @@ abstract class LocalDB {
   ///   String nome;
   ///   String peso;
   ///   String ruolo;
+  ///   String squadra: chiave della squadra a cui il giocatore appartiene;
   /// }
   static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
 
@@ -55,6 +56,17 @@ abstract class LocalDB {
     for (var team in teams) {
       if (team['key'] == key) return team;
     }
+    return null;
+  }
+
+  /// Cambia la chiave di una squadra.
+  static Map<String, dynamic> changeKey({String oldKey, String newKey}) {
+    for (var team in teams) {
+      if (team['key'] == oldKey) {
+        team['key'] = newKey;
+      }
+    }
+    store();
     return null;
   }
 

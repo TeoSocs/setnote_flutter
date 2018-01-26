@@ -326,9 +326,9 @@ class _TeamUploaderState extends State<TeamUploader> {
           leading: new Icon(
             Icons.group,
             color: (team['colore_maglia'] != 'null' &&
-                team['colore_maglia'] != null
+                    team['colore_maglia'] != null
                 ? new Color(int.parse(team['colore_maglia'].substring(8, 16),
-                radix: 16))
+                    radix: 16))
                 : Theme.of(context).buttonColor),
           ),
           title: new Text(team['nome']),
@@ -341,9 +341,11 @@ class _TeamUploaderState extends State<TeamUploader> {
   /// Carica il team nel database e sincronizza il campo key con quello locale.
   void _uploadTeam(Map<String, dynamic> team) {
     DatabaseReference newTeam =
-    FirebaseDatabase.instance.reference().child('squadre').push();
-    team['key'] = newTeam.key;
-    LocalDB.store();
+        FirebaseDatabase.instance.reference().child('squadre').push();
+    LocalDB.changeKey(
+      oldKey: team['key'],
+      newKey: newTeam.key,
+    );
     newTeam.set({
       'ultima_modifica': team['ultima_modifica'],
       'key': team['key'],
