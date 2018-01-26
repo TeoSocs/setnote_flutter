@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'constants.dart' as constant;
 import 'drawer.dart';
 
+/// Pulsante standard dell'applicazione.
 class SetnoteButton extends StatelessWidget {
-  SetnoteButton({this.label, this.onPressed});
   final String label;
   final VoidCallback onPressed;
+
+  SetnoteButton({this.label, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +22,19 @@ class SetnoteButton extends StatelessWidget {
   }
 }
 
+/// Layout standard dell'applicazione.
+///
+/// L'aspetto varia in base al form factor del dispositivo.
 class SetnoteBaseLayout extends StatelessWidget {
-  SetnoteBaseLayout({this.child, this.title, this.drawer, this.floatingActionButton}) {
-    if (drawer == null) {
-      drawer = new MyDrawer();
-    }
-  }
+  SetnoteBaseLayout(
+      {this.child,
+      this.title,
+      this.drawer: const MyDrawer(),
+      this.floatingActionButton});
   final Widget child;
   final String title;
   final Widget floatingActionButton;
-  Widget drawer;
+  final Widget drawer;
 
   @override
   Widget build(BuildContext context) {
@@ -38,40 +43,54 @@ class SetnoteBaseLayout extends StatelessWidget {
         MediaQueryData media = MediaQuery.of(context);
         if (media.orientation == Orientation.landscape &&
             media.size.width >= 950.00) {
-          return new Scaffold(
-            appBar: new AppBar(
-              title: new Text(title),
-            ),
-            floatingActionButton: floatingActionButton,
-            body: new Row(
-              children: <Widget>[
-                new Drawer(
-                  child: drawer,
-                ),
-                new Expanded(
-                  child: new Padding(
-                    padding: const EdgeInsets.only(left:3.0),
-                    child: child,
-                  ),
-                ),
-              ],
-            ),
-          );
+          return _newTabletLayout();
         } else {
-          return new Scaffold(
-            appBar: new AppBar(title: new Text(title)),
-            floatingActionButton: floatingActionButton,
-            drawer: new Drawer(
-              child: drawer,
-            ),
-            body: child,
-          );
+          return _newPhoneLayout();
         }
       },
     );
   }
+
+  /// Layout standard per i tablet.
+  Scaffold _newTabletLayout() {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(title),
+      ),
+      floatingActionButton: floatingActionButton,
+      body: new Row(
+        children: <Widget>[
+          new Drawer(
+            child: drawer,
+          ),
+          new Expanded(
+            child: new Padding(
+              padding: const EdgeInsets.only(left: 3.0),
+              child: child,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Layout standard per gli smartphone.
+  Scaffold _newPhoneLayout() {
+    return new Scaffold(
+      appBar: new AppBar(title: new Text(title)),
+      floatingActionButton: floatingActionButton,
+      drawer: new Drawer(
+        child: drawer,
+      ),
+      body: child,
+    );
+  }
 }
 
+/// Widget in attesa di una condizione.
+///
+/// Mostra [child] solo se [condition] è vera, altrimenti mostra un
+/// indicatore di caricamento circolare animato.
 class LoadingWidget extends StatelessWidget {
   LoadingWidget({this.condition, this.child});
   final bool condition;
@@ -87,19 +106,29 @@ class LoadingWidget extends StatelessWidget {
   }
 }
 
+/// Selettore di colore.
+///
+/// È uno StatefulWidget, per una descrizione del suo funzionamento vedere lo
+/// State corrispondente.
 class SetnoteColorSelector extends StatefulWidget {
   SetnoteColorSelector({this.red: 33.0, this.green: 77.0, this.blue: 130.0});
   final double red, green, blue;
 
   @override
-  SetnoteColorSelectorState createState() =>
-      new SetnoteColorSelectorState(red: red, green: green, blue: blue);
+  _SetnoteColorSelectorState createState() =>
+      new _SetnoteColorSelectorState(red: red, green: green, blue: blue);
 }
 
-class SetnoteColorSelectorState extends State<SetnoteColorSelector> {
-  SetnoteColorSelectorState({this.red, this.green, this.blue});
-
+/// State di SetnoteColorSelector.
+///
+/// Riceve da costruttore tre parametri [red], [green], e [blue] associati ai
+/// colori primari. Costruisce una dialog che presenta un rettangolo del
+/// colore selezionato e tre slider che permettono di modificarne le
+/// componenti RGB. A colore selezionato lo ritorna attraverso Navigator.pop().
+class _SetnoteColorSelectorState extends State<SetnoteColorSelector> {
   double red, green, blue;
+
+  _SetnoteColorSelectorState({this.red, this.green, this.blue});
 
   @override
   Widget build(BuildContext context) {
@@ -167,18 +196,26 @@ class SetnoteColorSelectorState extends State<SetnoteColorSelector> {
   }
 }
 
+/// Pulsante associato ad un SetnoteColorSelector.
+///
+/// È uno StatefulWidget, per una descrizione del suo funzionamento vedere lo
+/// State corrispondente.
 class SetnoteColorSelectorButton extends StatefulWidget {
   SetnoteColorSelectorButton({this.label});
   final String label;
 
   @override
-  SetnoteColorSelectorButtonState createState() =>
-      new SetnoteColorSelectorButtonState(label: label);
+  _SetnoteColorSelectorButtonState createState() =>
+      new _SetnoteColorSelectorButtonState(label: label);
 }
 
-class SetnoteColorSelectorButtonState
+/// State di SetnoteColorSelectorButton.
+///
+/// Costruisce un pulsante il cui colore di sfondo corrisponde con il colore
+/// selezionato. Il colore del testo si adatta in base al colore di sfondo.
+class _SetnoteColorSelectorButtonState
     extends State<SetnoteColorSelectorButton> {
-  SetnoteColorSelectorButtonState({this.label});
+  _SetnoteColorSelectorButtonState({this.label});
   String label;
   SetnoteColorSelector selector = new SetnoteColorSelector();
   Color _buttonColor;

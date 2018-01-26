@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
 
+/// Elemento del drawer principale.
+///
+/// Voce del menù che riporta la scritta [label] e rimanda al route indicato
+/// in [address].
 class DrawerEntry extends StatelessWidget {
-  DrawerEntry({this.label, this.address});
   final String label;
   final String address;
+
+  DrawerEntry({this.label, this.address});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,13 @@ class DrawerEntry extends StatelessWidget {
   }
 }
 
+/// Drawer principale.
+///
+/// Riprende gli elementi del menù principale e li presenta sotto forma di
+/// drawer.
 class MyDrawer extends StatelessWidget {
+  const MyDrawer();
+
   @override
   Widget build(BuildContext context) {
     return new ListView(
@@ -24,7 +35,10 @@ class MyDrawer extends StatelessWidget {
         new DrawerHeader(
           child: new Align(
             alignment: Alignment.bottomLeft,
-            child: new Text(constant.app_name, style: Theme.of(context).primaryTextTheme.headline,),
+            child: new Text(
+              constant.app_name,
+              style: Theme.of(context).primaryTextTheme.headline,
+            ),
           ),
           decoration: new BoxDecoration(
             color: Theme.of(context).primaryColor,

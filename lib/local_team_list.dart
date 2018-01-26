@@ -2,10 +2,16 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+/// Database locale delle squadre.
+///
+/// Database implementato come istanza statica di una classe LocalDB.
+/// I dati sono memorizzati in una lista [teams] di squadre in cui ogni
+/// squadra è una mappa chiave-valore.
 abstract class LocalDB {
   static const String prefKey = 'localTeams';
   static List<Map<String, dynamic>> teams = new List<Map<String, dynamic>>();
 
+  /// Controlla se la chiave è presente nella lista.
   static bool has(String key) {
     for (var team in teams) {
       if (team['key'] == key) return true;
@@ -13,6 +19,7 @@ abstract class LocalDB {
     return false;
   }
 
+  /// Ritorna un'istanza di una squadra (oppure null) cercandola per chiave.
   static Map<String, dynamic> getByKey(String key) {
     for (var team in teams) {
       if (team['key'] == key) return team;
@@ -20,24 +27,31 @@ abstract class LocalDB {
     return null;
   }
 
+  /// Aggiunge una squadra alla lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
   static Future<Null> add(Map<String, dynamic> newTeam) async {
     teams.add(newTeam);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString(prefKey, JSON.encode(teams));
+    store();
   }
 
+  /// Salva le modifiche nelle SharedPrederences.
   static Future<Null> store() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(prefKey, JSON.encode(teams));
   }
 
+  /// Legge le SharedPreferences.
+  /// Stampa un su console in caso di NoSuchMethodError. Questo si verifica ogni
+  /// volta che si tentano di leggere Preferences vuote.
   static Future<Null> readFromFile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       teams = JSON.decode(prefs.getString(prefKey));
-    } on NoSuchMethodError{
+    } on NoSuchMethodError {
       print(
-          "Errore nella lettura delle sharedPreferences, probabilmente non sono ancora state create");
+          "Errore nella lettura delle sharedPreferences, "
+              + "probabilmente non sono ancora state create");
     }
   }
 }

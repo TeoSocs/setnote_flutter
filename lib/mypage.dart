@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'google_auth.dart';
 import 'setnote_widgets.dart';
 
+/// Pagina mock.
+///
+/// Generica pagina segnaposto.
 class MyPage extends StatefulWidget {
   MyPage({this.title});
   final String title;
