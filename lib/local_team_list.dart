@@ -35,6 +35,15 @@ abstract class LocalDB {
     store();
   }
 
+  /// Elimina una squadra dalla lista.
+  /// 
+  /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
+  static Future<Null> remove(String key) async {
+    teams.remove(LocalDB.getByKey(key));
+    store();
+  }
+
+
   /// Salva le modifiche nelle SharedPrederences.
   static Future<Null> store() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
