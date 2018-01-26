@@ -12,7 +12,7 @@ class MyTeamPage extends StatefulWidget {
 
 class _MyTeamPageState extends State<MyTeamPage> {
   _MyTeamPageState() {
-    LocalDB.readFromFile().then((x) => setState(()=> reloadNeeded = false));
+    LocalDB.readFromFile().then((x) => setState(() => reloadNeeded = false));
   }
   bool reloadNeeded = true;
 
@@ -32,7 +32,8 @@ class _MyTeamPageState extends State<MyTeamPage> {
           child: new ListTile(
             leading: new Icon(
               Icons.group,
-              color: (team['colore_maglia'] != 'null' && team['colore_maglia'] != null
+              color: (team['colore_maglia'] != 'null' &&
+                      team['colore_maglia'] != null
                   ? new Color(int.parse(team['colore_maglia'].substring(8, 16),
                       radix: 16))
                   : Theme.of(context).buttonColor),
@@ -51,8 +52,7 @@ class _MyTeamPageState extends State<MyTeamPage> {
           Map<String, dynamic> team = new Map<String, dynamic>();
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) =>
-              new ManageTeam(selectedTeam: team)));
-          LocalDB.add(team);
+                  new ManageTeam(selectedTeam: team)));
           setState(() => reloadNeeded = false);
         },
         child: new ListTile(

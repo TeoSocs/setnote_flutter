@@ -105,6 +105,10 @@ class _ManageTeamState extends State<ManageTeam> {
     final FormState form = formKey.currentState;
     form.save();
     selectedTeam['ultima_modifica'] = new DateTime.now().millisecondsSinceEpoch.toString();
+    if (selectedTeam['key'] == null) {
+      selectedTeam['key'] = new DateTime.now().millisecondsSinceEpoch.toString();
+      LocalDB.add(selectedTeam);
+    }
     LocalDB.store();
     Navigator.of(context).pop();
   }
