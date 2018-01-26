@@ -27,15 +27,14 @@ class SetnoteButton extends StatelessWidget {
 /// L'aspetto varia in base al form factor del dispositivo.
 class SetnoteBaseLayout extends StatelessWidget {
   SetnoteBaseLayout(
-      {this.child, this.title, this.drawer, this.floatingActionButton}) {
-    if (drawer == null) {
-      drawer = new MyDrawer();
-    }
-  }
+      {this.child,
+      this.title,
+      this.drawer: const MyDrawer(),
+      this.floatingActionButton});
   final Widget child;
   final String title;
   final Widget floatingActionButton;
-  Widget drawer;
+  final Widget drawer;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +118,6 @@ class SetnoteColorSelector extends StatefulWidget {
   _SetnoteColorSelectorState createState() =>
       new _SetnoteColorSelectorState(red: red, green: green, blue: blue);
 }
-
 
 /// State di SetnoteColorSelector.
 ///

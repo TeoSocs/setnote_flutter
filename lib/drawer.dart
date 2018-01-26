@@ -26,6 +26,8 @@ class DrawerEntry extends StatelessWidget {
 /// Riprende gli elementi del menù principale e li presenta sotto forma di
 /// drawer.
 class MyDrawer extends StatelessWidget {
+  const MyDrawer();
+
   @override
   Widget build(BuildContext context) {
     return new ListView(
