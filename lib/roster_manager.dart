@@ -28,7 +28,8 @@ class _RosterManagerState extends State<RosterManager> {
   Widget build(BuildContext context) {
     MediaQueryData media = MediaQuery.of(context);
     List<Widget> playerList = new List<Widget>();
-    for (Map<String, dynamic> _player in LocalDB.getPlayersOf(teamKey: team['key'])) {
+    for (Map<String, dynamic> _player
+        in LocalDB.getPlayersOf(teamKey: team['key'])) {
       playerList.add(_newListEntry(_player));
     }
 
