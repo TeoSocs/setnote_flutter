@@ -11,7 +11,7 @@ import 'google_auth.dart';
 
 class RosterManager extends StatefulWidget {
   RosterManager({this.team});
-  final Map<String,dynamic> team;
+  final Map<String, dynamic> team;
 
   @override
   State createState() => new _RosterManagerState(team: team);
@@ -19,12 +19,13 @@ class RosterManager extends StatefulWidget {
 
 class _RosterManagerState extends State<RosterManager> {
   _RosterManagerState({this.team}) {
-    rosterDB = FirebaseDatabase.instance.reference().child('squadre/' + team['key'] + '/giocatori');
+    rosterDB = FirebaseDatabase.instance
+        .reference()
+        .child('squadre/' + team['key'] + '/giocatori');
   }
-  Map<String,dynamic> team;
+  Map<String, dynamic> team;
   bool logged = false;
   DatabaseReference rosterDB;
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,42 +57,33 @@ class _RosterManagerState extends State<RosterManager> {
       ),
       child: new LoadingWidget(
         condition: logged,
-        child: new Row(
-          children: <Widget>[
-            new Expanded(
-              child: new Scaffold(
-                body: new Form(
-                  child: new FirebaseAnimatedList(
-                    query: rosterDB,
-                    sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
-                    padding: constant.standard_margin,
-                    itemBuilder: (_, DataSnapshot snapshot,
-                        Animation<double> animation) {
-                      return _newListEntry(snapshot);
-                    },
-                  ),
-                ),
-                floatingActionButton: new FloatingActionButton(
-                  onPressed: null,
-                  tooltip: 'Aggiungi', // used by assistive technologies
-                  child: new Icon(Icons.add),
-                ),
-              ),
-            ),
-            new Expanded(
-              child: new Scaffold(
-                  body: new Center(
-                child: new ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    new Text("qui ci andranno i giocatori selezionati"),
-                    new Text("qui ci andranno i giocatori selezionati"),
-                    new Text("qui ci andranno i giocatori selezionati"),
-                  ],
-                ),
-              )),
-            ),
-          ],
+        child: new FirebaseAnimatedList(
+          query: rosterDB,
+          sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
+          padding: constant.standard_margin,
+          itemBuilder: (_, DataSnapshot snapshot, Animation<double> animation) {
+            return _newListEntry(snapshot);
+          },
+        ),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        onPressed: null,
+        tooltip: 'Aggiungi', // used by assistive technologies
+        child: new Icon(Icons.add),
+      ),
+    );
+  }
+
+  Card _newListEntry(DataSnapshot snapshot) {
+    return new Card(
+      child: new FlatButton(
+        onPressed: null,
+        child: new ListTile(
+          leading: new Icon(
+            Icons.android,
+          ),
+          title: new Text(snapshot.value['nome']),
+          subtitle: new Text(snapshot.value['ruolo']),
         ),
       ),
     );
@@ -100,28 +92,5 @@ class _RosterManagerState extends State<RosterManager> {
   Future<Null> login() async {
     await ensureLoggedIn();
     setState(() => logged = true);
-  }
-
-  Widget _newListEntry(DataSnapshot snapshot) {
-    bool _titolare = false;
-    return new Card(
-      child: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: new FlatButton(
-              onPressed: null,
-              child: new ListTile(
-                leading: new Icon(
-                  Icons.android,
-                ),
-                title: new Text(snapshot.value['nome']),
-                subtitle: new Text(snapshot.value['ruolo']),
-              ),
-            ),
-          ),
-          new Checkbox(value: _titolare, onChanged: (bool newValue) => setState(() => _titolare = newValue)),
-        ],
-      )
-    );
   }
 }
