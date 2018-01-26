@@ -62,7 +62,7 @@ class SetnoteBaseLayout extends StatelessWidget {
             appBar: new AppBar(title: new Text(title)),
             floatingActionButton: floatingActionButton,
             drawer: new Drawer(
-              child: new MyDrawer(),
+              child: drawer,
             ),
             body: child,
           );
