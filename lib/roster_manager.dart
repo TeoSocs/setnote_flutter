@@ -1,13 +1,8 @@
-import 'dart:async';
-
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:setnote_flutter/local_team_list.dart';
-import 'package:setnote_flutter/setnote_widgets.dart';
+import 'local_team_list.dart';
+import 'setnote_widgets.dart';
 
 import 'constants.dart' as constant;
-import 'google_auth.dart';
 
 class RosterManager extends StatefulWidget {
   RosterManager({this.team});
@@ -20,37 +15,32 @@ class RosterManager extends StatefulWidget {
 /// Pagina di gestione della formazione di un team.
 ///
 /// [team] è la squadra che si sta modificando e viene passata da costruttore.
-/// [logged] è una variabile ausiliaria che permette di mostrare
-/// un'indicatore di caricamento in attesa che sia verificato il login
-/// dell'utente. [rosterDB] mantiene un riferimento al database in cui si
-/// trovano i giocatori della squadra.
+
 class _RosterManagerState extends State<RosterManager> {
   Map<String, dynamic> team;
-  bool logged = false;
-  DatabaseReference rosterDB;
 
   /// Costruttore di _RosterManagerState.
   ///
   /// Riceve in input [team] e recupera da Firebase il riferimento [rosterDB].
-  _RosterManagerState({this.team}) {
-    rosterDB = FirebaseDatabase.instance
-        .reference()
-        .child('squadre/' + team['key'] + '/giocatori');
-  }
+  _RosterManagerState({this.team});
 
   @override
   Widget build(BuildContext context) {
-    login();
     MediaQueryData media = MediaQuery.of(context);
+    List<Widget> playerList = new List<Widget>();
+    for (Map<String, dynamic> _player in LocalDB.getPlayersOf(teamKey: team['key'])) {
+      playerList.add(_newListEntry(_player));
+    }
+
     return new SetnoteBaseLayout(
       title: (media.orientation == Orientation.landscape &&
               media.size.width >= 950.00
           ? "Gestisci formazione"
           : team['nome']),
       drawer: _newRosterManagerDrawer(),
-      child: new LoadingWidget(
-        condition: logged,
-        child: _newRosterFirebaseAnimatedList(),
+      child: new ListView(
+        padding: constant.standard_margin,
+        children: playerList,
       ),
       floatingActionButton: new FloatingActionButton(
         tooltip: 'Aggiungi', // used by assistive technologies
@@ -83,20 +73,8 @@ class _RosterManagerState extends State<RosterManager> {
     );
   }
 
-  /// Costruisce la FirebaseAnimatedList legata a [rosterDB].
-  FirebaseAnimatedList _newRosterFirebaseAnimatedList() {
-    return new FirebaseAnimatedList(
-      query: rosterDB,
-      sort: (a, b) => a.value['nome'].compareTo(b.value['nome']),
-      padding: constant.standard_margin,
-      itemBuilder: (_, DataSnapshot snapshot, Animation<double> animation) {
-        return _newListEntry(snapshot);
-      },
-    );
-  }
-
   /// Costruisce la card che presenta ciascun giocatore recuperato dal DB.
-  Card _newListEntry(DataSnapshot snapshot) {
+  Card _newListEntry(Map<String, dynamic> player) {
     return new Card(
       child: new FlatButton(
         onPressed: null,
@@ -104,17 +82,10 @@ class _RosterManagerState extends State<RosterManager> {
           leading: new Icon(
             Icons.android,
           ),
-          title: new Text(snapshot.value['nome']),
-          subtitle: new Text(snapshot.value['ruolo']),
+          title: new Text(player['nome']),
+          subtitle: new Text(player['ruolo']),
         ),
       ),
     );
-  }
-
-  /// Controlla il login dell'utente e setta la variabile [logged] di
-  /// conseguenza.
-  Future<Null> login() async {
-    await ensureLoggedIn();
-    setState(() => logged = true);
   }
 }

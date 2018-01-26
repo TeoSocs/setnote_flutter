@@ -209,7 +209,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       team['colore_maglia'] = snapshot.value['colore_maglia'];
       team['allenatore'] = snapshot.value['allenatore'];
       team['assistente'] = snapshot.value['assistente'];
-      LocalDB.store();
+      LocalDB.store()
+      .then((foo) => _downloadPlayers(teamKey: snapshot.key));
     }
   }
 

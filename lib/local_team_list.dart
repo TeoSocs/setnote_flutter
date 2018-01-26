@@ -75,6 +75,15 @@ abstract class LocalDB {
     return null;
   }
 
+  /// Ritorna un'istanza di un giocatore (oppure null) cercandola per chiave.
+  static List<Map<String, dynamic>> getPlayersOf({String teamKey}) {
+    List<Map<String, dynamic>> team = new List<Map<String, dynamic>>();
+    for (var player in players) {
+      if (player['squadra'] == teamKey) team.add(player);
+    }
+    return team;
+  }
+
   /// Cambia la chiave di una squadra.
   static void changeKey({String oldKey, String newKey}) {
     for (var team in teams) {
@@ -105,6 +114,7 @@ abstract class LocalDB {
           "Tentativo di aggiungere un giocatore già presente in lista");
     players.add(newPlayer);
     store();
+    print("aggiunto giocatore: " + newPlayer.toString());
   }
 
   /// Aggiorna un giocatore in lista.
@@ -127,6 +137,7 @@ abstract class LocalDB {
     player['ruolo'] = newPlayer['ruolo'];
     player['squadra'] = newPlayer['squadra'];
     store();
+    print("aggiornato giocatore: " + newPlayer.toString());
   }
 
   /// Elimina una squadra dalla lista.
