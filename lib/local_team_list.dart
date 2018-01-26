@@ -60,14 +60,13 @@ abstract class LocalDB {
   }
 
   /// Cambia la chiave di una squadra.
-  static Map<String, dynamic> changeKey({String oldKey, String newKey}) {
+  static void changeKey({String oldKey, String newKey}) {
     for (var team in teams) {
       if (team['key'] == oldKey) {
         team['key'] = newKey;
       }
     }
     store();
-    return null;
   }
 
   /// Aggiunge una squadra alla lista.
