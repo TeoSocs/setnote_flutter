@@ -7,7 +7,7 @@ import 'main_menu.dart';
 import 'manage_team.dart';
 import 'match_page.dart';
 import 'mypage.dart';
-import 'my_team_page.dart';
+import 'team_page.dart';
 
 /// Avvia l'applicazione.
 ///
