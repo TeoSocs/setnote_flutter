@@ -9,7 +9,38 @@ import 'dart:convert';
 /// squadra è una mappa chiave-valore.
 abstract class LocalDB {
   static const String prefKey = 'localTeams';
+
+  /// Elenco delle squadre.
+  /// 
+  /// Template di squadra inserita:
+  /// {
+  ///   String key;
+  ///   String nome;
+  ///   String allenatore;
+  ///   String assistente;
+  ///   String categoria;
+  ///   String stagione;
+  ///   String coloreMaglia;
+  ///   String ultimaModifica;
+  /// }
   static List<Map<String, dynamic>> teams = new List<Map<String, dynamic>>();
+
+  /// Elenco dei giocatori.
+  /// 
+  /// Template di giocatore inserito:
+  /// {
+  ///   String key;
+  ///   String altezza;
+  ///   String capitano;
+  ///   String cognome;
+  ///   String mancino;
+  ///   String nascita;
+  ///   String nazionalita;
+  ///   String nome;
+  ///   String peso;
+  ///   String ruolo;
+  /// }
+  static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
 
   /// Controlla se la chiave è presente nella lista.
   static bool has(String key) {
@@ -65,34 +96,7 @@ abstract class LocalDB {
   }
 }
 
-// class TeamInstance {
-//   String nome = '';
-//   String allenatore = '';
-//   String assistente = '';
-//   String categoria = '';
-//   String stagione = '';
-//   String coloreMaglia = '';
-//   String key = '';
-//   String ultimaModifica;
-//   List<PlayerInstance> giocatori;
-//
-//   Future<Null> aggiornaGiocatori() async {
-//     return null;
-//   }
-// }
-//
-// class PlayerInstance {
-//   String key = '';
-//   String altezza = '';
-//   String capitano = '';
-//   String cognome = '';
-//   String mancino = '';
-//   String nascita = '';
-//   String nazionalita = '';
-//   String nome = '';
-//   String peso = '';
-//   String ruolo = '';
-// }
+// Templates
 //
 // class PlayerData {
 //   List<FundamentalData> battute;
