@@ -136,6 +136,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         _clickedAheadTeam(snapshot);
         break;
       case 'updated':
+        // TODO: rimuovere questo codice
+        _downloadPlayers(teamKey: snapshot.key);
         break;
     }
     Navigator.of(context).pop();
@@ -152,8 +154,22 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
     newTeam['allenatore'] = snapshot.value['allenatore'];
     newTeam['assistente'] = snapshot.value['assistente'];
-    // newTeam['giocatori'];
-    LocalDB.add(newTeam);
+    LocalDB
+        .addTeam(newTeam)
+        .then((foo) => _downloadPlayers(teamKey: newTeam['key']));
+  }
+
+  /// Scarica in locale i giocatori della squadra passata in input
+  static Future<Null> _downloadPlayers({String teamKey}) async {
+    // TODO
+    Query players = FirebaseDatabase.instance
+        .reference()
+        .child('giocatori')
+        .orderByChild('squadra')
+        .equalTo(teamKey);
+    players.onValue.listen((e) {
+      print(e.snapshot.value);
+    });
   }
 
   /// Aggiorna la copia locale della squadra selezionata
@@ -308,6 +324,7 @@ class _TeamUploaderState extends State<TeamUploader> {
     );
   }
 
+  /// Crea una Card per la _teamList rappresentativa del team passato in input.
   Card _newTeamCard(Map<String, dynamic> team) {
     return new Card(
       child: new FlatButton(

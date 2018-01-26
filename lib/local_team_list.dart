@@ -72,7 +72,7 @@ abstract class LocalDB {
   /// Aggiunge una squadra alla lista.
   ///
   /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
-  static Future<Null> add(Map<String, dynamic> newTeam) async {
+  static Future<Null> addTeam(Map<String, dynamic> newTeam) async {
     teams.add(newTeam);
     store();
   }
