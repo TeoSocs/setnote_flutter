@@ -163,6 +163,8 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   void update(BuildContext context) {
     final FormState form = _formKey.currentState;
     form.save();
+    LocalDB.getTeamByKey(selectedPlayer['squadra'])['ultimaModifica'] =
+        new DateTime.now().millisecondsSinceEpoch.toString();
     // Se ci si trova davanti ad un giocatore appena creato è necessario
     // associare una chiave e aggiungerlo al database.
     if (selectedPlayer['key'] == null) {

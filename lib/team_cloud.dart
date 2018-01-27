@@ -428,8 +428,8 @@ class _TeamUploaderState extends State<TeamUploader> {
             Icons.group,
             color: (team['coloreMaglia'] != 'null' &&
                     team['coloreMaglia'] != null
-                ? new Color(int.parse(team['coloreMaglia'].substring(8, 16),
-                    radix: 16))
+                ? new Color(
+                    int.parse(team['coloreMaglia'].substring(8, 16), radix: 16))
                 : Theme.of(context).buttonColor),
           ),
           title: new Text(team['nome']),
