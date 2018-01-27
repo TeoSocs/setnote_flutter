@@ -155,6 +155,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     newTeam['coloreMaglia'] = snapshot.value['coloreMaglia'];
     newTeam['allenatore'] = snapshot.value['allenatore'];
     newTeam['assistente'] = snapshot.value['assistente'];
+    newTeam['assistente'] = snapshot.value['assistente'];
     LocalDB
         .addTeam(newTeam)
         .then((foo) => _downloadPlayers(teamKey: newTeam['key']));
@@ -171,6 +172,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       Map<String, dynamic> playerMap = e.snapshot.value;
       print(playerMap);
       for (String key in playerMap.keys) {
+        Map<String, dynamic> player = playerMap[key];
+        player["key"] = key;
         if (!LocalDB.hasPlayer(key))
           LocalDB.addPlayer(playerMap[key]);
         else
