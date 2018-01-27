@@ -89,8 +89,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   String _computeStateForListEntryIcon(DataSnapshot snapshot) {
     if (LocalDB.hasTeam(snapshot.key)) {
       int _local =
-          int.parse(LocalDB.getTeamByKey(snapshot.key)['ultima_modifica']);
-      int _remote = int.parse(snapshot.value['ultima_modifica']);
+          int.parse(LocalDB.getTeamByKey(snapshot.key)['ultimaModifica']);
+      int _remote = int.parse(snapshot.value['ultimaModifica']);
 
       if (_remote > _local) {
         return 'outdated';
@@ -108,10 +108,10 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Costruisce l'oggetto Color corrispondente al colore di maglia letto da
   /// Firebase o ne costruisce uno di default.
   Color _computeColoreMagliaForListEntryIcon(DataSnapshot snapshot) {
-    if ((snapshot.value['colore_maglia'] != null) ||
-        (snapshot.value['colore_maglia'] != 'null')) {
+    if ((snapshot.value['coloreMaglia'] != null) ||
+        (snapshot.value['coloreMaglia'] != 'null')) {
       return new Color(int
-          .parse(snapshot.value['colore_maglia'].substring(8, 16), radix: 16));
+          .parse(snapshot.value['coloreMaglia'].substring(8, 16), radix: 16));
     } else {
       return Colors.blue[400];
     }
@@ -147,13 +147,14 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Scarica in locale la squadra selezionata.
   void _clickedAbsentTeam(DataSnapshot snapshot) {
     Map<String, dynamic> newTeam = new Map<String, dynamic>();
-    newTeam['ultima_modifica'] = snapshot.value['ultima_modifica'];
+    newTeam['ultimaModifica'] = snapshot.value['ultimaModifica'];
     newTeam['key'] = snapshot.key;
     newTeam['stagione'] = snapshot.value['stagione'];
     newTeam['categoria'] = snapshot.value['categoria'];
     newTeam['nome'] = snapshot.value['nome'];
-    newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
+    newTeam['coloreMaglia'] = snapshot.value['coloreMaglia'];
     newTeam['allenatore'] = snapshot.value['allenatore'];
+    newTeam['assistente'] = snapshot.value['assistente'];
     newTeam['assistente'] = snapshot.value['assistente'];
     LocalDB
         .addTeam(newTeam)
@@ -170,6 +171,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     players.onValue.listen((e) {
       Map<String, dynamic> playerMap = e.snapshot.value;
       for (String key in playerMap.keys) {
+        Map<String, dynamic> player = playerMap[key];
+        player["key"] = key;
         if (!LocalDB.hasPlayer(key))
           LocalDB.addPlayer(playerMap[key]);
         else
@@ -206,12 +209,12 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     );
     if (agree) {
       Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
-      team['ultima_modifica'] = snapshot.value['ultima_modifica'];
+      team['ultimaModifica'] = snapshot.value['ultimaModifica'];
       team['key'] = snapshot.key;
       team['stagione'] = snapshot.value['stagione'];
       team['categoria'] = snapshot.value['categoria'];
       team['nome'] = snapshot.value['nome'];
-      team['colore_maglia'] = snapshot.value['colore_maglia'];
+      team['coloreMaglia'] = snapshot.value['coloreMaglia'];
       team['allenatore'] = snapshot.value['allenatore'];
       team['assistente'] = snapshot.value['assistente'];
       _downloadPlayers(teamKey: snapshot.key);
@@ -261,12 +264,12 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         .child('squadre')
         .child(snapshot.key)
         .set({
-      'ultima_modifica': team['ultima_modifica'],
+      'ultimaModifica': team['ultimaModifica'],
       'key': team['key'],
       'stagione': team['stagione'],
       'categoria': team['categoria'],
       'nome': team['nome'],
-      'colore_maglia': team['colore_maglia'],
+      'coloreMaglia': team['coloreMaglia'],
       'allenatore': team['allenatore'],
       'assistente': team['assistente'],
     });
@@ -310,6 +313,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       'nascita': player['nascita'],
       'nazionalita': player['nazionalita'],
       'nome': player['nome'],
+      'numeroMaglia': player['numeroMaglia'],
       'peso': player['peso'],
       'ruolo': player['ruolo'],
       'squadra': player['squadra'],
@@ -331,6 +335,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       'nascita': player['nascita'],
       'nazionalita': player['nazionalita'],
       'nome': player['nome'],
+      'numeroMaglia': player['numeroMaglia'],
       'peso': player['peso'],
       'ruolo': player['ruolo'],
       'squadra': player['squadra'],
@@ -421,10 +426,10 @@ class _TeamUploaderState extends State<TeamUploader> {
         child: new ListTile(
           leading: new Icon(
             Icons.group,
-            color: (team['colore_maglia'] != 'null' &&
-                    team['colore_maglia'] != null
-                ? new Color(int.parse(team['colore_maglia'].substring(8, 16),
-                    radix: 16))
+            color: (team['coloreMaglia'] != 'null' &&
+                    team['coloreMaglia'] != null
+                ? new Color(
+                    int.parse(team['coloreMaglia'].substring(8, 16), radix: 16))
                 : Theme.of(context).buttonColor),
           ),
           title: new Text(team['nome']),
@@ -443,12 +448,12 @@ class _TeamUploaderState extends State<TeamUploader> {
       newKey: newTeam.key,
     );
     newTeam.set({
-      'ultima_modifica': team['ultima_modifica'],
+      'ultimaModifica': team['ultimaModifica'],
       'key': team['key'],
       'stagione': team['stagione'],
       'categoria': team['categoria'],
       'nome': team['nome'],
-      'colore_maglia': team['colore_maglia'],
+      'coloreMaglia': team['coloreMaglia'],
       'allenatore': team['allenatore'],
       'assistente': team['assistente'],
     });

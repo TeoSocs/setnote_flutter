@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
 import 'local_database.dart';
+import 'player_properties.dart';
 import 'setnote_widgets.dart';
 
 class PlayerList extends StatefulWidget {
@@ -15,9 +16,12 @@ class PlayerList extends StatefulWidget {
 /// Pagina di gestione della formazione di un team.
 ///
 /// [team] è la squadra che si sta modificando e viene passata da costruttore.
+/// [_reloadNeeded] è una variabile ausiliaria che permette di gestire
+/// l'attesa del caricamento di alcune componenti.
 
 class _PlayerListState extends State<PlayerList> {
   Map<String, dynamic> team;
+  bool _reloadNeeded = false;
 
   /// Costruttore di _RosterManagerState.
   ///
@@ -32,21 +36,31 @@ class _PlayerListState extends State<PlayerList> {
         in LocalDB.getPlayersOf(teamKey: team['key'])) {
       playerList.add(_newListEntry(_player));
     }
-
+    setState(() => _reloadNeeded = false);
     return new SetnoteBaseLayout(
       title: (media.orientation == Orientation.landscape &&
               media.size.width >= 950.00
           ? "Gestisci formazione"
           : team['nome']),
       drawer: _newRosterManagerDrawer(),
-      child: new ListView(
-        padding: constant.standard_margin,
-        children: playerList,
-      ),
+      child: (_reloadNeeded
+          ? []
+          : new ListView(
+              padding: constant.standard_margin,
+              children: playerList,
+            )),
       floatingActionButton: new FloatingActionButton(
         tooltip: 'Aggiungi', // used by assistive technologies
         child: new Icon(Icons.add),
-        onPressed: null,
+        onPressed: () async {
+          _reloadNeeded = true;
+          Map<String, dynamic> player = new Map<String, dynamic>();
+          player['squadra'] = team['key'];
+          await Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) =>
+                  new PlayerProperties(selectedPlayer: player)));
+          setState(() => _reloadNeeded = false);
+        },
       ),
     );
   }
@@ -78,7 +92,13 @@ class _PlayerListState extends State<PlayerList> {
   Card _newListEntry(Map<String, dynamic> player) {
     return new Card(
       child: new FlatButton(
-        onPressed: null,
+        onPressed: () async {
+          _reloadNeeded = true;
+          await Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) =>
+                  new PlayerProperties(selectedPlayer: player)));
+          setState(() => _reloadNeeded = false);
+        },
         child: new ListTile(
           leading: new Icon(
             Icons.android,

@@ -39,6 +39,7 @@ abstract class LocalDB {
   ///   String nascita;
   ///   String nazionalita;
   ///   String nome;
+  ///   String numeroMaglia;
   ///   String peso;
   ///   String ruolo;
   ///   String squadra: chiave della squadra a cui il giocatore appartiene;
@@ -126,7 +127,6 @@ abstract class LocalDB {
           "Tentativo di aggiungere un giocatore già presente in lista");
     players.add(newPlayer);
     store();
-    print("aggiunto giocatore: " + newPlayer.toString());
   }
 
   /// Aggiorna un giocatore in lista.
@@ -145,18 +145,27 @@ abstract class LocalDB {
     player['nascita'] = newPlayer['nascita'];
     player['nazionalita'] = newPlayer['nazionalita'];
     player['nome'] = newPlayer['nome'];
+    player['numeroMaglia'] = newPlayer['numeroMaglia'];
     player['peso'] = newPlayer['peso'];
     player['ruolo'] = newPlayer['ruolo'];
     player['squadra'] = newPlayer['squadra'];
     store();
-    print("aggiornato giocatore: " + newPlayer.toString());
   }
 
   /// Elimina una squadra dalla lista.
   ///
   /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
-  static Future<Null> remove(String key) async {
+  static Future<Null> removeTeam(String key) async {
+    players.removeWhere((player) => player['squadra'] == key);
     teams.remove(getTeamByKey(key));
+    store();
+  }
+
+  /// Elimina un giocatore dalla lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
+  static Future<Null> removePlayer(String key) async {
+    players.remove(getPlayerByKey(key));
     store();
   }
 
