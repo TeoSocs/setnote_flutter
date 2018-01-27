@@ -16,6 +16,7 @@ class MatchProperties extends StatefulWidget {
 class _MatchPropertiesState extends State<MatchProperties> {
   final String title;
   bool _enabled = false;
+  bool _autovalidate = false;
 
   /// Template match:
   ///
@@ -46,11 +47,59 @@ class _MatchPropertiesState extends State<MatchProperties> {
       new TextEditingController();
   final TextEditingController _phaseController = new TextEditingController();
   final TextEditingController _placeController = new TextEditingController();
-
+ int radioValue = 0;
   /// Costruttore di _MatchPropertiesState.
   ///
   /// Riceve in input il [title] da applicare allo scaffold.
-  _MatchPropertiesState({this.title});
+  _MatchPropertiesState({this.title}) {
+    _opposingTeamController.addListener(
+        () => match['opposingTeam'] = _opposingTeamController.text);
+
+    _matchCodeController.addListener(
+        () => match['matchCode'] = _matchCodeController.text);
+
+    _dayController.addListener(
+        () => match['day'] = _dayController.text);
+
+    _monthController.addListener(
+        () => match['month'] = _monthController.text);
+
+    _yearController.addListener(
+        () => match['year'] = _yearController.text);
+
+    _manifestationController.addListener(
+        () => match['manifestation'] = _manifestationController.text);
+
+    _phaseController.addListener(
+        () => match['phase'] = _phaseController.text);
+
+    _placeController.addListener(
+        () => match['place'] = _placeController.text);
+  }
+
+  String _validateDay(String value) {
+    final RegExp nameExp = new RegExp(r'^[0-9]+$');
+    if (nameExp.hasMatch(value)) {
+      if (int.parse(value) > 31 && int.parse(value) < 1) return null;
+    }
+    return 'Giorno non valido';
+  }
+
+  String _validateMonth(String value) {
+    final RegExp nameExp = new RegExp(r'^[0-9]+$');
+    if (nameExp.hasMatch(value)) {
+      if (int.parse(value) > 12 && int.parse(value) < 1) return null;
+    }
+    return 'Mese non valido';
+  }
+
+  String _validateYear(String value) {
+    final RegExp nameExp = new RegExp(r'^[0-9]+$');
+    if (nameExp.hasMatch(value)) {
+      if (int.parse(value) > 2100 && int.parse(value) < 1900) return null;
+    }
+    return 'Anno non valido';
+  }
 
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
@@ -59,16 +108,25 @@ class _MatchPropertiesState extends State<MatchProperties> {
 
   void _handleSubmitted() {
     final FormState form = _formKey.currentState;
+    if (!form.validate()) {
+      setState(() => _autovalidate = true);
+      _scaffoldKey.currentState
+          .showSnackBar(new SnackBar(content: new Text('Input non valido')));
+    }
     form.save();
-    Navigator.of(context).pushNamed("/formations");
+    Navigator.of(context).pushNamed("/dataentry");
   }
 
-  int radioValue = 0;
+ 
 
   void handleRadioValueChanged(int value) {
     setState(() {
       radioValue = value;
     });
+  }
+  String displaySwitchText() {
+    if (_enabled == false) return "Femminile";
+    else return "Maschile";
   }
 
   @override
@@ -86,6 +144,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
             children: <Widget>[
               new Expanded(
                 child: new Form(
+                  key: _formKey,
+                  autovalidate: _autovalidate,
                   child: new ListView(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     children: <Widget>[
@@ -121,10 +181,10 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newOpposingTeamInput() {
-    return new TextFormField(
+
+  TextField _newOpposingTeamInput() {
+    return new TextField(
       controller: _opposingTeamController,
-      initialValue: _opposingTeamController.text,
       decoration: const InputDecoration(
         hintText: 'Qual è il nome della squadra avversaria?',
         labelText: 'Squadra Avversaria *',
@@ -132,10 +192,9 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newMatchCodeInput() {
-    return new TextFormField(
+  TextField _newMatchCodeInput() {
+    return new TextField(
       controller: _matchCodeController,
-      initialValue: _matchCodeController.text,
       decoration: const InputDecoration(
         hintText: 'Qual è il codice della gara?',
         labelText: 'Codice Gara *',
@@ -143,8 +202,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newDayInput() {
-    return new TextFormField(
+  TextField _newDayInput() {
+    return new TextField(
       controller: _dayController,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
@@ -154,8 +213,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newMonthInput() {
-    return new TextFormField(
+  TextField _newMonthInput() {
+    return new TextField(
       controller: _monthController,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
@@ -165,8 +224,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newYearInput() {
-    return new TextFormField(
+  TextField _newYearInput() {
+    return new TextField(
       controller: _yearController,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
@@ -176,8 +235,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newManifestationInput() {
-    return new TextFormField(
+  TextField _newManifestationInput() {
+    return new TextField(
       controller: _manifestationController,
       decoration: const InputDecoration(
         hintText: 'Che manifestazione è?',
@@ -186,8 +245,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newPhaseInput() {
-    return new TextFormField(
+  TextField _newPhaseInput() {
+    return new TextField(
       controller: _phaseController,
       decoration: const InputDecoration(
         hintText: 'Che fase della competizione è?',
@@ -196,8 +255,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
     );
   }
 
-  TextFormField _newPlaceInput() {
-    return new TextFormField(
+  TextField _newPlaceInput() {
+    return new TextField(
       controller: _placeController,
       decoration: const InputDecoration(
         hintText: 'Dove si svolge la partita?',
@@ -223,7 +282,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
         ),
         new Center(
             child: new Text(
-          'asdasd',
+            displaySwitchText(),
           textAlign: TextAlign.center,
         )),
       ],
