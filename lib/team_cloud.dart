@@ -22,16 +22,22 @@ class TeamDownloader extends StatefulWidget {
 ///
 /// Permette il download e l'upload dei dati delle squadre in Firebase.
 class _TeamDownloaderState extends State<TeamDownloader> {
-  bool logged = false;
+  bool _logged = false;
+  bool _needReload = false;
+  FirebaseAnimatedList _list;
+
+  _TeamDownloaderState() {
+    login();
+    _list = _newTeamDownloaderFirebaseAnimatedList();
+  }
 
   @override
   Widget build(BuildContext context) {
-    login();
     return new SetnoteBaseLayout(
       title: "Squadre nel cloud",
       child: new LoadingWidget(
-        condition: logged,
-        child: _newTeamDownloaderFirebaseAnimatedList(),
+        condition: _logged && !_needReload,
+        child: _list,
       ),
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.person_add),
@@ -57,11 +63,11 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     );
   }
 
-  /// Controlla il login dell'utente e setta la variabile [logged] di
+  /// Controlla il login dell'utente e setta la variabile [_logged] di
   /// conseguenza.
   Future<Null> login() async {
     await ensureLoggedIn();
-    setState(() => logged = true);
+    setState(() => _logged = true);
   }
 
   /// Costruisce un nuovo elemento della FirebaseAnimatedList.
@@ -133,15 +139,20 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         _clickedAbsentTeam(snapshot);
         break;
       case 'outdated':
-        _clickedOutdatedTeam(snapshot);
+        await _clickedOutdatedTeam(snapshot);
         break;
       case 'ahead':
-        _clickedAheadTeam(snapshot);
+        setState(() {
+          _needReload = true;
+          _list = null;
+        });
+        await _clickedAheadTeam(snapshot);
         break;
       case 'updated':
         break;
     }
-    Navigator.of(context).pop();
+    _list = _newTeamDownloaderFirebaseAnimatedList();
+    setState(() => _needReload = false);
   }
 
   /// Scarica in locale la squadra selezionata.
@@ -189,24 +200,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   Future<Null> _clickedOutdatedTeam(DataSnapshot snapshot) async {
     bool agree = await showDialog<bool>(
       context: context,
-      child: new AlertDialog(
-        content: const Text(
-            'Questo sovrascriverà i dati locali di questa squadra, sei sicuro?'),
-        actions: <Widget>[
-          new FlatButton(
-            child: new Text('Annulla'),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-          ),
-          new FlatButton(
-            child: new Text('Ok'),
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-          ),
-        ],
-      ),
+      child: _newTeamUploadConfirmationDialog(),
     );
     if (agree) {
       Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
@@ -230,33 +224,36 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     // Chiede conferma all'utente
     bool agree = await showDialog<bool>(
       context: context,
-      child: new AlertDialog(
-        content: const Text(
-            'Questo caricherà i tuoi dati locali nel database, sei sicuro?'),
-        actions: <Widget>[
-          new FlatButton(
-            child: new Text('Annulla'),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-          ),
-          new FlatButton(
-            child: new Text('Ok'),
-            onPressed: () {
-              print('ritortotrue');
-              Navigator.of(context).pop(true);
-            },
-          ),
-        ],
-      ),
+      child: _newTeamUploadConfirmationDialog(),
     );
-    print('sonoqui');
     if (agree) {
       // Prima carica le modifiche alla squadra
       _updateTeam(snapshot);
       // Poi carica o modifica tutti i giocatori appartenenti a quella squadra
       _updateAllPlayersOf(snapshot.key);
     }
+  }
+
+  /// Costruisce una nuova dialog di conferma
+  AlertDialog _newTeamUploadConfirmationDialog() {
+    return new AlertDialog(
+      content: const Text(
+          'Questo caricherà i tuoi dati locali nel database, sei sicuro?'),
+      actions: <Widget>[
+        new FlatButton(
+          child: new Text('Annulla'),
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+        ),
+        new FlatButton(
+          child: new Text('Ok'),
+          onPressed: () {
+            Navigator.of(context).pop(true);
+          },
+        ),
+      ],
+    );
   }
 
   /// Carica su firebase i dati relativi alla squadra nel complesso.
