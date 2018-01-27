@@ -170,7 +170,6 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         .equalTo(teamKey);
     players.onValue.listen((e) {
       Map<String, dynamic> playerMap = e.snapshot.value;
-      print(playerMap);
       for (String key in playerMap.keys) {
         Map<String, dynamic> player = playerMap[key];
         player["key"] = key;

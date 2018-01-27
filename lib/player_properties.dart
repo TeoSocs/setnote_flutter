@@ -45,7 +45,6 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   ///
   /// Gestisce l'uso di opportuni valori di default nel form.
   _PlayerPropertiesState({this.selectedPlayer}) {
-    print(this.selectedPlayer);
     if (selectedPlayer['altezza'] != null)
       _altezzaController.text = selectedPlayer['altezza'];
     if (selectedPlayer['capitano'] != null)

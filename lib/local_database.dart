@@ -127,7 +127,6 @@ abstract class LocalDB {
           "Tentativo di aggiungere un giocatore già presente in lista");
     players.add(newPlayer);
     store();
-    print("aggiunto giocatore: " + newPlayer.toString());
   }
 
   /// Aggiorna un giocatore in lista.
@@ -151,7 +150,6 @@ abstract class LocalDB {
     player['ruolo'] = newPlayer['ruolo'];
     player['squadra'] = newPlayer['squadra'];
     store();
-    print("aggiornato giocatore: " + newPlayer.toString());
   }
 
   /// Elimina una squadra dalla lista.
