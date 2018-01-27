@@ -28,6 +28,11 @@ class _ManageTeamState extends State<ManageTeam> {
   Color _coloreMaglia;
   bool _whiteButtonText;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final TextEditingController _nomeSquadraController = new TextEditingController();
+  final TextEditingController _allenatoreController = new TextEditingController();
+    final TextEditingController _assistenteController = new TextEditingController();
+  final TextEditingController _categoriaController = new TextEditingController();
+  final TextEditingController _stagioneController = new TextEditingController();
 
   /// Costruttore di _ManageTeamState.
   ///
@@ -193,7 +198,8 @@ class _ManageTeamState extends State<ManageTeam> {
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newInputNomeSquadra() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam['nome'],
+      controller: _nomeSquadraController,
+      initialValue: _nomeSquadraController.text,
       decoration: const InputDecoration(
         labelText: 'Nome squadra',
         hintText: 'CAME Casier',
@@ -222,7 +228,8 @@ class _ManageTeamState extends State<ManageTeam> {
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newInputAllenatore() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam['allenatore'],
+      controller: _allenatoreController,
+      initialValue: _allenatoreController.text,
       decoration: const InputDecoration(
         labelText: 'Allenatore',
         hintText: 'G. Povia',
@@ -250,7 +257,8 @@ class _ManageTeamState extends State<ManageTeam> {
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newInputAssistente() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam['assistente'],
+      controller: _assistenteController,
+      initialValue: _assistenteController.text,
       decoration: const InputDecoration(
         labelText: 'Assistente',
         hintText: 'A. Uscolo',
@@ -278,7 +286,8 @@ class _ManageTeamState extends State<ManageTeam> {
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newInputCategoria() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam['categoria'],
+      controller: _categoriaController,
+      initialValue: _categoriaController.text,
       decoration: const InputDecoration(
         labelText: 'Categoria',
         hintText: 'Serie C Maschile',
@@ -306,7 +315,8 @@ class _ManageTeamState extends State<ManageTeam> {
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newInputStagione() {
     Widget content = new TextFormField(
-      initialValue: selectedTeam['stagione'],
+      controller: _stagioneController,
+      initialValue: _stagioneController.text,
       decoration: const InputDecoration(
         labelText: 'Stagione',
         hintText: '2018',
