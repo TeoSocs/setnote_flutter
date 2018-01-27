@@ -55,6 +55,7 @@ class _PlayerListState extends State<PlayerList> {
         onPressed: () async {
           _reloadNeeded = true;
           Map<String, dynamic> player = new Map<String, dynamic>();
+          player['squadra'] = team['key'];
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) =>
                   new PlayerProperties(selectedPlayer: player)));
