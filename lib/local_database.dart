@@ -155,8 +155,16 @@ abstract class LocalDB {
   /// Elimina una squadra dalla lista.
   ///
   /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
-  static Future<Null> remove(String key) async {
+  static Future<Null> removeTeam(String key) async {
     teams.remove(getTeamByKey(key));
+    store();
+  }
+
+  /// Elimina un giocatore dalla lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
+  static Future<Null> removePlayer(String key) async {
+    players.remove(getPlayerByKey(key));
     store();
   }
 

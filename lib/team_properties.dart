@@ -5,6 +5,10 @@ import 'local_database.dart';
 import 'player_list.dart';
 import 'setnote_widgets.dart';
 
+/// Pagina di gestione di un singolo team.
+///
+/// È uno StatefulWidget, per una descrizione del suo funzionamento vedere il
+/// corrispondente [_TeamPropertiesState].
 class TeamProperties extends StatefulWidget {
   TeamProperties({this.selectedTeam});
   final Map<String, dynamic> selectedTeam;
@@ -13,7 +17,7 @@ class TeamProperties extends StatefulWidget {
       new _TeamPropertiesState(selectedTeam: selectedTeam);
 }
 
-/// Pagina di gestione di un singolo team.
+/// State di TeamProperties.
 ///
 /// Riceve da costruttore [selectedTeam], ovvero la squadra che andrà a
 /// modificare. Questa può essere una squadra vuota in caso di creazione
@@ -23,18 +27,24 @@ class TeamProperties extends StatefulWidget {
 /// [_whiteButtonText] è una variabile ausiliaria che controlla il colore del
 /// testo del pulsante di selezione per [_coloreMaglia].
 /// [_formKey] è una variabile ausiliaria per riferirsi al form di input.
+/// Gli altri campi dati sono una serie di [TextEditingController], uno per
+/// ogni campo di input.
 class _TeamPropertiesState extends State<TeamProperties> {
   Map<String, dynamic> selectedTeam;
   Color _coloreMaglia;
   bool _whiteButtonText;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final TextEditingController _nomeSquadraController = new TextEditingController();
-  final TextEditingController _allenatoreController = new TextEditingController();
-    final TextEditingController _assistenteController = new TextEditingController();
-  final TextEditingController _categoriaController = new TextEditingController();
+  final TextEditingController _nomeSquadraController =
+      new TextEditingController();
+  final TextEditingController _allenatoreController =
+      new TextEditingController();
+  final TextEditingController _assistenteController =
+      new TextEditingController();
+  final TextEditingController _categoriaController =
+      new TextEditingController();
   final TextEditingController _stagioneController = new TextEditingController();
 
-  /// Costruttore di _ManageTeamState.
+  /// Costruttore di [_PlayerPropertiesState].
   ///
   /// Gestisce l'uso di opportuni valori di default nel caso di campi nulli
   /// nella squadra passata in input. Questo per evitare problemi nel
@@ -360,7 +370,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
     );
   }
 
-  /// Genera un nuovo pulsante per eliminare la squadra correntemente 
+  /// Genera un nuovo pulsante per eliminare la squadra correntemente
   /// selezionata dal database locale.
   Widget _newDeleteTeam() {
     if (selectedTeam['key'] == null) {
@@ -379,7 +389,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
 
   /// Elimina la squadra correntemente selezionata dal database locale.
   void _deleteTeam() {
-    LocalDB.remove(selectedTeam['key']);
+    LocalDB.removeTeam(selectedTeam['key']);
     Navigator.of(context).pop();
   }
 }
