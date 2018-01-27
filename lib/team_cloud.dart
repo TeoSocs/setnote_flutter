@@ -108,7 +108,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Costruisce l'oggetto Color corrispondente al colore di maglia letto da
   /// Firebase o ne costruisce uno di default.
   Color _computeColoreMagliaForListEntryIcon(DataSnapshot snapshot) {
-    if ((snapshot.value['coloreMaglia'] != null) ||
+    if ((snapshot.value['coloreMaglia'] != null) &&
         (snapshot.value['coloreMaglia'] != 'null')) {
       return new Color(int
           .parse(snapshot.value['coloreMaglia'].substring(8, 16), radix: 16));
