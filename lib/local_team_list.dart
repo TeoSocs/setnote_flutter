@@ -86,7 +86,7 @@ abstract class LocalDB {
   }
 
   /// Cambia la chiave di una squadra.
-  static void changeKey({String oldKey, String newKey}) {
+  static void changeTeamKey({String oldKey, String newKey}) {
     for (var team in teams) {
       if (team['key'] == oldKey) {
         team['key'] = newKey;
@@ -94,6 +94,16 @@ abstract class LocalDB {
     }
     store();
   }
+
+  /// Cambia la chiave di un giocatore.
+    static void changePlayerKey({String oldKey, String newKey}) {
+      for (var player in players) {
+        if (player['key'] == oldKey) {
+          player['key'] = newKey;
+        }
+      }
+      store();
+    }
 
   /// Aggiunge una squadra alla lista.
   ///
