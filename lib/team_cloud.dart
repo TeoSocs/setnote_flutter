@@ -170,6 +170,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         .equalTo(teamKey);
     players.onValue.listen((e) {
       Map<String, dynamic> playerMap = e.snapshot.value;
+      if (playerMap == null) return;
       for (String key in playerMap.keys) {
         Map<String, dynamic> player = playerMap[key];
         player["key"] = key;
@@ -242,12 +243,14 @@ class _TeamDownloaderState extends State<TeamDownloader> {
           new FlatButton(
             child: new Text('Ok'),
             onPressed: () {
+              print('ritortotrue');
               Navigator.of(context).pop(true);
             },
           ),
         ],
       ),
     );
+    print('sonoqui');
     if (agree) {
       // Prima carica le modifiche alla squadra
       _updateTeam(snapshot);
