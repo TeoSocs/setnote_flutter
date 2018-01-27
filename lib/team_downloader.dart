@@ -85,8 +85,9 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Calcola il valore della variabile temporanea state in base al rapporto
   /// tra copia locale del dato e firebase.
   String _computeStateForListEntryIcon(DataSnapshot snapshot) {
-    if (LocalDB.has(snapshot.key)) {
-      int _local = int.parse(LocalDB.getByKey(snapshot.key)['ultima_modifica']);
+    if (LocalDB.hasTeam(snapshot.key)) {
+      int _local =
+          int.parse(LocalDB.getTeamByKey(snapshot.key)['ultima_modifica']);
       int _remote = int.parse(snapshot.value['ultima_modifica']);
 
       if (_remote > _local) {
@@ -152,8 +153,27 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     newTeam['colore_maglia'] = snapshot.value['colore_maglia'];
     newTeam['allenatore'] = snapshot.value['allenatore'];
     newTeam['assistente'] = snapshot.value['assistente'];
-    // newTeam['giocatori'];
-    LocalDB.add(newTeam);
+    LocalDB
+        .addTeam(newTeam)
+        .then((foo) => _downloadPlayers(teamKey: newTeam['key']));
+  }
+
+  /// Scarica in locale i giocatori della squadra passata in input
+  static Future<Null> _downloadPlayers({String teamKey}) async {
+    Query players = FirebaseDatabase.instance
+        .reference()
+        .child('giocatori')
+        .orderByChild('squadra')
+        .equalTo(teamKey);
+    players.onValue.listen((e) {
+      Map<String, dynamic> playerMap = e.snapshot.value;
+      for (String key in playerMap.keys) {
+        if (!LocalDB.hasPlayer(key))
+          LocalDB.addPlayer(playerMap[key]);
+        else
+          LocalDB.updatePlayer(playerMap[key]);
+      }
+    });
   }
 
   /// Aggiorna la copia locale della squadra selezionata
@@ -183,7 +203,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       ),
     );
     if (agree) {
-      Map<String, dynamic> team = LocalDB.getByKey(snapshot.key);
+      Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
       team['ultima_modifica'] = snapshot.value['ultima_modifica'];
       team['key'] = snapshot.key;
       team['stagione'] = snapshot.value['stagione'];
@@ -192,7 +212,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       team['colore_maglia'] = snapshot.value['colore_maglia'];
       team['allenatore'] = snapshot.value['allenatore'];
       team['assistente'] = snapshot.value['assistente'];
-      LocalDB.store();
+      _downloadPlayers(teamKey: snapshot.key);
     }
   }
 
@@ -201,6 +221,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Al momento l'operazione è distruttiva.
   // TODO: integrare dati in DB invece di sovrascrivere.
   Future<Null> _clickedAheadTeam(DataSnapshot snapshot) async {
+    // Chiede conferma all'utente
     bool agree = await showDialog<bool>(
       context: context,
       child: new AlertDialog(
@@ -223,23 +244,95 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       ),
     );
     if (agree) {
-      Map<String, dynamic> team = LocalDB.getByKey(snapshot.key);
-      FirebaseDatabase.instance
-          .reference()
-          .child('squadre')
-          .child(snapshot.key)
-          .set({
-        'ultima_modifica': team['ultima_modifica'],
-        'key': team['key'],
-        'stagione': team['stagione'],
-        'categoria': team['categoria'],
-        'nome': team['nome'],
-        'colore_maglia': team['colore_maglia'],
-        'allenatore': team['allenatore'],
-        'assistente': team['assistente'],
-      });
-      analytics.logEvent(name: 'modificata_squadra');
+      // Prima carica le modifiche alla squadra
+      _updateTeam(snapshot);
+      // Poi carica o modifica tutti i giocatori appartenenti a quella squadra
+      _updateAllPlayersOf(snapshot.key);
     }
+  }
+
+  /// Carica su firebase i dati relativi alla squadra nel complesso.
+  void _updateTeam(DataSnapshot snapshot) {
+    Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
+    FirebaseDatabase.instance
+        .reference()
+        .child('squadre')
+        .child(snapshot.key)
+        .set({
+      'ultima_modifica': team['ultima_modifica'],
+      'key': team['key'],
+      'stagione': team['stagione'],
+      'categoria': team['categoria'],
+      'nome': team['nome'],
+      'colore_maglia': team['colore_maglia'],
+      'allenatore': team['allenatore'],
+      'assistente': team['assistente'],
+    });
+    analytics.logEvent(name: 'modificata_squadra');
+  }
+
+  /// Carica i giocatori di una squadra decidendo se aggiornare o creare nuovi
+  /// giocatori.
+  void _updateAllPlayersOf(String teamKey) {
+    List<Map<String, dynamic>> localPlayers =
+        LocalDB.getPlayersOf(teamKey: teamKey);
+    for (Map<String, dynamic> local in localPlayers) {
+      Query players = FirebaseDatabase.instance
+          .reference()
+          .child('giocatori')
+          .orderByKey()
+          .equalTo(local['key']);
+      players.onValue.listen((e) {
+        if (e.snapshot.value.keys.isEmpty)
+          _uploadSinglePlayer(local);
+        else
+          _updateSinglePlayer(local);
+      });
+    }
+  }
+
+  /// Carica un nuovo giocatore in firebase.
+  void _uploadSinglePlayer(Map<String, dynamic> player) {
+    DatabaseReference newPlayer =
+        FirebaseDatabase.instance.reference().child('giocatori').push();
+    LocalDB.changePlayerKey(
+      oldKey: player['key'],
+      newKey: newPlayer.key,
+    );
+    newPlayer.set({
+      'key': player['key'],
+      'altezza': player['altezza'],
+      'capitano': player['capitano'],
+      'cognome': player['cognome'],
+      'mancino': player['mancino'],
+      'nascita': player['nascita'],
+      'nazionalita': player['nazionalita'],
+      'nome': player['nome'],
+      'peso': player['peso'],
+      'ruolo': player['ruolo'],
+      'squadra': player['squadra'],
+    });
+  }
+
+  /// Aggiorna un giocatore già presente in firebase.
+  void _updateSinglePlayer(Map<String, dynamic> player) {
+    FirebaseDatabase.instance
+        .reference()
+        .child('giocatori')
+        .child(player['key'])
+        .set({
+      'key': player['key'],
+      'altezza': player['altezza'],
+      'capitano': player['capitano'],
+      'cognome': player['cognome'],
+      'mancino': player['mancino'],
+      'nascita': player['nascita'],
+      'nazionalita': player['nazionalita'],
+      'nome': player['nome'],
+      'peso': player['peso'],
+      'ruolo': player['ruolo'],
+      'squadra': player['squadra'],
+    });
   }
 }
 
@@ -308,6 +401,7 @@ class _TeamUploaderState extends State<TeamUploader> {
     );
   }
 
+  /// Crea una Card per la _teamList rappresentativa del team passato in input.
   Card _newTeamCard(Map<String, dynamic> team) {
     return new Card(
       child: new FlatButton(
@@ -326,9 +420,9 @@ class _TeamUploaderState extends State<TeamUploader> {
           leading: new Icon(
             Icons.group,
             color: (team['colore_maglia'] != 'null' &&
-                team['colore_maglia'] != null
+                    team['colore_maglia'] != null
                 ? new Color(int.parse(team['colore_maglia'].substring(8, 16),
-                radix: 16))
+                    radix: 16))
                 : Theme.of(context).buttonColor),
           ),
           title: new Text(team['nome']),
@@ -341,9 +435,11 @@ class _TeamUploaderState extends State<TeamUploader> {
   /// Carica il team nel database e sincronizza il campo key con quello locale.
   void _uploadTeam(Map<String, dynamic> team) {
     DatabaseReference newTeam =
-    FirebaseDatabase.instance.reference().child('squadre').push();
-    team['key'] = newTeam.key;
-    LocalDB.store();
+        FirebaseDatabase.instance.reference().child('squadre').push();
+    LocalDB.changeTeamKey(
+      oldKey: team['key'],
+      newKey: newTeam.key,
+    );
     newTeam.set({
       'ultima_modifica': team['ultima_modifica'],
       'key': team['key'],

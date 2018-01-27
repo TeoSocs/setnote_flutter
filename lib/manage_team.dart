@@ -145,7 +145,7 @@ class _ManageTeamState extends State<ManageTeam> {
     if (selectedTeam['key'] == null) {
       selectedTeam['key'] =
           new DateTime.now().millisecondsSinceEpoch.toString();
-      LocalDB.add(selectedTeam);
+      LocalDB.addTeam(selectedTeam);
     } else {
       LocalDB.store();
     }
