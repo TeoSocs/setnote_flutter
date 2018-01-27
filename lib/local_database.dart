@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Database locale delle squadre.
 ///
@@ -96,14 +97,14 @@ abstract class LocalDB {
   }
 
   /// Cambia la chiave di un giocatore.
-    static void changePlayerKey({String oldKey, String newKey}) {
-      for (var player in players) {
-        if (player['key'] == oldKey) {
-          player['key'] = newKey;
-        }
+  static void changePlayerKey({String oldKey, String newKey}) {
+    for (var player in players) {
+      if (player['key'] == oldKey) {
+        player['key'] = newKey;
       }
-      store();
     }
+    store();
+  }
 
   /// Aggiunge una squadra alla lista.
   ///

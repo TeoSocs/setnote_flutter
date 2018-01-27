@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:setnote_flutter/local_team_list.dart';
-import 'package:setnote_flutter/roster_manager.dart';
-import 'package:setnote_flutter/setnote_widgets.dart';
 
 import 'constants.dart' as constant;
+import 'local_database.dart';
+import 'player_list.dart';
+import 'setnote_widgets.dart';
 
-class ManageTeam extends StatefulWidget {
-  ManageTeam({this.selectedTeam});
+class TeamProperties extends StatefulWidget {
+  TeamProperties({this.selectedTeam});
   final Map<String, dynamic> selectedTeam;
   @override
-  _ManageTeamState createState() =>
-      new _ManageTeamState(selectedTeam: selectedTeam);
+  _TeamPropertiesState createState() =>
+      new _TeamPropertiesState(selectedTeam: selectedTeam);
 }
 
 /// Pagina di gestione di un singolo team.
@@ -23,7 +23,7 @@ class ManageTeam extends StatefulWidget {
 /// [_whiteButtonText] è una variabile ausiliaria che controlla il colore del
 /// testo del pulsante di selezione per [_coloreMaglia].
 /// [_formKey] è una variabile ausiliaria per riferirsi al form di input.
-class _ManageTeamState extends State<ManageTeam> {
+class _TeamPropertiesState extends State<TeamProperties> {
   Map<String, dynamic> selectedTeam;
   Color _coloreMaglia;
   bool _whiteButtonText;
@@ -39,7 +39,7 @@ class _ManageTeamState extends State<ManageTeam> {
   /// Gestisce l'uso di opportuni valori di default nel caso di campi nulli
   /// nella squadra passata in input. Questo per evitare problemi nel
   /// recuperare i valori iniziali da parte del form.
-  _ManageTeamState({this.selectedTeam}) {
+  _TeamPropertiesState({this.selectedTeam}) {
     if (selectedTeam['colore_maglia'] != 'null' &&
         selectedTeam['colore_maglia'] != null) {
       _coloreMaglia = new Color(
@@ -354,7 +354,7 @@ class _ManageTeamState extends State<ManageTeam> {
         onPressed: () async {
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) =>
-                  new RosterManager(team: selectedTeam)));
+                  new PlayerList(team: selectedTeam)));
         },
       )),
     );

@@ -13,7 +13,8 @@ class MainMenu extends StatelessWidget {
         child: new ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420.0),
           child: new ListView(
-            shrinkWrap: media.orientation == Orientation.landscape && media.size.width >= 950.00,
+            shrinkWrap: media.orientation == Orientation.landscape &&
+                media.size.width >= 950.00,
             children: <Widget>[
               new Card(
                 child: new FlatButton(

@@ -4,32 +4,36 @@ import 'constants.dart' as constant;
 import 'drawer.dart';
 import 'setnote_widgets.dart';
 
-class MatchPage extends StatefulWidget {
-  const MatchPage({this.title});
+class MatchProperties extends StatefulWidget {
+  const MatchProperties({this.title});
   final String title;
 
   @override
-  _MatchPageState createState() => new _MatchPageState(title: title);
+  _MatchPropertiesState createState() =>
+      new _MatchPropertiesState(title: title);
 }
 
-class MatchData {
-  String opposingTeam = '';
-  String matchCode = '';
-  String day = '';
-  String month = '';
-  String year = '';
-  String manifestation = '';
-  String phase = '';
-  String place = '';
-  bool isMale = false;
-}
-
-class _MatchPageState extends State<MatchPage> {
-  _MatchPageState({this.title});
-
+class _MatchPropertiesState extends State<MatchProperties> {
   final String title;
   bool _enabled = false;
-  MatchData match = new MatchData();
+
+  /// Template match:
+  ///
+  /// {
+  ///   String opposingTeam = '';
+  ///   String matchCode = '';
+  ///   String day = '';
+  ///   String month = '';
+  ///   String year = '';
+  ///   String manifestation = '';
+  ///   String phase = '';
+  ///   String place = '';
+  ///   String isMale = 'false';
+  /// }
+  Map<String, dynamic> match = new Map<String, dynamic>();
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   final TextEditingController _opposingTeamController =
       new TextEditingController();
@@ -43,13 +47,16 @@ class _MatchPageState extends State<MatchPage> {
   final TextEditingController _phaseController = new TextEditingController();
   final TextEditingController _placeController = new TextEditingController();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  /// Costruttore di _MatchPropertiesState.
+  ///
+  /// Riceve in input il [title] da applicare allo scaffold.
+  _MatchPropertiesState({this.title});
+
   void showInSnackBar(String value) {
     _scaffoldKey.currentState
         .showSnackBar(new SnackBar(content: new Text(value)));
   }
 
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   void _handleSubmitted() {
     final FormState form = _formKey.currentState;
     form.save();
@@ -67,21 +74,21 @@ class _MatchPageState extends State<MatchPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        key: _scaffoldKey,
-        appBar: new AppBar(title: new Text(constant.app_name + " - " + title)),
-        drawer: new Drawer(
-          child: new MyDrawer(),
-        ),
-        body: new Center(
-            child: new ConstrainedBox(
+      key: _scaffoldKey,
+      appBar: new AppBar(title: new Text(constant.app_name + " - " + title)),
+      drawer: new Drawer(
+        child: new MyDrawer(),
+      ),
+      body: new Center(
+        child: new ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420.0),
           child: new Column(
             children: <Widget>[
               new Expanded(
                 child: new Form(
-                    child: new ListView(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        children: <Widget>[
+                  child: new ListView(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    children: <Widget>[
                       _newOpposingTeamInput(),
                       _newMatchCodeInput(),
                       new Row(
@@ -103,11 +110,15 @@ class _MatchPageState extends State<MatchPage> {
                       _newPlaceInput(),
                       _newSexSwitch(),
                       _newFormationsButton(),
-                    ])),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
 
   TextFormField _newOpposingTeamInput() {

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 
 import 'constants.dart' as constant;
 import 'main_menu.dart';
-import 'manage_team.dart';
-import 'match_page.dart';
+import 'match_properties.dart';
 import 'mypage.dart';
-import 'team_page.dart';
+import 'team_list.dart';
+import 'team_properties.dart';
+
+// import 'package:shared_preferences/shared_preferences.dart';
 
 /// Avvia l'applicazione.
 ///
@@ -21,8 +21,8 @@ void main() {
     home: new MainMenu(), // becomes the route named '/'
     routes: <String, WidgetBuilder>{
       '/match': (BuildContext context) =>
-          new MatchPage(title: constant.match_label),
-      '/team': (BuildContext context) => new TeamPage(),
+          new MatchProperties(title: constant.match_label),
+      '/team': (BuildContext context) => new TeamList(),
       '/stats': (BuildContext context) =>
           new MyPage(title: constant.stats_label),
       '/history': (BuildContext context) =>
@@ -32,7 +32,7 @@ void main() {
       '/formations': (BuildContext context) =>
       new MyPage(title: constant.formations_label),
       '/manage_team': (BuildContext context) =>
-      new ManageTeam(),
+      new TeamProperties(),
     },
   ));
 }

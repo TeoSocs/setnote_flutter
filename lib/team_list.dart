@@ -1,15 +1,16 @@
-import 'package:setnote_flutter/local_team_list.dart';
 import 'package:flutter/material.dart';
-import 'package:setnote_flutter/setnote_widgets.dart';
-import 'package:setnote_flutter/team_downloader.dart';
-import 'package:setnote_flutter/constants.dart' as constant;
-import 'package:setnote_flutter/manage_team.dart';
+
+import 'constants.dart' as constant;
+import 'local_database.dart';
+import 'setnote_widgets.dart';
+import 'team_cloud.dart';
+import 'team_properties.dart';
 
 /// Carica una squadra già presente in locale nel DB.
 ///
 /// È uno StatefulWidget, per una descrizione del suo funzionamento vedere lo
 /// State corrispondente.
-class TeamPage extends StatefulWidget {
+class TeamList extends StatefulWidget {
   @override
   State createState() => new _TeamPageState();
 }
@@ -19,7 +20,7 @@ class TeamPage extends StatefulWidget {
 /// Crea una lista basata sulle squadre presenti in locale.
 /// [_reloadNeeded] è una variabile ausiliaria che permette di gestire
 /// l'attesa del caricamento di alcune componenti.
-class _TeamPageState extends State<TeamPage> {
+class _TeamPageState extends State<TeamList> {
   bool _reloadNeeded = true;
 
   /// Costruttore di _TeamPageState.
@@ -66,7 +67,7 @@ class _TeamPageState extends State<TeamPage> {
           _reloadNeeded = true;
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) =>
-                  new ManageTeam(selectedTeam: team)));
+                  new TeamProperties(selectedTeam: team)));
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
@@ -96,7 +97,7 @@ class _TeamPageState extends State<TeamPage> {
           Map<String, dynamic> team = new Map<String, dynamic>();
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) =>
-                  new ManageTeam(selectedTeam: team)));
+                  new TeamProperties(selectedTeam: team)));
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(

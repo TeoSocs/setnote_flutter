@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'local_team_list.dart';
-import 'setnote_widgets.dart';
 
 import 'constants.dart' as constant;
+import 'local_database.dart';
+import 'setnote_widgets.dart';
 
-class RosterManager extends StatefulWidget {
-  RosterManager({this.team});
+class PlayerList extends StatefulWidget {
+  PlayerList({this.team});
   final Map<String, dynamic> team;
 
   @override
-  State createState() => new _RosterManagerState(team: team);
+  State createState() => new _PlayerListState(team: team);
 }
 
 /// Pagina di gestione della formazione di un team.
 ///
 /// [team] è la squadra che si sta modificando e viene passata da costruttore.
 
-class _RosterManagerState extends State<RosterManager> {
+class _PlayerListState extends State<PlayerList> {
   Map<String, dynamic> team;
 
   /// Costruttore di _RosterManagerState.
   ///
   /// Riceve in input [team] e recupera da Firebase il riferimento [rosterDB].
-  _RosterManagerState({this.team});
+  _PlayerListState({this.team});
 
   @override
   Widget build(BuildContext context) {

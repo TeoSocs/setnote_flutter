@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:setnote_flutter/local_database.dart';
 import 'package:test/test.dart';
-import 'package:setnote_flutter/local_team_list.dart';
 
 
 
@@ -12,9 +11,9 @@ test('test dei test', () {
 
  test('checkTextColor unity test', () {
      var team =<String, dynamic> {"ultima_modifica":"123455","key":"chiavesecondasquadra","stagione":"2018","categoria":"Serie X Femminile","nome":"Vattelapesca","colore_maglia":"Color(0xff214d82)","allenatore":"allenatore2","assistente":"assistente2"}; 
-    LocalDB.add(team);
+    LocalDB.addTeam(team);
     var key= "chiavesecondasquadra";
-    var answer = LocalDB.getByKey(key);
+    var answer = LocalDB.getTeamByKey(key);
    
     expect(answer, team);
   });
