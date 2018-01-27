@@ -34,8 +34,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
   Color _coloreMaglia;
   bool _whiteButtonText;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final TextEditingController _nomeSquadraController =
-      new TextEditingController();
+  final TextEditingController _nomeController = new TextEditingController();
   final TextEditingController _allenatoreController =
       new TextEditingController();
   final TextEditingController _assistenteController =
@@ -46,20 +45,23 @@ class _TeamPropertiesState extends State<TeamProperties> {
 
   /// Costruttore di [_PlayerPropertiesState].
   ///
-  /// Gestisce l'uso di opportuni valori di default nel caso di campi nulli
-  /// nella squadra passata in input. Questo per evitare problemi nel
-  /// recuperare i valori iniziali da parte del form.
+  /// Gestisce l'uso di opportuni valori di default nel form.
   _TeamPropertiesState({this.selectedTeam}) {
     if (selectedTeam['colore_maglia'] != 'null' &&
         selectedTeam['colore_maglia'] != null) {
       _coloreMaglia = new Color(
           int.parse(selectedTeam['colore_maglia'].substring(8, 16), radix: 16));
     }
-    if (selectedTeam['nome'] == null) selectedTeam['nome'] = '';
-    if (selectedTeam['allenatore'] == null) selectedTeam['allenatore'] = '';
-    if (selectedTeam['assistente'] == null) selectedTeam['assistente'] = '';
-    if (selectedTeam['categoria'] == null) selectedTeam['categoria'] = '';
-    if (selectedTeam['stagione'] == null) selectedTeam['stagione'] = '';
+    if (selectedTeam['nome'] != null)
+      _nomeController.text = selectedTeam['nome'];
+    if (selectedTeam['allenatore'] != null)
+      _allenatoreController.text = selectedTeam['allenatore'];
+    if (selectedTeam['assistente'] != null)
+      _assistenteController.text = selectedTeam['assistente'];
+    if (selectedTeam['categoria'] != null)
+      _categoriaController.text = selectedTeam['categoria'];
+    if (selectedTeam['stagione'] != null)
+      _stagioneController.text = selectedTeam['stagione'];
     checkTextColor(_coloreMaglia);
   }
 
@@ -208,8 +210,8 @@ class _TeamPropertiesState extends State<TeamProperties> {
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newInputNomeSquadra() {
     Widget content = new TextFormField(
-      controller: _nomeSquadraController,
-      initialValue: _nomeSquadraController.text,
+      controller: _nomeController,
+      initialValue: _nomeController.text,
       decoration: const InputDecoration(
         labelText: 'Nome squadra',
         hintText: 'CAME Casier',
