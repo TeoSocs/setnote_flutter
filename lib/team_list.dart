@@ -12,7 +12,7 @@ import 'team_properties.dart';
 /// State corrispondente.
 class TeamList extends StatefulWidget {
   @override
-  State createState() => new _TeamPageState();
+  State createState() => new _TeamListState();
 }
 
 /// State di TeamPage.
@@ -20,7 +20,7 @@ class TeamList extends StatefulWidget {
 /// Crea una lista basata sulle squadre presenti in locale.
 /// [_reloadNeeded] è una variabile ausiliaria che permette di gestire
 /// l'attesa del caricamento di alcune componenti.
-class _TeamPageState extends State<TeamList> {
+class _TeamListState extends State<TeamList> {
   bool _reloadNeeded = true;
 
   /// Costruttore di _TeamPageState.
@@ -29,7 +29,7 @@ class _TeamPageState extends State<TeamList> {
   /// quanto operazione potenzialmente lunga ed indispensabile allo
   /// svolgimento delle funzioni base del widget. A caricamento ultimato
   /// imposta la variabile [_reloadNeeded] in modo da aggiornare l'interfaccia.
-  _TeamPageState() {
+  _TeamListState() {
     LocalDB.readFromFile().then((x) => setState(() => _reloadNeeded = false));
   }
 

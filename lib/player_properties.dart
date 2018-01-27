@@ -27,28 +27,44 @@ class PlayerProperties extends StatefulWidget {
 class _PlayerPropertiesState extends State<PlayerProperties> {
   Map<String, dynamic> selectedPlayer;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final TextEditingController _nomeGiocatoreController =
-  new TextEditingController();
+
+  final TextEditingController _altezzaController = new TextEditingController();
+  final TextEditingController _capitanoController = new TextEditingController();
+  final TextEditingController _cognomeController = new TextEditingController();
+  final TextEditingController _mancinoController = new TextEditingController();
+  final TextEditingController _nascitaController = new TextEditingController();
+  final TextEditingController _nazionalitaController =
+      new TextEditingController();
+  final TextEditingController _nomeController = new TextEditingController();
+  final TextEditingController _pesoController = new TextEditingController();
+  final TextEditingController _ruoloController = new TextEditingController();
+  final TextEditingController _squadraController = new TextEditingController();
 
   /// Costruttore di [_PlayerPropertiesState].
   ///
-  /// Gestisce l'uso di opportuni valori di default nel caso di campi nulli
-  /// nel giocatore passato in input. Questo per evitare problemi nel
-  /// recuperare i valori iniziali da parte del form.
+  /// Gestisce l'uso di opportuni valori di default nel form.
   _PlayerPropertiesState({this.selectedPlayer}) {
-    if (selectedPlayer['altezza'] == null) selectedPlayer['altezza'] = '';
-    if (selectedPlayer['capitano'] == null) selectedPlayer['capitano'] = '';
-    if (selectedPlayer['cognome'] == null) selectedPlayer['cognome'] = '';
-    if (selectedPlayer['mancino'] == null) selectedPlayer['mancino'] = '';
-    if (selectedPlayer['nascita'] == null) selectedPlayer['nascita'] = '';
-    if (selectedPlayer['nazionalita'] == null) selectedPlayer['nazionalita'] =
-    '';
-    if (selectedPlayer['nome'] == null) selectedPlayer['nome'] = '';
-    if (selectedPlayer['peso'] == null) selectedPlayer['peso'] = '';
-    if (selectedPlayer['ruolo'] == null) selectedPlayer['ruolo'] = '';
-    if (selectedPlayer['squadra'] == null) selectedPlayer['squadra'] = '';
+    if (selectedPlayer['altezza'] != null)
+      _altezzaController.text = selectedPlayer['altezza'];
+    if (selectedPlayer['capitano'] != null)
+      _capitanoController.text = selectedPlayer['capitano'];
+    if (selectedPlayer['cognome'] != null)
+      _cognomeController.text = selectedPlayer['cognome'];
+    if (selectedPlayer['mancino'] != null)
+      _mancinoController.text = selectedPlayer['mancino'];
+    if (selectedPlayer['nascita'] != null)
+      _nascitaController.text = selectedPlayer['nascita'];
+    if (selectedPlayer['nazionalita'] != null)
+      _nazionalitaController.text = selectedPlayer['nazionalita'];
+    if (selectedPlayer['nome'] != null)
+      _nomeController.text = selectedPlayer['nome'];
+    if (selectedPlayer['peso'] != null)
+      _pesoController.text = selectedPlayer['peso'];
+    if (selectedPlayer['ruolo'] != null)
+      _ruoloController.text = selectedPlayer['ruolo'];
+    if (selectedPlayer['squadra'] != null)
+      _squadraController.text = selectedPlayer['squadra'];
   }
-
 
   /// Costruisce la pagina.
   ///
@@ -61,20 +77,21 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
         child: const Icon(Icons.check),
         onPressed: () => update(context),
       ),
-      title:
-      (selectedPlayer['key'] == null ? "Nuovo giocatore" : "Aggiorna "
+      title: (selectedPlayer['key'] == null
+          ? "Nuovo giocatore"
+          : "Aggiorna "
           "giocatore"),
       child: new Center(
         child: new LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              MediaQueryData media = MediaQuery.of(context);
-              if (media.orientation == Orientation.landscape &&
-                  media.size.width >= 950.00) {
-                return _newTabletForm();
-              } else {
-                return _newPhoneForm();
-              }
-            }),
+          MediaQueryData media = MediaQuery.of(context);
+          if (media.orientation == Orientation.landscape &&
+              media.size.width >= 950.00) {
+            return _newTabletForm();
+          } else {
+            return _newPhoneForm();
+          }
+        }),
       ),
     );
   }
@@ -87,7 +104,27 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       child: new ListView(
         padding: constant.standard_margin,
         children: <Widget>[
-          // TODO: disegna il form
+          new Row(
+            children: <Widget>[
+              _newInputNome(),
+              _newInputCognome(),
+              _newInputRuolo(),
+            ],
+          ),
+          new Row(
+            children: <Widget>[
+              _newInputNascita(),
+              _newInputNazionalita(),
+            ],
+          ),
+          new Row(
+            children: <Widget>[
+              _newInputMancino(),
+              _newInputCapitano(),
+              _newInputAltezza(),
+              _newInputPeso(),
+            ],
+          ),
           _newDeletePlayer(),
         ],
       ),
@@ -102,7 +139,16 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       child: new ListView(
         padding: constant.standard_margin,
         children: <Widget>[
-          // TODO: disegna il form
+          _newInputNome(),
+          _newInputCognome(),
+          _newInputRuolo(),
+          _newInputNascita(),
+          _newInputNazionalita(),
+          _newInputMancino(),
+          _newInputCapitano(),
+          _newInputAltezza(),
+          _newInputPeso(),
+          _newDeletePlayer(),
         ],
       ),
     );
@@ -122,6 +168,267 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       LocalDB.store();
     }
     Navigator.of(context).pop();
+  }
+
+  /// Genera un nuovo campo di input per il nome del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputNome() {
+    Widget content = new TextFormField(
+      controller: _nomeController,
+      initialValue: _nomeController.text,
+      decoration: const InputDecoration(
+        labelText: 'Nome',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['nome'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per il cognome del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputCognome() {
+    Widget content = new TextFormField(
+      controller: _cognomeController,
+      initialValue: _cognomeController.text,
+      decoration: const InputDecoration(
+        labelText: 'Cognome',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['cognome'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per il ruolo del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputRuolo() {
+    Widget content = new TextFormField(
+      controller: _ruoloController,
+      initialValue: _ruoloController.text,
+      decoration: const InputDecoration(
+        labelText: 'Ruolo',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['ruolo'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per la data di nascita del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputNascita() {
+    Widget content = new TextFormField(
+      controller: _nascitaController,
+      initialValue: _nascitaController.text,
+      decoration: const InputDecoration(
+        labelText: 'Data di nascita',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['nascita'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per la nazionalita del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputNazionalita() {
+    Widget content = new TextFormField(
+      controller: _nazionalitaController,
+      initialValue: _nazionalitaController.text,
+      decoration: const InputDecoration(
+        labelText: 'Nazionalità',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['nazionalita'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per indicare se il giocatore è mancino.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputMancino() {
+    Widget content = new TextFormField(
+      controller: _mancinoController,
+      initialValue: _mancinoController.text,
+      decoration: const InputDecoration(
+        labelText: 'Mancino',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['mancino'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per indicare se il giocatore è il capitano.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputCapitano() {
+    Widget content = new TextFormField(
+      controller: _capitanoController,
+      initialValue: _capitanoController.text,
+      decoration: const InputDecoration(
+        labelText: 'Capitano',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['capitano'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per l'altezza del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputAltezza() {
+    Widget content = new TextFormField(
+      controller: _altezzaController,
+      initialValue: _altezzaController.text,
+      decoration: const InputDecoration(
+        labelText: 'Altezza',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['altezza'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per il peso del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputPeso() {
+    Widget content = new TextFormField(
+      controller: _pesoController,
+      initialValue: _pesoController.text,
+      decoration: const InputDecoration(
+        labelText: 'Peso',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['peso'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
   }
 
   /// Genera un nuovo pulsante per eliminare il giocatore correntemente
