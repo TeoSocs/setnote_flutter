@@ -86,7 +86,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// tra copia locale del dato e firebase.
   String _computeStateForListEntryIcon(DataSnapshot snapshot) {
     if (LocalDB.hasTeam(snapshot.key)) {
-      int _local = int.parse(LocalDB.getTeamByKey(snapshot.key)['ultima_modifica']);
+      int _local =
+          int.parse(LocalDB.getTeamByKey(snapshot.key)['ultima_modifica']);
       int _remote = int.parse(snapshot.value['ultima_modifica']);
 
       if (_remote > _local) {
@@ -167,8 +168,10 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     players.onValue.listen((e) {
       Map<String, dynamic> playerMap = e.snapshot.value;
       for (String key in playerMap.keys) {
-        if (!LocalDB.hasPlayer(key)) LocalDB.addPlayer(playerMap[key]);
-        else LocalDB.updatePlayer(playerMap[key]);
+        if (!LocalDB.hasPlayer(key))
+          LocalDB.addPlayer(playerMap[key]);
+        else
+          LocalDB.updatePlayer(playerMap[key]);
       }
     });
   }
@@ -209,8 +212,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       team['colore_maglia'] = snapshot.value['colore_maglia'];
       team['allenatore'] = snapshot.value['allenatore'];
       team['assistente'] = snapshot.value['assistente'];
-      LocalDB.store()
-      .then((foo) => _downloadPlayers(teamKey: snapshot.key));
+      _downloadPlayers(teamKey: snapshot.key);
     }
   }
 
@@ -219,6 +221,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Al momento l'operazione è distruttiva.
   // TODO: integrare dati in DB invece di sovrascrivere.
   Future<Null> _clickedAheadTeam(DataSnapshot snapshot) async {
+    // Chiede conferma all'utente
     bool agree = await showDialog<bool>(
       context: context,
       child: new AlertDialog(
@@ -241,23 +244,95 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       ),
     );
     if (agree) {
-      Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
-      FirebaseDatabase.instance
-          .reference()
-          .child('squadre')
-          .child(snapshot.key)
-          .set({
-        'ultima_modifica': team['ultima_modifica'],
-        'key': team['key'],
-        'stagione': team['stagione'],
-        'categoria': team['categoria'],
-        'nome': team['nome'],
-        'colore_maglia': team['colore_maglia'],
-        'allenatore': team['allenatore'],
-        'assistente': team['assistente'],
-      });
-      analytics.logEvent(name: 'modificata_squadra');
+      // Prima carica le modifiche alla squadra
+      _updateTeam(snapshot);
+      // Poi carica o modifica tutti i giocatori appartenenti a quella squadra
+      _updateAllPlayersOf(snapshot.key);
     }
+  }
+
+  /// Carica su firebase i dati relativi alla squadra nel complesso.
+  void _updateTeam(DataSnapshot snapshot) {
+    Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
+    FirebaseDatabase.instance
+        .reference()
+        .child('squadre')
+        .child(snapshot.key)
+        .set({
+      'ultima_modifica': team['ultima_modifica'],
+      'key': team['key'],
+      'stagione': team['stagione'],
+      'categoria': team['categoria'],
+      'nome': team['nome'],
+      'colore_maglia': team['colore_maglia'],
+      'allenatore': team['allenatore'],
+      'assistente': team['assistente'],
+    });
+    analytics.logEvent(name: 'modificata_squadra');
+  }
+
+  /// Carica i giocatori di una squadra decidendo se aggiornare o creare nuovi
+  /// giocatori.
+  void _updateAllPlayersOf(String teamKey) {
+    List<Map<String, dynamic>> localPlayers =
+        LocalDB.getPlayersOf(teamKey: teamKey);
+    for (Map<String, dynamic> local in localPlayers) {
+      Query players = FirebaseDatabase.instance
+          .reference()
+          .child('giocatori')
+          .orderByKey()
+          .equalTo(local['key']);
+      players.onValue.listen((e) {
+        if (e.snapshot.value.keys.isEmpty)
+          _uploadSinglePlayer(local);
+        else
+          _updateSinglePlayer(local);
+      });
+    }
+  }
+
+  /// Carica un nuovo giocatore in firebase.
+  void _uploadSinglePlayer(Map<String, dynamic> player) {
+    DatabaseReference newPlayer =
+        FirebaseDatabase.instance.reference().child('giocatori').push();
+    LocalDB.changePlayerKey(
+      oldKey: player['key'],
+      newKey: newPlayer.key,
+    );
+    newPlayer.set({
+      'key': player['key'],
+      'altezza': player['altezza'],
+      'capitano': player['capitano'],
+      'cognome': player['cognome'],
+      'mancino': player['mancino'],
+      'nascita': player['nascita'],
+      'nazionalita': player['nazionalita'],
+      'nome': player['nome'],
+      'peso': player['peso'],
+      'ruolo': player['ruolo'],
+      'squadra': player['squadra'],
+    });
+  }
+
+  /// Aggiorna un giocatore già presente in firebase.
+  void _updateSinglePlayer(Map<String, dynamic> player) {
+    FirebaseDatabase.instance
+        .reference()
+        .child('giocatori')
+        .child(player['key'])
+        .set({
+      'key': player['key'],
+      'altezza': player['altezza'],
+      'capitano': player['capitano'],
+      'cognome': player['cognome'],
+      'mancino': player['mancino'],
+      'nascita': player['nascita'],
+      'nazionalita': player['nazionalita'],
+      'nome': player['nome'],
+      'peso': player['peso'],
+      'ruolo': player['ruolo'],
+      'squadra': player['squadra'],
+    });
   }
 }
 
@@ -361,7 +436,7 @@ class _TeamUploaderState extends State<TeamUploader> {
   void _uploadTeam(Map<String, dynamic> team) {
     DatabaseReference newTeam =
         FirebaseDatabase.instance.reference().child('squadre').push();
-    LocalDB.changeKey(
+    LocalDB.changeTeamKey(
       oldKey: team['key'],
       newKey: newTeam.key,
     );
