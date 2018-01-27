@@ -47,10 +47,10 @@ class _TeamPropertiesState extends State<TeamProperties> {
   ///
   /// Gestisce l'uso di opportuni valori di default nel form.
   _TeamPropertiesState({this.selectedTeam}) {
-    if (selectedTeam['colore_maglia'] != 'null' &&
-        selectedTeam['colore_maglia'] != null) {
+    if (selectedTeam['coloreMaglia'] != 'null' &&
+        selectedTeam['coloreMaglia'] != null) {
       _coloreMaglia = new Color(
-          int.parse(selectedTeam['colore_maglia'].substring(8, 16), radix: 16));
+          int.parse(selectedTeam['coloreMaglia'].substring(8, 16), radix: 16));
     }
     if (selectedTeam['nome'] != null)
       _nomeController.text = selectedTeam['nome'];
@@ -155,7 +155,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
   void update(BuildContext context) {
     final FormState form = _formKey.currentState;
     form.save();
-    selectedTeam['ultima_modifica'] =
+    selectedTeam['ultimaModifica'] =
         new DateTime.now().millisecondsSinceEpoch.toString();
     // Se ci si trova davanti ad una squadra appena creata è necessario
     // associare una chiave e aggiungerla al database.
@@ -199,7 +199,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
             child: new SetnoteColorSelector(),
           ).then((Color newColor) {
             _coloreMaglia = newColor;
-            selectedTeam['colore_maglia'] = newColor.toString();
+            selectedTeam['coloreMaglia'] = newColor.toString();
             checkTextColor(newColor);
           }),
     );

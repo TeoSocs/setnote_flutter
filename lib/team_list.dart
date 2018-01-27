@@ -73,9 +73,9 @@ class _TeamListState extends State<TeamList> {
         child: new ListTile(
           leading: new Icon(
             Icons.group,
-            color: (team['colore_maglia'] != 'null' &&
-                    team['colore_maglia'] != null
-                ? new Color(int.parse(team['colore_maglia'].substring(8, 16),
+            color: (team['coloreMaglia'] != 'null' &&
+                    team['coloreMaglia'] != null
+                ? new Color(int.parse(team['coloreMaglia'].substring(8, 16),
                     radix: 16))
                 : Theme.of(context).buttonColor),
           ),

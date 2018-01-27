@@ -39,6 +39,7 @@ abstract class LocalDB {
   ///   String nascita;
   ///   String nazionalita;
   ///   String nome;
+  ///   String numeroMaglia;
   ///   String peso;
   ///   String ruolo;
   ///   String squadra: chiave della squadra a cui il giocatore appartiene;
@@ -145,6 +146,7 @@ abstract class LocalDB {
     player['nascita'] = newPlayer['nascita'];
     player['nazionalita'] = newPlayer['nazionalita'];
     player['nome'] = newPlayer['nome'];
+    player['numeroMaglia'] = newPlayer['numeroMaglia'];
     player['peso'] = newPlayer['peso'];
     player['ruolo'] = newPlayer['ruolo'];
     player['squadra'] = newPlayer['squadra'];

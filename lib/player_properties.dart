@@ -36,6 +36,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   final TextEditingController _nazionalitaController =
       new TextEditingController();
   final TextEditingController _nomeController = new TextEditingController();
+  final TextEditingController _numeroController = new TextEditingController();
   final TextEditingController _pesoController = new TextEditingController();
   final TextEditingController _ruoloController = new TextEditingController();
   final TextEditingController _squadraController = new TextEditingController();
@@ -58,6 +59,8 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       _nazionalitaController.text = selectedPlayer['nazionalita'];
     if (selectedPlayer['nome'] != null)
       _nomeController.text = selectedPlayer['nome'];
+    if (selectedPlayer['numeroMaglia'] != null)
+      _numeroController.text = selectedPlayer['numeroMaglia'];
     if (selectedPlayer['peso'] != null)
       _pesoController.text = selectedPlayer['peso'];
     if (selectedPlayer['ruolo'] != null)
@@ -109,6 +112,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
               _newInputNome(),
               _newInputCognome(),
               _newInputRuolo(),
+              _newInputNumero(),
             ],
           ),
           new Row(
@@ -142,6 +146,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
           _newInputNome(),
           _newInputCognome(),
           _newInputRuolo(),
+          _newInputNumero(),
           _newInputNascita(),
           _newInputNazionalita(),
           _newInputMancino(),
@@ -240,6 +245,35 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       ),
       onSaved: (String value) {
         selectedPlayer['ruolo'] = value;
+      },
+    );
+
+    MediaQueryData media = MediaQuery.of(context);
+    if (media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00) {
+      return new Flexible(
+        child: new Padding(padding: constant.lateral_margin, child: content),
+      );
+    } else {
+      return new Padding(
+        padding: constant.lateral_margin,
+        child: content,
+      );
+    }
+  }
+
+  /// Genera un nuovo campo di input per il ruolo del giocatore.
+  ///
+  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
+  Widget _newInputNumero() {
+    Widget content = new TextFormField(
+      controller: _numeroController,
+      initialValue: _numeroController.text,
+      decoration: const InputDecoration(
+        labelText: 'Numero Maglia',
+      ),
+      onSaved: (String value) {
+        selectedPlayer['numeroMaglia'] = value;
       },
     );
 
