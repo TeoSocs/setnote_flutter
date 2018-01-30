@@ -6,7 +6,7 @@ import 'setnote_widgets.dart';
 import 'team_cloud.dart';
 import 'team_properties.dart';
 
-/// Carica una squadra già presente in locale nel DB.
+/// Mostra la lista di squadre presenti nel DB locale.
 ///
 /// È uno StatefulWidget, per una descrizione del suo funzionamento vedere lo
 /// State corrispondente.

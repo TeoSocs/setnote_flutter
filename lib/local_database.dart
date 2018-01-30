@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class LocalDB {
   static const String prefTeamsKey = 'localTeams';
   static const String prefPlayersKey = 'localPlayers';
+    static const String prefMatchKey = 'localPlayers';
 
   /// Elenco delle squadre.
   ///
@@ -45,6 +46,27 @@ abstract class LocalDB {
   ///   String squadra: chiave della squadra a cui il giocatore appartiene;
   /// }
   static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
+
+/// Elenco dei partite.
+  ///
+  /// Template di partita inserita:
+  /// {
+  ///   String squadraA;
+  ///   String squadraB;
+  ///   String codiceGara;
+  ///   String giorno;
+  ///   String mese;
+  ///   String anno;
+  ///   String manifestazione;
+  ///   String fase;
+  ///   String luogo;
+  ///   String maschile;
+  ///   String squadra: chiave della squadra a cui il giocatore appartiene;
+  /// }
+  static List<Map<String, dynamic>> matches = new List<Map<String, dynamic>>();
+
+
+
 
   /// Controlla se la squadra con la chiave indicata è presente nella lista.
   static bool hasTeam(String key) {
@@ -107,6 +129,27 @@ abstract class LocalDB {
         player['key'] = newKey;
       }
     }
+    store();
+  }
+
+  /// Cambia la chiave di una partita.
+  static void changeMatchKey({String oldKey, String newKey}) {
+    for (var match in matches) {
+      if (match['key'] == oldKey) {
+        match['key'] = newKey;
+      }
+    }
+    store();
+  }
+
+  /// Aggiunge una partita alla lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [matches] che le SharedPreferences.
+  static Future<Null> addMatch(Map<String, dynamic> newMatch) async {
+    if (hasTeam(newMatch['key']))
+      throw new ArgumentError(
+          "Tentativo di aggiungere una partita già presente in lista");
+    matches.add(newMatch);
     store();
   }
 

@@ -31,7 +31,7 @@ void main() {
     home: new MainMenu(), // becomes the route named '/'
     routes: <String, WidgetBuilder>{
       '/match': (BuildContext context) =>
-          new MatchProperties(title: constant.match_label),
+          new MatchTeamList(),
       '/team': (BuildContext context) => new TeamList(),
       '/stats': (BuildContext context) => new ChartDemo(),
       '/history': (BuildContext context) =>
