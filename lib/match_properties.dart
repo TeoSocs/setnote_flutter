@@ -105,7 +105,6 @@ class _MatchPropertiesState extends State<MatchProperties> {
   ///   String manifestation = '';
   ///   String phase = '';
   ///   String place = '';
-  ///   String isMale = 'false';
   /// }
   Map<String, dynamic> match = new Map<String, dynamic>();
 
@@ -223,17 +222,17 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
   }
 
 ///Metodo che modifica il label accanto allo switch
-  String displaySwitchText() {
-    if (_enabled == false) return "Femminile";
-    else return "Maschile";
-  }
+  // String displaySwitchText() {
+  //   if (_enabled == false) return "Femminile";
+  //   else return "Maschile";
+  // }
 
 
 /// Metodo che aggiorna il campo isMale di [match] quando l'utente usa lo switch
-  void _changeSwitchValue(){
-    if (_enabled==true) match['isMale']='maschile';
-    else match['isMale']='femminile';
-  }
+  // void _changeSwitchValue(){
+  //   if (_enabled==true) match['isMale']='maschile';
+  //   else match['isMale']='femminile';
+  // }
 
 
   @override
@@ -275,7 +274,7 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
                       _newManifestationInput(),
                       _newPhaseInput(),
                       _newPlaceInput(),
-                      _newSexSwitch(),
+                      //_newSexSwitch(),
                       _newFormationsButton(),
                     ],
                   ),
@@ -372,30 +371,30 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
     );
   }
 
-  Row _newSexSwitch() {
-    return new Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        new Switch(
-          value: _enabled,
-          activeColor: Colors.blue,
-          inactiveThumbColor: Colors.pink,
-          inactiveTrackColor: Colors.pink[200],
-          onChanged: (bool value) {
-            setState(() {
-              _enabled = value;
-              _changeSwitchValue();
-            });
-          },
-        ),
-        new Center(
-            child: new Text(
-            displaySwitchText(),
-          textAlign: TextAlign.center,
-        )),
-      ],
-    );
-  }
+  // Row _newSexSwitch() {
+  //   return new Row(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     children: <Widget>[
+  //       new Switch(
+  //         value: _enabled,
+  //         activeColor: Colors.blue,
+  //         inactiveThumbColor: Colors.pink,
+  //         inactiveTrackColor: Colors.pink[200],
+  //         onChanged: (bool value) {
+  //           setState(() {
+  //             _enabled = value;
+  //             _changeSwitchValue();
+  //           });
+  //         },
+  //       ),
+  //       new Center(
+  //           child: new Text(
+  //           displaySwitchText(),
+  //         textAlign: TextAlign.center,
+  //       )),
+  //     ],
+  //   );
+  // }
 
   SetnoteButton _newFormationsButton() {
     return new SetnoteButton(
