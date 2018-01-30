@@ -6,6 +6,7 @@ import 'match_properties.dart';
 import 'mypage.dart';
 import 'team_list.dart';
 import 'team_properties.dart';
+import 'chart_demo.dart';
 
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,7 +25,7 @@ void main() {
           new MatchProperties(title: constant.match_label),
       '/team': (BuildContext context) => new TeamList(),
       '/stats': (BuildContext context) =>
-          new MyPage(title: constant.stats_label),
+          new ChartDemo(),
       '/history': (BuildContext context) =>
           new MyPage(title: constant.history_label),
       '/settings': (BuildContext context) =>
