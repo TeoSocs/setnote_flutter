@@ -145,7 +145,7 @@ abstract class LocalDB {
     if (hasTeam(newMatch['key']))
       throw new ArgumentError(
           "Tentativo di aggiungere una partita già presente in lista");
-    teams.add(newMatch);
+    matches.add(newMatch);
     store();
   }
 
