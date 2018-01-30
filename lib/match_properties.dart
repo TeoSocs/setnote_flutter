@@ -79,6 +79,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
 
     _placeController.addListener(
         () => match['place'] = _placeController.text);
+
   }
 
  // String _validateDay(String value) {
@@ -148,17 +149,19 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
     Navigator.of(context).pushNamed("/dataentry");
   }
 
- 
-
-  void handleRadioValueChanged(int value) {
-    setState(() {
-      radioValue = value;
-    });
-  }
+///Metodo che modifica il label accanto allo switch
   String displaySwitchText() {
     if (_enabled == false) return "Femminile";
     else return "Maschile";
   }
+
+
+/// Metodo che aggiorna il campo isMale di [match] quando l'utente usa lo switch
+  void _changeSwitchValue(){
+    if (_enabled==true) match['isMale']='maschile';
+    else match['isMale']='femminile';
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -308,6 +311,7 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
           onChanged: (bool value) {
             setState(() {
               _enabled = value;
+              _changeSwitchValue();
             });
           },
         ),
