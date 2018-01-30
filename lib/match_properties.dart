@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 import 'constants.dart' as constant;
 import 'drawer.dart';
+import 'local_database.dart'; //TODO aggiungere match qui dentro
 import 'setnote_widgets.dart';
+import 'google_auth.dart';
 
 class MatchProperties extends StatefulWidget {
   const MatchProperties({this.title});
@@ -77,43 +81,70 @@ class _MatchPropertiesState extends State<MatchProperties> {
         () => match['place'] = _placeController.text);
   }
 
-  String _validateDay(String value) {
-    final RegExp nameExp = new RegExp(r'^[0-9]+$');
-    if (nameExp.hasMatch(value)) {
-      if (int.parse(value) > 31 && int.parse(value) < 1) return null;
-    }
-    return 'Giorno non valido';
-  }
+ // String _validateDay(String value) {
+ //   final RegExp nameExp = new RegExp(r'^[0-9]+$');
+ //   if (nameExp.hasMatch(value)) {
+ //     if (int.parse(value) > 31 && int.parse(value) < 1) return null;
+ //   }
+ //   return 'Giorno non valido';
+ // }
 
-  String _validateMonth(String value) {
-    final RegExp nameExp = new RegExp(r'^[0-9]+$');
-    if (nameExp.hasMatch(value)) {
-      if (int.parse(value) > 12 && int.parse(value) < 1) return null;
-    }
-    return 'Mese non valido';
-  }
+ // String _validateMonth(String value) {
+ //   final RegExp nameExp = new RegExp(r'^[0-9]+$');
+ //   if (nameExp.hasMatch(value)) {
+ //     if (int.parse(value) > 12 && int.parse(value) < 1) return null;
+ //   }
+ //   return 'Mese non valido';
+ // }
 
-  String _validateYear(String value) {
-    final RegExp nameExp = new RegExp(r'^[0-9]+$');
-    if (nameExp.hasMatch(value)) {
-      if (int.parse(value) > 2100 && int.parse(value) < 1900) return null;
-    }
-    return 'Anno non valido';
-  }
+//  String _validateYear(String value) {
+//    final RegExp nameExp = new RegExp(r'^[0-9]+$');
+//    if (nameExp.hasMatch(value)) {
+//      if (int.parse(value) > 2100 && int.parse(value) < 1900) return null;
+//    }
+//    return 'Anno non valido';
+//  }
 
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState
-        .showSnackBar(new SnackBar(content: new Text(value)));
-  }
+
+/// Salva la partita nel database.
+/// 
+/// 
+void _saveMatchOnDatabase(Map<String, dynamic> match) {
+    DatabaseReference newMatch = FirebaseDatabase.instance.reference().child('partite').push();
+    LocalDB.changeMatchKey(
+      oldKey: match['key'],
+      newKey: newMatch.key,
+    );
+    newMatch.set({
+      //'ultima_modifica': match['ultima_modifica'],
+      'myTeam': match['myTeam'],
+      'opposingTeam': match['opposingTeam'],
+      'matchCode': match['matchCode'],
+      'day': match['day'],
+      'month': match['month'],
+      'year': match['year'],
+      'manifestation': match['manifestation'],
+      'phase': match['phase'],
+      'place': match['place'],
+      'isMale': match['isMale'],
+    });
+    analytics.logEvent(name: 'aggiunta_squadra');
+}
+
+  //void showInSnackBar(String value) {
+  //  _scaffoldKey.currentState
+  //      .showSnackBar(new SnackBar(content: new Text(value)));
+ // }
 
   void _handleSubmitted() {
     final FormState form = _formKey.currentState;
-    if (!form.validate()) {
-      setState(() => _autovalidate = true);
-      _scaffoldKey.currentState
-          .showSnackBar(new SnackBar(content: new Text('Input non valido')));
-    }
+    //if (!form.validate()) {
+    //  setState(() => _autovalidate = true);
+    //  _scaffoldKey.currentState
+    //      .showSnackBar(new SnackBar(content: new Text('Input non valido')));
+    //}
     form.save();
+    _saveMatchOnDatabase(match);
     Navigator.of(context).pushNamed("/dataentry");
   }
 
