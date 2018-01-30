@@ -92,6 +92,9 @@ abstract class LocalDB {
     for (var team in teams) {
       if (team['key'] == oldKey) {
         team['key'] = newKey;
+        for (var player in players) {
+          if (player['squadra'] == oldKey) player['squadra'] == newKey;
+        }
       }
     }
     store();
