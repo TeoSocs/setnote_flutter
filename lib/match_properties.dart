@@ -4,7 +4,7 @@ import 'constants.dart' as constant;
 import 'drawer.dart';
 import 'local_database.dart';
 import 'setnote_widgets.dart';
-//TODO aggiungere match qui dentro
+import 'collect_data.dart';
 
 /// Mostra la lista di squadre presenti nel DB locale.
 ///
@@ -164,7 +164,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
     //  _scaffoldKey.currentState
     //      .showSnackBar(new SnackBar(content: new Text('Input non valido')));
     //}
-    Navigator.of(context).pushNamed("/dataentry");
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) => new CollectData()));
   }
 
   // Metodo che modifica il label accanto allo switch
@@ -189,7 +190,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
       ),
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.library_add),
-        onPressed: null,
+        onPressed: _handleSubmitted,
       ),
       body: new Center(
         child: new ConstrainedBox(
