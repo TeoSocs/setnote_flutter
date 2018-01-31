@@ -1,13 +1,10 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
 import 'drawer.dart';
-import 'google_auth.dart';
 import 'local_database.dart';
 import 'setnote_widgets.dart';
 //TODO aggiungere match qui dentro
-
 
 /// Mostra la lista di squadre presenti nel DB locale.
 ///
@@ -59,17 +56,16 @@ class _MatchTeamListState extends State<MatchTeamList> {
         onPressed: () async {
           _reloadNeeded = true;
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) =>
-              new MatchProperties(team)));
+              builder: (BuildContext context) => new MatchProperties(team)));
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
           leading: new Icon(
             Icons.group,
-            color: (team['colore_maglia'] != 'null' &&
-                team['colore_maglia'] != null
-                ? new Color(int.parse(team['colore_maglia'].substring(8, 16),
-                radix: 16))
+            color: (team['coloreMaglia'] != 'null' &&
+                    team['coloreMaglia'] != null
+                ? new Color(
+                    int.parse(team['coloreMaglia'].substring(8, 16), radix: 16))
                 : Theme.of(context).buttonColor),
           ),
           title: new Text(team['nome']),
@@ -90,30 +86,24 @@ class MatchProperties extends StatefulWidget {
 }
 
 class _MatchPropertiesState extends State<MatchProperties> {
-  bool _enabled = false;
-  bool _autovalidate = false;
-
-  /// Template match:
-  ///
-  /// {
-  ///   String myTeam;
-  ///   String opposingTeam = '';
-  ///   String matchCode = '';
-  ///   String day = '';
-  ///   String month = '';
-  ///   String year = '';
-  ///   String manifestation = '';
-  ///   String phase = '';
-  ///   String place = '';
-  /// }
+  // Template match:
+  //
+  // {
+  //   String myTeam;
+  //   String opposingTeam = '';
+  //   String matchCode = '';
+  //   String day = '';
+  //   String month = '';
+  //   String year = '';
+  //   String manifestation = '';
+  //   String phase = '';
+  //   String place = '';
+  // }
   Map<String, dynamic> match = new Map<String, dynamic>();
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   final TextEditingController _opposingTeamController =
-      new TextEditingController();
-  final TextEditingController _matchCodeController =
       new TextEditingController();
   final TextEditingController _dayController = new TextEditingController();
   final TextEditingController _monthController = new TextEditingController();
@@ -122,118 +112,72 @@ class _MatchPropertiesState extends State<MatchProperties> {
       new TextEditingController();
   final TextEditingController _phaseController = new TextEditingController();
   final TextEditingController _placeController = new TextEditingController();
- int radioValue = 0;
+
   /// Costruttore di _MatchPropertiesState.
   ///
-  /// Riceve in input il [title] da applicare allo scaffold.
+  /// Riceve in input [selectedTeam] ovvero quella che sarà [myTeam].
   _MatchPropertiesState(Map<String, dynamic> selectedTeam) {
     match['myTeam'] = selectedTeam;
     _opposingTeamController.addListener(
         () => match['opposingTeam'] = _opposingTeamController.text);
-
-    _matchCodeController.addListener(
-        () => match['matchCode'] = _matchCodeController.text);
-
-    _dayController.addListener(
-        () => match['day'] = _dayController.text);
-
-    _monthController.addListener(
-        () => match['month'] = _monthController.text);
-
-    _yearController.addListener(
-        () => match['year'] = _yearController.text);
-
+    _dayController.addListener(() => match['day'] = _dayController.text);
+    _monthController.addListener(() => match['month'] = _monthController.text);
+    _yearController.addListener(() => match['year'] = _yearController.text);
     _manifestationController.addListener(
         () => match['manifestation'] = _manifestationController.text);
-
-    _phaseController.addListener(
-        () => match['phase'] = _phaseController.text);
-
-    _placeController.addListener(
-        () => match['place'] = _placeController.text);
-
+    _phaseController.addListener(() => match['phase'] = _phaseController.text);
+    _placeController.addListener(() => match['place'] = _placeController.text);
   }
 
- // String _validateDay(String value) {
- //   final RegExp nameExp = new RegExp(r'^[0-9]+$');
- //   if (nameExp.hasMatch(value)) {
- //     if (int.parse(value) > 31 && int.parse(value) < 1) return null;
- //   }
- //   return 'Giorno non valido';
- // }
+  // String _validateDay(String value) {
+  //   final RegExp nameExp = new RegExp(r'^[0-9]+$');
+  //   if (nameExp.hasMatch(value)) {
+  //     if (int.parse(value) > 31 && int.parse(value) < 1) return null;
+  //   }
+  //   return 'Giorno non valido';
+  // }
 
- // String _validateMonth(String value) {
- //   final RegExp nameExp = new RegExp(r'^[0-9]+$');
- //   if (nameExp.hasMatch(value)) {
- //     if (int.parse(value) > 12 && int.parse(value) < 1) return null;
- //   }
- //   return 'Mese non valido';
- // }
+  // String _validateMonth(String value) {
+  //   final RegExp nameExp = new RegExp(r'^[0-9]+$');
+  //   if (nameExp.hasMatch(value)) {
+  //     if (int.parse(value) > 12 && int.parse(value) < 1) return null;
+  //   }
+  //   return 'Mese non valido';
+  // }
 
-//  String _validateYear(String value) {
-//    final RegExp nameExp = new RegExp(r'^[0-9]+$');
-//    if (nameExp.hasMatch(value)) {
-//      if (int.parse(value) > 2100 && int.parse(value) < 1900) return null;
-//    }
-//    return 'Anno non valido';
-//  }
-
-
-/// Salva la partita nel database.
-/// 
-/// 
-void _saveMatchOnDatabase(Map<String, dynamic> match) {
-    DatabaseReference newMatch = FirebaseDatabase.instance.reference().child('partite').push();
-    LocalDB.changeMatchKey(
-      oldKey: match['key'],
-      newKey: newMatch.key,
-    );
-    newMatch.set({
-      //'ultima_modifica': match['ultima_modifica'],
-      'myTeam': match['myTeam'],
-      'opposingTeam': match['opposingTeam'],
-      'matchCode': match['matchCode'],
-      'day': match['day'],
-      'month': match['month'],
-      'year': match['year'],
-      'manifestation': match['manifestation'],
-      'phase': match['phase'],
-      'place': match['place'],
-      'isMale': match['isMale'],
-    });
-    analytics.logEvent(name: 'aggiunta_squadra');
-}
+  // String _validateYear(String value) {
+  //   final RegExp nameExp = new RegExp(r'^[0-9]+$');
+  //   if (nameExp.hasMatch(value)) {
+  //     if (int.parse(value) > 2100 && int.parse(value) < 1900) return null;
+  //   }
+  //   return 'Anno non valido';
+  // }
 
   //void showInSnackBar(String value) {
   //  _scaffoldKey.currentState
   //      .showSnackBar(new SnackBar(content: new Text(value)));
- // }
+  // }
 
   void _handleSubmitted() {
-    final FormState form = _formKey.currentState;
     //if (!form.validate()) {
     //  setState(() => _autovalidate = true);
     //  _scaffoldKey.currentState
     //      .showSnackBar(new SnackBar(content: new Text('Input non valido')));
     //}
-    form.save();
-    _saveMatchOnDatabase(match);
     Navigator.of(context).pushNamed("/dataentry");
   }
 
-///Metodo che modifica il label accanto allo switch
+  // Metodo che modifica il label accanto allo switch
   // String displaySwitchText() {
   //   if (_enabled == false) return "Femminile";
   //   else return "Maschile";
   // }
 
-
-/// Metodo che aggiorna il campo isMale di [match] quando l'utente usa lo switch
+  // Metodo che aggiorna il campo isMale di [match] quando l'utente usa lo switch
   // void _changeSwitchValue(){
   //   if (_enabled==true) match['isMale']='maschile';
   //   else match['isMale']='femminile';
   // }
-
 
   @override
   Widget build(BuildContext context) {
@@ -243,43 +187,35 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
       drawer: new Drawer(
         child: new MyDrawer(),
       ),
+      floatingActionButton: new FloatingActionButton(
+        child: const Icon(Icons.library_add),
+        onPressed: null,
+      ),
       body: new Center(
         child: new ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420.0),
-          child: new Column(
+          child: new ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
-              new Expanded(
-                child: new Form(
-                  key: _formKey,
-                  autovalidate: _autovalidate,
-                  child: new ListView(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    children: <Widget>[
-                      _newOpposingTeamInput(),
-                      _newMatchCodeInput(),
-                      new Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          new Expanded(
-                            child: _newDayInput(),
-                          ),
-                          new Expanded(
-                            child: _newMonthInput(),
-                          ),
-                          new Expanded(
-                            child: _newYearInput(),
-                          ),
-                        ],
-                      ),
-                      _newManifestationInput(),
-                      _newPhaseInput(),
-                      _newPlaceInput(),
-                      //_newSexSwitch(),
-                      _newFormationsButton(),
-                    ],
+              _newOpposingTeamInput(),
+              new Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  new Expanded(
+                    child: _newDayInput(),
                   ),
-                ),
+                  new Expanded(
+                    child: _newMonthInput(),
+                  ),
+                  new Expanded(
+                    child: _newYearInput(),
+                  ),
+                ],
               ),
+              _newManifestationInput(),
+              _newPhaseInput(),
+              _newPlaceInput(),
+              //_newSexSwitch(),
             ],
           ),
         ),
@@ -287,23 +223,12 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
     );
   }
 
-
   TextField _newOpposingTeamInput() {
     return new TextField(
       controller: _opposingTeamController,
       decoration: const InputDecoration(
         hintText: 'Qual è il nome della squadra avversaria?',
         labelText: 'Squadra Avversaria *',
-      ),
-    );
-  }
-
-  TextField _newMatchCodeInput() {
-    return new TextField(
-      controller: _matchCodeController,
-      decoration: const InputDecoration(
-        hintText: 'Qual è il codice della gara?',
-        labelText: 'Codice Gara *',
       ),
     );
   }
@@ -395,11 +320,4 @@ void _saveMatchOnDatabase(Map<String, dynamic> match) {
   //     ],
   //   );
   // }
-
-  SetnoteButton _newFormationsButton() {
-    return new SetnoteButton(
-      label: constant.formations_label,
-      onPressed: _handleSubmitted,
-    );
-  }
 }
