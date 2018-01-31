@@ -5,7 +5,7 @@ import 'setnote_widgets.dart';
 import 'local_database.dart';
 import 'constants.dart' as constant;
 
-/// Permette di raccogliere dati sulla partita in corso.abstract
+/// Permette di raccogliere dati sulla partita in corso.
 ///
 /// È uno StatefulWidget, per una descrizione del suo funzionamento vedere lo
 /// State corrispondente.
