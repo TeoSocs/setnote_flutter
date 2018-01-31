@@ -41,8 +41,8 @@ class SetnoteBaseLayout extends StatelessWidget {
     return new LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         MediaQueryData media = MediaQuery.of(context);
-        if (media.orientation == Orientation.landscape &&
-            media.size.width >= 950.00) {
+        if (media.orientation == Orientation.landscape/* &&
+            media.size.width >= 950.00*/) {
           return _newTabletLayout();
         } else {
           return _newPhoneLayout();
