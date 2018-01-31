@@ -33,10 +33,6 @@ class _MyPageState extends State<MyPage> {
                 ? new Text("Sei connesso come: " +
                     googleSignIn.currentUser.displayName)
                 : new CircularProgressIndicator()),
-            new SetnoteButton(
-              label: "Login",
-              onPressed: () => login(),
-            ),
           ],
         ),
       ),

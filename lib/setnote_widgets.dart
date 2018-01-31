@@ -1,26 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'constants.dart' as constant;
 import 'drawer.dart';
-
-/// Pulsante standard dell'applicazione.
-class SetnoteButton extends StatelessWidget {
-  final String label;
-  final VoidCallback onPressed;
-
-  SetnoteButton({this.label, this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return new Padding(
-      padding: constant.standard_margin,
-      child: new RaisedButton(
-        child: new Text(label),
-        onPressed: onPressed,
-      ),
-    );
-  }
-}
 
 /// Layout standard dell'applicazione.
 ///
