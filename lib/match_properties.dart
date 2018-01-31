@@ -41,7 +41,7 @@ class _MatchTeamListState extends State<MatchTeamList> {
     }
     setState(() => _reloadNeeded = false);
     return new SetnoteBaseLayout(
-      title: 'Squadre salvate',
+      title: 'Scegli una squadra',
       child: new ListView(
         padding: constant.standard_margin,
         children: _reloadNeeded ? [] : teamList,
@@ -56,7 +56,8 @@ class _MatchTeamListState extends State<MatchTeamList> {
         onPressed: () async {
           _reloadNeeded = true;
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) => new MatchProperties(team)));
+              builder: (BuildContext context) =>
+                  new MatchProperties(team['key'])));
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
@@ -77,12 +78,12 @@ class _MatchTeamListState extends State<MatchTeamList> {
 }
 
 class MatchProperties extends StatefulWidget {
-  const MatchProperties(this.selectedTeam);
-  final Map<String, dynamic> selectedTeam;
+  const MatchProperties(this.selectedTeamKey);
+  final String selectedTeamKey;
 
   @override
   _MatchPropertiesState createState() =>
-      new _MatchPropertiesState(selectedTeam);
+      new _MatchPropertiesState(selectedTeamKey);
 }
 
 class _MatchPropertiesState extends State<MatchProperties> {
@@ -115,9 +116,9 @@ class _MatchPropertiesState extends State<MatchProperties> {
 
   /// Costruttore di _MatchPropertiesState.
   ///
-  /// Riceve in input [selectedTeam] ovvero quella che sarà [myTeam].
-  _MatchPropertiesState(Map<String, dynamic> selectedTeam) {
-    match['myTeam'] = selectedTeam;
+  /// Riceve in input [selectedTeamKey] ovvero quella che sarà [myTeam].
+  _MatchPropertiesState(String selectedTeamKey) {
+    match['myTeam'] = selectedTeamKey;
     _opposingTeamController.addListener(
         () => match['opposingTeam'] = _opposingTeamController.text);
     _dayController.addListener(() => match['day'] = _dayController.text);
@@ -165,7 +166,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
     //      .showSnackBar(new SnackBar(content: new Text('Input non valido')));
     //}
     Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) => new CollectData()));
+        builder: (BuildContext context) => new CollectData(match)));
   }
 
   // Metodo che modifica il label accanto allo switch

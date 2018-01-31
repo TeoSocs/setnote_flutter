@@ -100,9 +100,14 @@ class _PlayerListState extends State<PlayerList> {
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
-          leading: new Icon(
-            Icons.android,
-          ),
+          leading: (player['numeroMaglia'] != null
+              ? new Text(
+                  player['numeroMaglia'],
+                  style: const TextStyle(fontSize: 42.0),
+                )
+              : new Icon(
+                  Icons.person,
+                )),
           title: new Text(player['nome']),
           subtitle: new Text(player['ruolo']),
         ),

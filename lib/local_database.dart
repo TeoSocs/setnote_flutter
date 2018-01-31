@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class LocalDB {
   static const String prefTeamsKey = 'localTeams';
   static const String prefPlayersKey = 'localPlayers';
-    static const String prefMatchKey = 'localPlayers';
+  static const String prefMatchKey = 'localPlayers';
 
   /// Elenco delle squadre.
   ///
@@ -47,7 +47,7 @@ abstract class LocalDB {
   /// }
   static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
 
-/// Elenco dei partite.
+  /// Elenco dei partite.
   ///
   /// Template di partita inserita:
   /// {
@@ -64,9 +64,6 @@ abstract class LocalDB {
   ///   String squadra: chiave della squadra a cui il giocatore appartiene;
   /// }
   static List<Map<String, dynamic>> matches = new List<Map<String, dynamic>>();
-
-
-
 
   /// Controlla se la squadra con la chiave indicata è presente nella lista.
   static bool hasTeam(String key) {
