@@ -103,7 +103,7 @@ class _PlayerListState extends State<PlayerList> {
           leading: (player['numeroMaglia'] != null
               ? new Text(
                   player['numeroMaglia'],
-                  style: const TextStyle(fontSize: 42.0),
+                  style: const TextStyle(fontSize: 33.0),
                 )
               : new Icon(
                   Icons.person,

@@ -35,7 +35,7 @@ class _CollectDataState extends State<CollectData> {
           leading: (player['numeroMaglia'] != null
               ? new Text(
                   player['numeroMaglia'],
-                  style: const TextStyle(fontSize: 42.0),
+                  style: const TextStyle(fontSize: 33.0),
                 )
               : new Icon(
                   Icons.person,
@@ -63,7 +63,10 @@ class _CollectDataState extends State<CollectData> {
                 ),
               ),
               new Expanded(
-                child: new Text('Hic sun pulsantes'),
+                child: new Text('Hic sun lv1 \n pulsantes'),
+              ),
+              new Expanded(
+                child: new Text('Hic sun lv2 \n pulsantes'),
               ),
             ],
           ),
