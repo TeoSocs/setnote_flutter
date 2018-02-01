@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'collect_data.dart';
 import 'constants.dart' as constant;
 import 'drawer.dart';
 import 'local_database.dart';
 import 'setnote_widgets.dart';
-import 'collect_data.dart';
 
 /// Mostra la lista di squadre presenti nel DB locale.
 ///
@@ -99,6 +99,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
   //   String manifestation = '';
   //   String phase = '';
   //   String place = '';
+  //   List<List<Map<String, String>>> Set;
   // }
   Map<String, dynamic> match = new Map<String, dynamic>();
 
