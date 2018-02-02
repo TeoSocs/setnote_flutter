@@ -44,7 +44,7 @@ class _MatchStatsState extends State<MatchStats> {
   List<Widget> _gridChildrenBuilder() {
     List<Widget> list = new List<Widget>();
     Map<String, Map<String, int>> rawData = new Map<String, Map<String, int>>();
-    int i=1;
+    int i = 1;
     for (Map<String, dynamic> set in match['Set']) {
       for (String fondamentale in constant.fondamentali) {
         rawData[fondamentale] = new Map<String, int>();
@@ -70,144 +70,128 @@ class _MatchStatsState extends State<MatchStats> {
     for (String esito in constant.esiti) {
       battuteTotali += data["Battuta"][esito];
     }
-    double battutaPositivita = (data['Battuta']['Ottimo'] +
-        data['Battuta']['Buono']) * 100 / battuteTotali;
+    double battutaPositivita =
+        (data['Battuta']['Ottimo'] + data['Battuta']['Buono']) *
+            100 /
+            battuteTotali;
 
+    int ricezioniTotali = 0;
+    for (String esito in constant.esiti) {
+      ricezioniTotali += data["Ricezione"][esito];
+    }
+
+    double ricezionePositivita =
+        (data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
+            100 /
+            ricezioniTotali;
+
+    double ricezionePerfezione =
+        data['Ricezione']['Ottimo'] * 100 / ricezioniTotali;
 
     return new Column(
       children: <Widget>[
         new Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: new Text(title, style: Theme.of(context).textTheme.title,)),
+            child: new Text(
+              title,
+              style: Theme.of(context).textTheme.title,
+            )),
         new Padding(
             padding: const EdgeInsets.only(bottom: 10.0),
-            child: new Text("Battuta", style: Theme.of(context).textTheme
-                .subhead,)),
+            child: new Text(
+              "Battuta",
+              style: Theme.of(context).textTheme.subhead,
+            )),
         new Table(
           children: <TableRow>[
-            new TableRow(
-                children: <Widget> [
-                  const Text("Battute totali"),
-                  new Text("$battuteTotali")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Errori"),
-                  new Text("${data['Battuta']['Errato']}")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Ace"),
-                  new Text("${data['Battuta']['Ottimo']}")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Positività"),
-                  new Text("$battutaPositivita%")
-                ]
-            ),
+            new TableRow(children: <Widget>[
+              const Text("Battute totali"),
+              new Text("$battuteTotali")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Errori"),
+              new Text("${data['Battuta']['Errato']}")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Ace"),
+              new Text("${data['Battuta']['Ottimo']}")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Positività"),
+              new Text("$battutaPositivita%")
+            ]),
           ],
         ),
-
         new Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: new Text("Ricezione", style: Theme.of(context).textTheme
-                .subhead,)),
+            child: new Text(
+              "Ricezione",
+              style: Theme.of(context).textTheme.subhead,
+            )),
         new Table(
           children: <TableRow>[
-            new TableRow(
-                children: <Widget> [
-                  const Text("Ricezioni totali"),
-                  const Text("##")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Errori"),
-                  const Text("##")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Positività"),
-                  const Text("##%")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Perfezione"),
-                  const Text("##%")
-                ]
-            ),
+            new TableRow(children: <Widget>[
+              const Text("Ricezioni totali"),
+              new Text("$ricezioniTotali")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Errori"),
+              new Text("${data['Ricezione']['Errato']}")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Positività"),
+              new Text("$ricezionePositivita%")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Perfezione"),
+              new Text("$ricezionePerfezione%")
+            ]),
           ],
         ),
-
         new Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: new Text("Attacco", style: Theme.of(context).textTheme
-                .subhead,)),
+            child: new Text(
+              "Attacco",
+              style: Theme.of(context).textTheme.subhead,
+            )),
         new Table(
           children: <TableRow>[
+            new TableRow(children: <Widget>[
+              const Text("Attacchi totali"),
+              const Text("##")
+            ]),
             new TableRow(
-                children: <Widget> [
-                  const Text("Attacchi totali"),
-                  const Text("##")
-                ]
-            ),
+                children: <Widget>[const Text("Errori"), const Text("##")]),
             new TableRow(
-                children: <Widget> [
-                  const Text("Errori"),
-                  const Text("##")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Punti"),
-                  const Text("##%")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Efficienza"),
-                  const Text("##%")
-                ]
-            ),
+                children: <Widget>[const Text("Punti"), const Text("##%")]),
+            new TableRow(children: <Widget>[
+              const Text("Efficienza"),
+              const Text("##%")
+            ]),
           ],
         ),
-
         new Padding(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: new Text("Difesa", style: Theme.of(context).textTheme
-                .subhead,)),
+            child: new Text(
+              "Difesa",
+              style: Theme.of(context).textTheme.subhead,
+            )),
         new Table(
           children: <TableRow>[
+            new TableRow(children: <Widget>[
+              const Text("Difese totali"),
+              const Text("##")
+            ]),
             new TableRow(
-                children: <Widget> [
-                  const Text("Difese totali"),
-                  const Text("##")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Errori"),
-                  const Text("##")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Positività"),
-                  const Text("##%")
-                ]
-            ),
-            new TableRow(
-                children: <Widget> [
-                  const Text("Perfezione"),
-                  const Text("##%")
-                ]
-            ),
+                children: <Widget>[const Text("Errori"), const Text("##")]),
+            new TableRow(children: <Widget>[
+              const Text("Positività"),
+              const Text("##%")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Perfezione"),
+              const Text("##%")
+            ]),
           ],
         ),
       ],
@@ -236,12 +220,12 @@ class _MatchStatsState extends State<MatchStats> {
         child: new ListTile(
           leading: (player['numeroMaglia'] != null
               ? new Text(
-            player['numeroMaglia'],
-            style: const TextStyle(fontSize: 33.0),
-          )
+                  player['numeroMaglia'],
+                  style: const TextStyle(fontSize: 33.0),
+                )
               : new Icon(
-            Icons.person,
-          )),
+                  Icons.person,
+                )),
           title: new Text(player['nome']),
           subtitle: new Text(player['ruolo']),
         ),
