@@ -105,6 +105,14 @@ abstract class LocalDB {
     return null;
   }
 
+  /// Ritorna un'istanza di una partita (oppure null) cercandola per chiave.
+  static Map<String, dynamic> getMatchByKey(String key) {
+    for (var match in matches) {
+      if (match['key'] == key) return match;
+    }
+    return null;
+  }
+
   /// Ritorna un'istanza di un giocatore (oppure null) cercandola per chiave.
   static List<Map<String, dynamic>> getPlayersOf({String teamKey}) {
     List<Map<String, dynamic>> team = new List<Map<String, dynamic>>();
@@ -214,9 +222,17 @@ abstract class LocalDB {
 
   /// Elimina un giocatore dalla lista.
   ///
-  /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
+  /// Si occupa di aggiornare sia la lista [players] che le SharedPreferences.
   static Future<Null> removePlayer(String key) async {
     players.remove(getPlayerByKey(key));
+    store();
+  }
+
+  /// Elimina una partita dalla lista.
+  ///
+  /// Si occupa di aggiornare sia la lista [matches] che le SharedPreferences.
+  static Future<Null> removeMatch(String key) async {
+    matches.remove(getMatchByKey(key));
     store();
   }
 

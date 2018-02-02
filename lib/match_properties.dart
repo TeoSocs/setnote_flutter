@@ -93,6 +93,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
   //
   // {
   //   String key;
+  //   String ended = 'false'
   //   String myTeam;
   //   String opposingTeam = '';
   //   String matchCode = '';
@@ -243,6 +244,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
               _newManifestationInput(),
               _newPhaseInput(),
               _newPlaceInput(),
+              _newDeleteMatch(),
               //_newSexSwitch(),
             ],
           ),
@@ -322,6 +324,31 @@ class _MatchPropertiesState extends State<MatchProperties> {
         labelText: 'Luogo *',
       ),
     );
+  }
+
+  /// Genera un nuovo pulsante per eliminare la partita correntemente
+  /// selezionata dal database locale.
+  Widget _newDeleteMatch() {
+    // Se nessuna partita è selezionata (sto creando una nuova partita) non
+    // mostrare nulla.
+    if (match['ended'] == 'false') {
+      return new Container(width: 0.0, height: 0.0);
+    }
+    return new Padding(
+      padding: constant.standard_margin,
+      child: new Center(
+        child: new RaisedButton(
+          child: const Text('Elimina partita'),
+          onPressed: _deleteMatch,
+        ),
+      ),
+    );
+  }
+
+  /// Elimina il giocatore correntemente selezionato dal database locale.
+  void _deleteMatch() {
+    LocalDB.removeMatch(match['key']);
+    Navigator.of(context).pop();
   }
 
   // Row _newSexSwitch() {
