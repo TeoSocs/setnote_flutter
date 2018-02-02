@@ -51,10 +51,9 @@ class _MatchListState extends State<MatchList> {
   /// Costruisce una Card rappresentante la squadra passata in input.
   Card _newMatchListCard(Map<String, dynamic> match) {
     String _myTeamName = LocalDB.getTeamByKey(match['myTeam'])['nome'];
-    Map<String, dynamic> _opposingTeam =
-        LocalDB.getTeamByKey(match['opposingTeam']);
-    String _opposingTeamName = (_opposingTeam != null
-        ? _opposingTeam['nome']
+    String _opposingTeamName = (match['opposingTeam'] != '' &&
+        match['opposingTeam'] != null
+        ? match['opposingTeam']
         : "Avversario sconosciuto");
     String manifestazione = (match['manifestation'] != null
         ? match['manifestation']

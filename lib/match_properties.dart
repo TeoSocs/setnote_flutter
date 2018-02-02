@@ -128,7 +128,10 @@ class _MatchPropertiesState extends State<MatchProperties> {
   /// Riceve in input [selectedTeamKey] ovvero quella che sarà [myTeam].
   _MatchPropertiesState(this.match) {
     _opposingTeamController.addListener(
-        () => match['opposingTeam'] = _opposingTeamController.text);
+        () {
+          match['opposingTeam'] = _opposingTeamController.text;
+          print('ho aggiornato opposingTeam: ${match['opposingTeam']}');
+        });
     _dayController.addListener(() => match['day'] = _dayController.text);
     _monthController.addListener(() => match['month'] = _monthController.text);
     _yearController.addListener(() => match['year'] = _yearController.text);
