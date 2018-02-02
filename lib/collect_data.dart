@@ -24,6 +24,8 @@ class _CollectDataState extends State<CollectData> {
   Map<String, String> _pending = new Map<String, String>();
   List<Map<String, String>> _currentSet;
   List<Map<String, String>> _currentPoint = new List<Map<String, String>>();
+  int _myTeamPoints = 0;
+  int _opponentPoints = 0;
   Map<String, Color> _colors = {
     'Ottimo': Colors.blue[400],
     'Buono': Colors.green[400],
@@ -37,11 +39,11 @@ class _CollectDataState extends State<CollectData> {
     _currentSet = match['Set'][0];
     for (Map<String, dynamic> _player
         in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
-      _playerList.add(_newListEntry(_player));
+      _playerList.add(_newPlayerListEntry(_player));
     }
   }
 
-  Card _newListEntry(Map<String, dynamic> player) {
+  Card _newPlayerListEntry(Map<String, dynamic> player) {
     return new Card(
       child: new FlatButton(
         onPressed: () {
@@ -128,14 +130,46 @@ class _CollectDataState extends State<CollectData> {
             children: (scambio.isNotEmpty ? scambio : []),
           ),
           new Positioned(
-            bottom: 10.0,
-            right: 10.0,
-            child: new FloatingActionButton(
-              onPressed: () {
-                _currentSet.addAll(_currentPoint);
-                setState(() => _currentPoint.clear());
-              },
-              child: const Icon(Icons.add),
+            bottom: 0.0,
+            right: 0.0,
+            child: new Column(
+              children: <Widget>[
+                new Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 10.0,
+                    right: 10.0,
+                  ),
+                  child: new IconButton(
+                    color: _colors['Errato'],
+                    onPressed: () {
+                      setState(() {
+                        _currentSet.addAll(_currentPoint);
+                        _currentPoint.clear();
+                        _opponentPoints += 1;
+                        print("Punteggio: $_myTeamPoints - $_opponentPoints");
+                      });
+                    },
+                    icon: const Icon(Icons.clear),
+                  ),
+                ),
+                new Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 10.0,
+                    right: 10.0,
+                  ),
+                  child: new FloatingActionButton(
+                    onPressed: () {
+                      setState(() {
+                        _currentSet.addAll(_currentPoint);
+                        _currentPoint.clear();
+                        _myTeamPoints += 1;
+                        print("Punteggio: $_myTeamPoints - $_opponentPoints");
+                      });
+                    },
+                    child: const Icon(Icons.check),
+                  ),
+                ),
+              ],
             ),
           )
         ],
