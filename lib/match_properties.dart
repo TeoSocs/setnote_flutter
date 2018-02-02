@@ -89,27 +89,6 @@ class MatchProperties extends StatefulWidget {
 }
 
 class _MatchPropertiesState extends State<MatchProperties> {
-  // Template match:
-  //
-  // {
-  //   String key;
-  //   String ended = 'false'
-  //   String myTeam;
-  //   String opposingTeam = '';
-  //   String matchCode = '';
-  //   String day = '';
-  //   String month = '';
-  //   String year = '';
-  //   String manifestation = '';
-  //   String phase = '';
-  //   String place = '';
-  //   Set = [
-  //     {
-  //        punteggio: "25 - 21",
-  //        azioni: list<Map<String, String>>
-  //     }
-  //   ];
-  // }
   Map<String, dynamic> match;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
