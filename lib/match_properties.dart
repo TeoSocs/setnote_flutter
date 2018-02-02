@@ -90,6 +90,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
   // Template match:
   //
   // {
+  //   String key;
   //   String myTeam;
   //   String opposingTeam = '';
   //   String matchCode = '';
@@ -100,7 +101,10 @@ class _MatchPropertiesState extends State<MatchProperties> {
   //   String phase = '';
   //   String place = '';
   //   Set = [
-  //     ["25 - 21", list<Map<String, String>]
+  //     {
+  //        punteggio: "25 - 21",
+  //        azioni: list<Map<String, String>>
+  //     }
   //   ];
   // }
   Map<String, dynamic> match = new Map<String, dynamic>();
@@ -121,6 +125,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
   ///
   /// Riceve in input [selectedTeamKey] ovvero quella che sarà [myTeam].
   _MatchPropertiesState(String selectedTeamKey) {
+    match['key'] = new DateTime.now().millisecondsSinceEpoch.toString();
     match['myTeam'] = selectedTeamKey;
     _opposingTeamController.addListener(
         () => match['opposingTeam'] = _opposingTeamController.text);
