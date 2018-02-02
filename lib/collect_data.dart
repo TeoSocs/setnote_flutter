@@ -316,6 +316,10 @@ class _CollectDataState extends State<CollectData> {
 
   void _saveMatch() {
     match['ended'] = 'true';
-    LocalDB.matches.add(match);
+    if (LocalDB.hasMatch(match['key'])) {
+      LocalDB.store();
+    } else {
+      LocalDB.addMatch(match);
+    }
   }
 }

@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class LocalDB {
   static const String prefTeamsKey = 'localTeams';
   static const String prefPlayersKey = 'localPlayers';
-  static const String prefMatchKey = 'localPlayers';
+  static const String prefMatchesKey = 'localMatches';
 
   /// Elenco delle squadre.
   ///
@@ -81,6 +81,14 @@ abstract class LocalDB {
     return false;
   }
 
+  /// Controlla se la partita con la chiave indicata è presente nella lista.
+  static bool hasMatch(String key) {
+    for (var match in matches) {
+      if (match['key'] == key) return true;
+    }
+    return false;
+  }
+
   /// Ritorna un'istanza di una squadra (oppure null) cercandola per chiave.
   static Map<String, dynamic> getTeamByKey(String key) {
     for (var team in teams) {
@@ -143,7 +151,7 @@ abstract class LocalDB {
   ///
   /// Si occupa di aggiornare sia la lista [matches] che le SharedPreferences.
   static Future<Null> addMatch(Map<String, dynamic> newMatch) async {
-    if (hasTeam(newMatch['key']))
+    if (hasMatch(newMatch['key']))
       throw new ArgumentError(
           "Tentativo di aggiungere una partita già presente in lista");
     matches.add(newMatch);
@@ -217,6 +225,7 @@ abstract class LocalDB {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString(prefTeamsKey, JSON.encode(teams));
     prefs.setString(prefPlayersKey, JSON.encode(players));
+    prefs.setString(prefMatchesKey, JSON.encode(matches));
   }
 
   /// Legge le SharedPreferences.
@@ -227,6 +236,7 @@ abstract class LocalDB {
     try {
       teams = JSON.decode(prefs.getString(prefTeamsKey));
       players = JSON.decode(prefs.getString(prefPlayersKey));
+      matches = JSON.decode(prefs.getString(prefMatchesKey));
     } on NoSuchMethodError {
       print("Errore nella lettura delle sharedPreferences, " +
           "probabilmente non sono ancora state create");
