@@ -52,7 +52,8 @@ class _MatchStatsState extends State<MatchStats> {
           rawData[fondamentale][esito] = 0;
         }
       }
-      // Qui bisogna recuperare ed elaborare i dati
+      // Qui bisogna recuperare ed elaborare i dati, eventualmente filtrarli
+      // per giocatore
       for (Map<String, String> azione in set['azioni']) {
         rawData[azione['fondamentale']][azione['esito']] += 1;
       }
@@ -65,6 +66,13 @@ class _MatchStatsState extends State<MatchStats> {
   }
 
   Widget _statsTableBuilder(String title, Map<String, dynamic> data) {
+    int battuteTotali = 0;
+    for (String esito in constant.esiti) {
+      battuteTotali += data["Battuta"][esito];
+    }
+    double battutaPositivita = (data['Battuta']['Ottimo'] +
+        data['Battuta']['Buono']) * 100 / battuteTotali;
+
 
     return new Column(
       children: <Widget>[
@@ -80,25 +88,25 @@ class _MatchStatsState extends State<MatchStats> {
             new TableRow(
                 children: <Widget> [
                   const Text("Battute totali"),
-                  const Text("##")
+                  new Text("$battuteTotali")
                 ]
             ),
             new TableRow(
                 children: <Widget> [
                   const Text("Errori"),
-                  const Text("##")
+                  new Text("${data['Battuta']['Errato']}")
                 ]
             ),
             new TableRow(
                 children: <Widget> [
                   const Text("Ace"),
-                  const Text("##")
+                  new Text("${data['Battuta']['Ottimo']}")
                 ]
             ),
             new TableRow(
                 children: <Widget> [
                   const Text("Positività"),
-                  const Text("##%")
+                  new Text("$battutaPositivita%")
                 ]
             ),
           ],
