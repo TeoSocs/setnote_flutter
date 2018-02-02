@@ -28,14 +28,7 @@ class _MatchStatsState extends State<MatchStats> {
         padding: const EdgeInsets.all(20.0),
         crossAxisSpacing: 10.0,
         crossAxisCount: 2,
-        children: <Widget>[
-          _statsTableBuilder("Primo set"),
-          new StatChart(),
-          _statsTableBuilder("Secondo set"),
-          new StatChart(),
-          _statsTableBuilder("Terzo set"),
-          new StatChart(),
-        ],
+        children: _gridChildrenBuilder(),
       ),
       drawer: new Drawer(
         child: new ListView(
@@ -43,6 +36,17 @@ class _MatchStatsState extends State<MatchStats> {
         ),
       ),
     );
+  }
+
+  List<Widget> _gridChildrenBuilder() {
+    List<Widget> list = new List<Widget>();
+    int i=1;
+    for (Map<String, dynamic> set in match['Set']) {
+      list.add(_statsTableBuilder("Set $i"));
+      list.add(new StatChart());
+      i++;
+    }
+    return list;
   }
 
   Widget _statsTableBuilder(String title) {
