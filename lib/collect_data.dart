@@ -221,6 +221,7 @@ class _CollectDataState extends State<CollectData> {
               ],
             ),
             _buttonRowBuilder(),
+            _pointDisplayBuilder(),
           ],
         ),
       ),
@@ -237,7 +238,12 @@ class _CollectDataState extends State<CollectData> {
             padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
             child: new RaisedButton(
                 child: const Text('Termina set'),
-                onPressed: () => print('Faccio finta di chiudere il set')),
+                onPressed: () {
+                  setState(() {
+                    _myTeamPoints = 0;
+                    _opponentPoints = 0;
+                  });
+                }),
           ),
           new Padding(
             padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
@@ -249,6 +255,17 @@ class _CollectDataState extends State<CollectData> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _pointDisplayBuilder() {
+    return new Positioned(
+      top: 20.0,
+      right: 30.0,
+      child: new Text(
+        "$_myTeamPoints - $_opponentPoints",
+        style: Theme.of(context).textTheme.display4,
       ),
     );
   }
