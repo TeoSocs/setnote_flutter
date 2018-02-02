@@ -58,9 +58,9 @@ class _MatchTeamListState extends State<MatchTeamList> {
           Map<String, dynamic> match = new Map<String, dynamic>();
           match['myTeam'] = team['key'];
           match['key'] = new DateTime.now().millisecondsSinceEpoch.toString();
+          match['ended'] = 'false';
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) =>
-                  new MatchProperties(match)));
+              builder: (BuildContext context) => new MatchProperties(match)));
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
@@ -85,8 +85,7 @@ class MatchProperties extends StatefulWidget {
   final Map<String, dynamic> match;
 
   @override
-  _MatchPropertiesState createState() =>
-      new _MatchPropertiesState(match);
+  _MatchPropertiesState createState() => new _MatchPropertiesState(match);
 }
 
 class _MatchPropertiesState extends State<MatchProperties> {
@@ -174,8 +173,12 @@ class _MatchPropertiesState extends State<MatchProperties> {
     //  _scaffoldKey.currentState
     //      .showSnackBar(new SnackBar(content: new Text('Input non valido')));
     //}
-    Navigator.of(context).push(new MaterialPageRoute<Null>(
-        builder: (BuildContext context) => new CollectData(match)));
+    if (match['ended'] == 'false') {
+      Navigator.of(context).push(new MaterialPageRoute<Null>(
+          builder: (BuildContext context) => new CollectData(match)));
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   // Metodo che modifica il label accanto allo switch
@@ -199,7 +202,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
         child: new MyDrawer(),
       ),
       floatingActionButton: new FloatingActionButton(
-        child: const Icon(Icons.library_add),
+        child: const Icon(Icons.check),
         onPressed: _handleSubmitted,
       ),
       body: new Center(

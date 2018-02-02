@@ -299,6 +299,7 @@ class _CollectDataState extends State<CollectData> {
           new FlatButton(
             child: new Text('SÌ'),
             onPressed: () {
+              match['ended'] = 'true';
               Navigator.of(context).pop(true);
             },
           ),
@@ -314,6 +315,7 @@ class _CollectDataState extends State<CollectData> {
   }
 
   void _saveMatch() {
+    match['ended'] = 'true';
     LocalDB.matches.add(match);
   }
 }
