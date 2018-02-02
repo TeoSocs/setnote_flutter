@@ -99,7 +99,9 @@ class _MatchPropertiesState extends State<MatchProperties> {
   //   String manifestation = '';
   //   String phase = '';
   //   String place = '';
-  //   List<List<Map<String, String>>> Set;
+  //   Set = [
+  //     ["25 - 21", list<Map<String, String>]
+  //   ];
   // }
   Map<String, dynamic> match = new Map<String, dynamic>();
 

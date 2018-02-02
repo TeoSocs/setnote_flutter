@@ -69,7 +69,11 @@ class _CollectDataState extends State<CollectData> {
     return new Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, right: 20.0),
       child: new RaisedButton(
-        child: new Text(fondamentale),
+        child: new Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: new Text(
+              fondamentale,
+            )),
         onPressed: () {
           _pending['fondamentale'] = fondamentale;
         },
@@ -81,18 +85,21 @@ class _CollectDataState extends State<CollectData> {
     return new Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, right: 20.0),
       child: new RaisedButton(
-        child: new Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            new Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: new Icon(
-                Icons.brightness_1,
-                color: _colors[esito],
+        child: new Padding(
+          padding: const EdgeInsets.all(11.0),
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: new Icon(
+                  Icons.brightness_1,
+                  color: _colors[esito],
+                ),
               ),
-            ),
-            new Text(esito),
-          ],
+              new Text(esito),
+            ],
+          ),
         ),
         onPressed: () {
           _pending['esito'] = esito;
