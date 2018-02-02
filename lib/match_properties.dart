@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'collect_data.dart';
 import 'constants.dart' as constant;
 import 'drawer.dart';
 import 'local_database.dart';
 import 'setnote_widgets.dart';
-//TODO aggiungere match qui dentro
 
 /// Mostra la lista di squadre presenti nel DB locale.
 ///
@@ -41,7 +41,7 @@ class _MatchTeamListState extends State<MatchTeamList> {
     }
     setState(() => _reloadNeeded = false);
     return new SetnoteBaseLayout(
-      title: 'Squadre salvate',
+      title: 'Scegli una squadra',
       child: new ListView(
         padding: constant.standard_margin,
         children: _reloadNeeded ? [] : teamList,
@@ -55,8 +55,12 @@ class _MatchTeamListState extends State<MatchTeamList> {
       child: new FlatButton(
         onPressed: () async {
           _reloadNeeded = true;
+          Map<String, dynamic> match = new Map<String, dynamic>();
+          match['myTeam'] = team['key'];
+          match['key'] = new DateTime.now().millisecondsSinceEpoch.toString();
+          match['ended'] = 'false';
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) => new MatchProperties(team)));
+              builder: (BuildContext context) => new MatchProperties(match)));
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
@@ -77,18 +81,19 @@ class _MatchTeamListState extends State<MatchTeamList> {
 }
 
 class MatchProperties extends StatefulWidget {
-  const MatchProperties(this.selectedTeam);
-  final Map<String, dynamic> selectedTeam;
+  const MatchProperties(this.match);
+  final Map<String, dynamic> match;
 
   @override
-  _MatchPropertiesState createState() =>
-      new _MatchPropertiesState(selectedTeam);
+  _MatchPropertiesState createState() => new _MatchPropertiesState(match);
 }
 
 class _MatchPropertiesState extends State<MatchProperties> {
   // Template match:
   //
   // {
+  //   String key;
+  //   String ended = 'false'
   //   String myTeam;
   //   String opposingTeam = '';
   //   String matchCode = '';
@@ -98,8 +103,14 @@ class _MatchPropertiesState extends State<MatchProperties> {
   //   String manifestation = '';
   //   String phase = '';
   //   String place = '';
+  //   Set = [
+  //     {
+  //        punteggio: "25 - 21",
+  //        azioni: list<Map<String, String>>
+  //     }
+  //   ];
   // }
-  Map<String, dynamic> match = new Map<String, dynamic>();
+  Map<String, dynamic> match;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -115,9 +126,22 @@ class _MatchPropertiesState extends State<MatchProperties> {
 
   /// Costruttore di _MatchPropertiesState.
   ///
-  /// Riceve in input [selectedTeam] ovvero quella che sarà [myTeam].
-  _MatchPropertiesState(Map<String, dynamic> selectedTeam) {
-    match['myTeam'] = selectedTeam;
+  /// Riceve in input [selectedTeamKey] ovvero quella che sarà [myTeam].
+  _MatchPropertiesState(this.match) {
+    if (match['opposingTeam'] != null)
+      _opposingTeamController.text = match['opposingTeam'];
+    if (match['day'] != null)
+      _opposingTeamController.text = match['day'];
+    if (match['month'] != null)
+      _opposingTeamController.text = match['month'];
+    if (match['year'] != null)
+      _opposingTeamController.text = match['year'];
+    if (match['manifestation'] != null)
+      _opposingTeamController.text = match['manifestation'];
+    if (match['phase'] != null)
+      _opposingTeamController.text = match['phase'];
+    if (match['place'] != null)
+      _opposingTeamController.text = match['place'];
     _opposingTeamController.addListener(
         () => match['opposingTeam'] = _opposingTeamController.text);
     _dayController.addListener(() => match['day'] = _dayController.text);
@@ -164,7 +188,12 @@ class _MatchPropertiesState extends State<MatchProperties> {
     //  _scaffoldKey.currentState
     //      .showSnackBar(new SnackBar(content: new Text('Input non valido')));
     //}
-    Navigator.of(context).pushNamed("/dataentry");
+    if (match['ended'] == 'false') {
+      Navigator.of(context).push(new MaterialPageRoute<Null>(
+          builder: (BuildContext context) => new CollectData(match)));
+    } else {
+      Navigator.of(context).pop();
+    }
   }
 
   // Metodo che modifica il label accanto allo switch
@@ -188,8 +217,8 @@ class _MatchPropertiesState extends State<MatchProperties> {
         child: new MyDrawer(),
       ),
       floatingActionButton: new FloatingActionButton(
-        child: const Icon(Icons.library_add),
-        onPressed: null,
+        child: const Icon(Icons.check),
+        onPressed: _handleSubmitted,
       ),
       body: new Center(
         child: new ConstrainedBox(
@@ -215,6 +244,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
               _newManifestationInput(),
               _newPhaseInput(),
               _newPlaceInput(),
+              _newDeleteMatch(),
               //_newSexSwitch(),
             ],
           ),
@@ -294,6 +324,31 @@ class _MatchPropertiesState extends State<MatchProperties> {
         labelText: 'Luogo *',
       ),
     );
+  }
+
+  /// Genera un nuovo pulsante per eliminare la partita correntemente
+  /// selezionata dal database locale.
+  Widget _newDeleteMatch() {
+    // Se nessuna partita è selezionata (sto creando una nuova partita) non
+    // mostrare nulla.
+    if (match['ended'] == 'false') {
+      return new Container(width: 0.0, height: 0.0);
+    }
+    return new Padding(
+      padding: constant.standard_margin,
+      child: new Center(
+        child: new RaisedButton(
+          child: const Text('Elimina partita'),
+          onPressed: _deleteMatch,
+        ),
+      ),
+    );
+  }
+
+  /// Elimina il giocatore correntemente selezionato dal database locale.
+  void _deleteMatch() {
+    LocalDB.removeMatch(match['key']);
+    Navigator.of(context).pop();
   }
 
   // Row _newSexSwitch() {

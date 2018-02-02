@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'chart_demo.dart';
 import 'constants.dart' as constant;
 import 'main_menu.dart';
+import 'match_list.dart';
 import 'match_properties.dart';
 import 'mypage.dart';
 import 'team_list.dart';
@@ -30,12 +31,11 @@ void main() {
     title: constant.app_name,
     home: new MainMenu(), // becomes the route named '/'
     routes: <String, WidgetBuilder>{
-      '/match': (BuildContext context) =>
-          new MatchTeamList(),
+      '/match': (BuildContext context) => new MatchTeamList(),
       '/team': (BuildContext context) => new TeamList(),
       '/stats': (BuildContext context) => new ChartDemo(),
       '/history': (BuildContext context) =>
-          new MyPage(title: constant.history_label),
+          new MatchList(),
       '/settings': (BuildContext context) =>
           new MyPage(title: constant.settings_label),
       '/formations': (BuildContext context) =>

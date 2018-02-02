@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
+import '../constants.dart' as constant;
 import 'bar.dart';
 
 class StatChart extends StatefulWidget {
@@ -56,16 +57,12 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
     Colors.blue[400]
   ];
 
-  final fondamentali = ['battute', 'ricezioni', 'attacchi', 'difese'];
+  
 
   final random = new Random();
   AnimationController animation;
 
   Map<String, StackedBarTween> tweens = new Map<String, StackedBarTween>();
-  StackedBarTween tweenBattuta;
-  StackedBarTween tweenRicezione;
-  StackedBarTween tweenAttacco;
-  StackedBarTween tweenDifesa;
 
   _StatChartState(this.dataSet);
 
@@ -79,7 +76,7 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
     final StackedBar empty = new StackedBar.empty();
     if (dataSet != null) {
       List<Bar> list = new List<Bar>();
-      for (String fondamentale in fondamentali) {
+      for (String fondamentale in constant.fondamentali) {
         list.clear();
         for (int i = 0; i < dataSet[fondamentale].length; i++) {
           list.add(new Bar(double.parse([fondamentale][i]), colors[i]));
@@ -87,7 +84,7 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
         tweens[fondamentale] = new StackedBarTween(empty, new StackedBar(list));
       }
     } else {
-      for (String fondamentale in fondamentali) {
+      for (String fondamentale in constant.fondamentali) {
         tweens[fondamentale] = new StackedBarTween(
             new StackedBar.empty(), new StackedBar.random(random));
       }
@@ -102,21 +99,6 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
   }
 
   Widget _newBar(String fondamentale) {
-    String label;
-    switch (fondamentale) {
-      case "battute":
-        label = "Battute";
-        break;
-      case "ricezioni":
-        label = "Ricezioni";
-        break;
-      case "attacchi":
-        label = "Attacchi";
-        break;
-      case "difese":
-        label = "Difese";
-        break;
-    }
     return new Expanded(
       child: new Column(
         mainAxisSize: MainAxisSize.min,
@@ -125,7 +107,7 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
             size: new Size(barWidth, height),
             painter: new StackedBarChartPainter(tweens[fondamentale].animate(animation)),
           ),
-          new Text(label),
+          new Text(fondamentale),
         ],
       ),
     );
@@ -139,10 +121,10 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _newBar('battute'),
-          _newBar('ricezioni'),
-          _newBar('attacchi'),
-          _newBar('difese'),
+          _newBar('Battuta'),
+          _newBar('Ricezione'),
+          _newBar('Attacco'),
+          _newBar('Difesa'),
         ],
       ),
     );

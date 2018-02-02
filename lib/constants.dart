@@ -11,6 +11,10 @@ const settings_label = "Impostazioni";
 
 const formations_label = "Formazioni";
 
-const standard_margin = const EdgeInsets.all(10.0);
+const standard_margin = const EdgeInsets.all(8.0);
 const lateral_margin = const EdgeInsets.symmetric(horizontal: 16.0);
 const form_page_margin = const EdgeInsets.symmetric(horizontal: 100.0);
+
+final fondamentali = ['Battuta', 'Ricezione', 'Attacco', 'Difesa'];
+
+enum esiti {errato, scarso, buono, ottimo}
