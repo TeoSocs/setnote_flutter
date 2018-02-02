@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
@@ -22,7 +21,7 @@ class _CollectDataState extends State<CollectData> {
   Map<String, dynamic> match;
   List<Widget> _playerList = new List<Widget>();
   Map<String, String> _pending = new Map<String, String>();
-  List<Map<String, String>> _currentSet;
+  Map<String, dynamic> _currentSet;
   List<Map<String, String>> _currentPoint = new List<Map<String, String>>();
   int _myTeamPoints = 0;
   int _opponentPoints = 0;
@@ -34,8 +33,8 @@ class _CollectDataState extends State<CollectData> {
   };
 
   _CollectDataState(this.match) {
-    match['Set'] = new List<List<Map<String, String>>>();
-    match['Set'].add(new List<Map<String, String>>());
+    match['Set'] = new List<Map<String, dynamic>>();
+    match['Set'].add(new Map<String, dynamic>());
     _currentSet = match['Set'][0];
     for (Map<String, dynamic> _player
         in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
@@ -106,7 +105,6 @@ class _CollectDataState extends State<CollectData> {
           if (_pending['player'] != null && _pending['fondamentale'] != null) {
             setState(() => _currentPoint.add(_pending));
             _pending = new Map<String, String>();
-            print(JSON.encode(_currentSet));
           }
         },
       ),
@@ -150,9 +148,11 @@ class _CollectDataState extends State<CollectData> {
                     color: _colors['Errato'],
                     onPressed: () {
                       setState(() {
-                        _currentSet.addAll(_currentPoint);
+                        _currentSet['azioni'].addAll(_currentPoint);
                         _currentPoint.clear();
                         _opponentPoints += 1;
+                        _currentSet['punteggio'] = "$_myTeamPoints - "
+                            "$_opponentPoints";
                         print("Punteggio: $_myTeamPoints - $_opponentPoints");
                       });
                     },
@@ -167,9 +167,11 @@ class _CollectDataState extends State<CollectData> {
                   child: new FloatingActionButton(
                     onPressed: () {
                       setState(() {
-                        _currentSet.addAll(_currentPoint);
+                        _currentSet['azioni'].addAll(_currentPoint);
                         _currentPoint.clear();
                         _myTeamPoints += 1;
+                        _currentSet['punteggio'] = "$_myTeamPoints - "
+                            "$_opponentPoints";
                         print("Punteggio: $_myTeamPoints - $_opponentPoints");
                       });
                     },
@@ -244,8 +246,10 @@ class _CollectDataState extends State<CollectData> {
           new Padding(
             padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
             child: new RaisedButton(
-                child: const Text('Termina set'),
+                child: const Text('Nuovo set'),
                 onPressed: () {
+                  match['Set'].add(new Map<String, dynamic>());
+                  _currentSet = match['Set'].last;
                   setState(() {
                     _myTeamPoints = 0;
                     _opponentPoints = 0;
@@ -257,7 +261,7 @@ class _CollectDataState extends State<CollectData> {
             child: new RaisedButton(
               child: new Text('Salva',
                   style: Theme.of(context).primaryTextTheme.button),
-              onPressed: () => print('Faccio finta di salvare'),
+              onPressed: _saveMatch,
               color: Theme.of(context).primaryColor,
             ),
           ),
@@ -284,7 +288,7 @@ class _CollectDataState extends State<CollectData> {
       child: new AlertDialog(
         title: new Text('Vuoi uscire?'),
         content: new Text(
-            'Uscendo ora, i dati saranno salvati e non potrai più modificarli. Sei sicuro?'),
+            'Uscendo ora perderai i dati non salvati. Sei sicuro?'),
         actions: <Widget>[
           new FlatButton(
             child: new Text('NO'),
@@ -307,5 +311,9 @@ class _CollectDataState extends State<CollectData> {
       Navigator.of(context).pop();
     }
     return new Future.value(false);
+  }
+
+  void _saveMatch() {
+    LocalDB.matches.add(match);
   }
 }
