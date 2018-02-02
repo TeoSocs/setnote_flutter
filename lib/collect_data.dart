@@ -125,6 +125,8 @@ class _CollectDataState extends State<CollectData> {
         ),
         title: new Text(azione['fondamentale']),
         subtitle: new Text("${player['nome']} ${player['cognome']}"),
+        onLongPress: () =>
+          setState(() => _currentPoint.remove(azione)),
       );
       scambio.add(newEntry);
     }
@@ -289,8 +291,8 @@ class _CollectDataState extends State<CollectData> {
       barrierDismissible: false,
       child: new AlertDialog(
         title: new Text('Vuoi uscire?'),
-        content: new Text(
-            'Uscendo ora perderai i dati non salvati. Sei sicuro?'),
+        content:
+            new Text('Uscendo ora perderai i dati non salvati. Sei sicuro?'),
         actions: <Widget>[
           new FlatButton(
             child: new Text('NO'),
