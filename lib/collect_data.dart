@@ -36,6 +36,7 @@ class _CollectDataState extends State<CollectData> {
     match['Set'] = new List<Map<String, dynamic>>();
     match['Set'].add(new Map<String, dynamic>());
     _currentSet = match['Set'][0];
+    _currentSet['azioni'] = new List<Map<String, String>>();
     for (Map<String, dynamic> _player
         in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
       _playerList.add(_newPlayerListEntry(_player));
@@ -250,6 +251,7 @@ class _CollectDataState extends State<CollectData> {
                 onPressed: () {
                   match['Set'].add(new Map<String, dynamic>());
                   _currentSet = match['Set'].last;
+                  _currentSet['azioni'] = new List<Map<String, String>>();
                   setState(() {
                     _myTeamPoints = 0;
                     _opponentPoints = 0;
