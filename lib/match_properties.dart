@@ -55,9 +55,12 @@ class _MatchTeamListState extends State<MatchTeamList> {
       child: new FlatButton(
         onPressed: () async {
           _reloadNeeded = true;
+          Map<String, dynamic> match = new Map<String, dynamic>();
+          match['myTeam'] = team['key'];
+          match['key'] = new DateTime.now().millisecondsSinceEpoch.toString();
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) =>
-                  new MatchProperties(team['key'])));
+                  new MatchProperties(match)));
           setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
@@ -78,12 +81,12 @@ class _MatchTeamListState extends State<MatchTeamList> {
 }
 
 class MatchProperties extends StatefulWidget {
-  const MatchProperties(this.selectedTeamKey);
-  final String selectedTeamKey;
+  const MatchProperties(this.match);
+  final Map<String, dynamic> match;
 
   @override
   _MatchPropertiesState createState() =>
-      new _MatchPropertiesState(selectedTeamKey);
+      new _MatchPropertiesState(match);
 }
 
 class _MatchPropertiesState extends State<MatchProperties> {
@@ -107,7 +110,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
   //     }
   //   ];
   // }
-  Map<String, dynamic> match = new Map<String, dynamic>();
+  Map<String, dynamic> match;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -124,9 +127,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
   /// Costruttore di _MatchPropertiesState.
   ///
   /// Riceve in input [selectedTeamKey] ovvero quella che sarà [myTeam].
-  _MatchPropertiesState(String selectedTeamKey) {
-    match['key'] = new DateTime.now().millisecondsSinceEpoch.toString();
-    match['myTeam'] = selectedTeamKey;
+  _MatchPropertiesState(this.match) {
     _opposingTeamController.addListener(
         () => match['opposingTeam'] = _opposingTeamController.text);
     _dayController.addListener(() => match['day'] = _dayController.text);

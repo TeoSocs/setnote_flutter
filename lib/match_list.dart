@@ -70,26 +70,4 @@ class _MatchListState extends State<MatchList> {
       ),
     );
   }
-
-  /// Costruisce una Card che fa da pulsante per la creazione di una nuova
-  /// squadra.
-  Card _addNewTeamCard() {
-    return new Card(
-      elevation: 0.5,
-      child: new FlatButton(
-        onPressed: () async {
-          _reloadNeeded = true;
-          Map<String, dynamic> team = new Map<String, dynamic>();
-          await Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) =>
-                  new TeamProperties(selectedTeam: team)));
-          setState(() => _reloadNeeded = false);
-        },
-        child: new ListTile(
-          leading: new Icon(Icons.add),
-          title: const Text('Aggiungi una nuova squadra'),
-        ),
-      ),
-    );
-  }
 }
