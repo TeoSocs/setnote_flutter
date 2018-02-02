@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import 'charts/stat_chart.dart';
+import 'constants.dart' as constant;
 import 'local_database.dart';
 import 'setnote_widgets.dart';
 
@@ -40,16 +43,29 @@ class _MatchStatsState extends State<MatchStats> {
 
   List<Widget> _gridChildrenBuilder() {
     List<Widget> list = new List<Widget>();
+    Map<String, Map<String, int>> rawData = new Map<String, Map<String, int>>();
     int i=1;
     for (Map<String, dynamic> set in match['Set']) {
-      list.add(_statsTableBuilder("Set $i"));
+      for (String fondamentale in constant.fondamentali) {
+        rawData[fondamentale] = new Map<String, int>();
+        for (String esito in constant.esiti) {
+          rawData[fondamentale][esito] = 0;
+        }
+      }
+      // Qui bisogna recuperare ed elaborare i dati
+      for (Map<String, String> azione in set['azioni']) {
+        rawData[azione['fondamentale']][azione['esito']] += 1;
+      }
+      print(JSON.encode(rawData));
+      list.add(_statsTableBuilder("Set $i", rawData));
       list.add(new StatChart());
       i++;
     }
     return list;
   }
 
-  Widget _statsTableBuilder(String title) {
+  Widget _statsTableBuilder(String title, Map<String, dynamic> data) {
+
     return new Column(
       children: <Widget>[
         new Padding(

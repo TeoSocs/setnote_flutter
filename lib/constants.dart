@@ -17,4 +17,4 @@ const form_page_margin = const EdgeInsets.symmetric(horizontal: 100.0);
 
 final fondamentali = ['Battuta', 'Ricezione', 'Attacco', 'Difesa'];
 
-enum esiti {errato, scarso, buono, ottimo}
+final esiti = ["Errato", "Scarso", "Buono", "Ottimo"];
