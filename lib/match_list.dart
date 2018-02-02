@@ -35,7 +35,7 @@ class _MatchListState extends State<MatchList> {
   @override
   Widget build(BuildContext context) {
     List<Widget> matchList = new List<Widget>();
-    for (Map<String, dynamic> _match in LocalDB.teams) {
+    for (Map<String, dynamic> _match in LocalDB.matches) {
       matchList.add(_newMatchListCard(_match));
     }
     setState(() => _reloadNeeded = false);
@@ -51,8 +51,15 @@ class _MatchListState extends State<MatchList> {
   /// Costruisce una Card rappresentante la squadra passata in input.
   Card _newMatchListCard(Map<String, dynamic> match) {
     String _myTeamName = LocalDB.getTeamByKey(match['myTeam'])['nome'];
-    String _opposingTeamName =
-        LocalDB.getTeamByKey(match['opposingTeam'])['nome'];
+    Map<String, dynamic> _opposingTeam =
+        LocalDB.getTeamByKey(match['opposingTeam']);
+    String _opposingTeamName = (_opposingTeam != null
+        ? _opposingTeam['nome']
+        : "Avversario sconosciuto");
+    String manifestazione = (match['manifestation'] != null
+        ? match['manifestation']
+        : 'Competizione sconosciuta');
+    String anno = (match['year'] != null ? match['year'] : 'Anno sconosciuto');
     return new Card(
       child: new FlatButton(
         onPressed: () async {
@@ -64,8 +71,7 @@ class _MatchListState extends State<MatchList> {
         child: new ListTile(
           leading: new Icon(Icons.group),
           title: new Text("$_myTeamName VS $_opposingTeamName"),
-          subtitle: new Text(match['manifestation'] + ' - ' +
-              match['year']),
+          subtitle: new Text(manifestazione + ' - ' + anno),
         ),
       ),
     );
