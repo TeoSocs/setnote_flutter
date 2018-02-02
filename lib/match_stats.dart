@@ -70,23 +70,38 @@ class _MatchStatsState extends State<MatchStats> {
     for (String esito in constant.esiti) {
       battuteTotali += data["Battuta"][esito];
     }
-    double battutaPositivita =
-        (data['Battuta']['Ottimo'] + data['Battuta']['Buono']) *
-            100 /
-            battuteTotali;
+    double battutaPositivita = 0.0;
+    if (battuteTotali != 0)
+      battutaPositivita =
+          (data['Battuta']['Ottimo'] + data['Battuta']['Buono']) *
+              100 /
+              battuteTotali;
 
     int ricezioniTotali = 0;
     for (String esito in constant.esiti) {
       ricezioniTotali += data["Ricezione"][esito];
     }
+    double ricezionePositivita = 0.0;
+    double ricezionePerfezione = 0.0;
+    if (ricezioniTotali != 0) {
+      ricezionePositivita =
+          (data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
+              100 /
+              ricezioniTotali;
 
-    double ricezionePositivita =
-        (data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
-            100 /
-            ricezioniTotali;
+      ricezionePerfezione = data['Ricezione']['Ottimo'] * 100 / ricezioniTotali;
+    }
 
-    double ricezionePerfezione =
-        data['Ricezione']['Ottimo'] * 100 / ricezioniTotali;
+    int attacchiTotali = 0;
+    for (String esito in constant.esiti) {
+      attacchiTotali += data["Attacco"][esito];
+    }
+    double attaccoEfficienza = 0.0;
+    if (attacchiTotali != 0) {
+      attaccoEfficienza = 5.0;
+      attaccoEfficienza += (5.0/attacchiTotali) * (data['Attacco']['Ottimo']
+          - (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
+    }
 
     return new Column(
       children: <Widget>[
@@ -158,15 +173,19 @@ class _MatchStatsState extends State<MatchStats> {
           children: <TableRow>[
             new TableRow(children: <Widget>[
               const Text("Attacchi totali"),
-              const Text("##")
+              new Text("$attacchiTotali")
             ]),
-            new TableRow(
-                children: <Widget>[const Text("Errori"), const Text("##")]),
-            new TableRow(
-                children: <Widget>[const Text("Punti"), const Text("##%")]),
+            new TableRow(children: <Widget>[
+              const Text("Errori"),
+              new Text("${data['Attacco']['Errato']}")
+            ]),
+            new TableRow(children: <Widget>[
+              const Text("Punti"),
+              new Text("${data['Attacco']['Ottimo']}")
+            ]),
             new TableRow(children: <Widget>[
               const Text("Efficienza"),
-              const Text("##%")
+              new Text("$attaccoEfficienza")
             ]),
           ],
         ),
