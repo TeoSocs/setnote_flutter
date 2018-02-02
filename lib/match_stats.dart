@@ -20,7 +20,6 @@ class _MatchStatsState extends State<MatchStats> {
   _MatchStatsState(this.match);
 
   Map<String, dynamic> match;
-  bool _reloadNeeded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +100,21 @@ class _MatchStatsState extends State<MatchStats> {
       attaccoEfficienza = 5.0;
       attaccoEfficienza += (5.0/attacchiTotali) * (data['Attacco']['Ottimo']
           - (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
+    }
+
+    int difeseTotali = 0;
+    for (String esito in constant.esiti) {
+      difeseTotali += data["Difesa"][esito];
+    }
+    double difesaPositivita = 0.0;
+    double difesaPerfezione = 0.0;
+    if (difeseTotali != 0) {
+      difesaPositivita =
+          (data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
+              100 /
+              difeseTotali;
+
+      difesaPerfezione = data['Difesa']['Ottimo'] * 100 / difeseTotali;
     }
 
     return new Column(
@@ -199,17 +213,18 @@ class _MatchStatsState extends State<MatchStats> {
           children: <TableRow>[
             new TableRow(children: <Widget>[
               const Text("Difese totali"),
-              const Text("##")
+              new Text("$difeseTotali")
             ]),
             new TableRow(
-                children: <Widget>[const Text("Errori"), const Text("##")]),
+                children: <Widget>[const Text("Errori"), new Text
+                  ("${data['Difesa']['Errato']}")]),
             new TableRow(children: <Widget>[
               const Text("Positività"),
-              const Text("##%")
+              new Text("$difesaPositivita%")
             ]),
             new TableRow(children: <Widget>[
               const Text("Perfezione"),
-              const Text("##%")
+              new Text("$difesaPerfezione%")
             ]),
           ],
         ),
@@ -224,7 +239,6 @@ class _MatchStatsState extends State<MatchStats> {
         in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
       playerList.add(_listEntryBuilder(_player));
     }
-    setState(() => _reloadNeeded = false);
     return playerList;
   }
 
@@ -232,9 +246,7 @@ class _MatchStatsState extends State<MatchStats> {
     return new Card(
       child: new FlatButton(
         onPressed: () async {
-          _reloadNeeded = true;
           // cose
-          setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
           leading: (player['numeroMaglia'] != null
@@ -257,9 +269,7 @@ class _MatchStatsState extends State<MatchStats> {
       elevation: 0.5,
       child: new FlatButton(
         onPressed: () async {
-          _reloadNeeded = true;
           // cose
-          setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
           title: new Text("Rendimento di squadra"),
