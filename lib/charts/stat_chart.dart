@@ -7,9 +7,9 @@ import '../constants.dart' as constant;
 import 'bar.dart';
 
 class StatChart extends StatefulWidget {
-  final Map<String, String> dataSet;
+  final Map<String, Map<String, double>> dataSet;
 
-  StatChart({this.dataSet});
+  StatChart(this.dataSet);
 
   @override
   _StatChartState createState() => new _StatChartState(dataSet);
@@ -50,12 +50,12 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
   */
   final Map<String, dynamic> dataSet;
 
-  final colors = [
-    Colors.red[400],
-    Colors.yellow[400],
-    Colors.green[400],
-    Colors.blue[400]
-  ];
+  final Map<String, Color> _colors = {
+    'Ottimo': Colors.blue[400],
+    'Buono': Colors.green[400],
+    'Scarso': Colors.yellow[400],
+    'Errato': Colors.red[400],
+  };
 
   
 
@@ -78,8 +78,9 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
       List<Bar> list = new List<Bar>();
       for (String fondamentale in constant.fondamentali) {
         list.clear();
-        for (int i = 0; i < dataSet[fondamentale].length; i++) {
-          list.add(new Bar(double.parse([fondamentale][i]), colors[i]));
+        for (String esito in constant.esiti) {
+          list.add(new Bar(dataSet[fondamentale][esito],
+              _colors[esito]));
         }
         tweens[fondamentale] = new StackedBarTween(empty, new StackedBar(list));
       }

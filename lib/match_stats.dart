@@ -42,13 +42,14 @@ class _MatchStatsState extends State<MatchStats> {
 
   List<Widget> _gridChildrenBuilder() {
     List<Widget> list = new List<Widget>();
-    Map<String, Map<String, int>> rawData = new Map<String, Map<String, int>>();
-    int i = 1;
+    Map<String, Map<String, double>> rawData = new Map<String, Map<String,
+        double>>();
+    double i = 1.0;
     for (Map<String, dynamic> set in match['Set']) {
       for (String fondamentale in constant.fondamentali) {
-        rawData[fondamentale] = new Map<String, int>();
+        rawData[fondamentale] = new Map<String, double>();
         for (String esito in constant.esiti) {
-          rawData[fondamentale][esito] = 0;
+          rawData[fondamentale][esito] = 0.0;
         }
       }
       // Qui bisogna recuperare ed elaborare i dati, eventualmente filtrarli
@@ -58,31 +59,31 @@ class _MatchStatsState extends State<MatchStats> {
       }
       print(JSON.encode(rawData));
       list.add(_statsTableBuilder("Set $i", rawData));
-      list.add(new StatChart());
+      list.add(new StatChart(rawData));
       i++;
     }
     return list;
   }
 
   Widget _statsTableBuilder(String title, Map<String, dynamic> data) {
-    int battuteTotali = 0;
+    double battuteTotali = 0.0;
     for (String esito in constant.esiti) {
       battuteTotali += data["Battuta"][esito];
     }
     double battutaPositivita = 0.0;
-    if (battuteTotali != 0)
+    if (battuteTotali != 0.0)
       battutaPositivita =
           (data['Battuta']['Ottimo'] + data['Battuta']['Buono']) *
               100 /
               battuteTotali;
 
-    int ricezioniTotali = 0;
+    double ricezioniTotali = 0.0;
     for (String esito in constant.esiti) {
       ricezioniTotali += data["Ricezione"][esito];
     }
     double ricezionePositivita = 0.0;
     double ricezionePerfezione = 0.0;
-    if (ricezioniTotali != 0) {
+    if (ricezioniTotali != 0.0) {
       ricezionePositivita =
           (data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
               100 /
@@ -91,24 +92,24 @@ class _MatchStatsState extends State<MatchStats> {
       ricezionePerfezione = data['Ricezione']['Ottimo'] * 100 / ricezioniTotali;
     }
 
-    int attacchiTotali = 0;
+    double attacchiTotali = 0.0;
     for (String esito in constant.esiti) {
       attacchiTotali += data["Attacco"][esito];
     }
     double attaccoEfficienza = 0.0;
-    if (attacchiTotali != 0) {
+    if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
       attaccoEfficienza += (5.0/attacchiTotali) * (data['Attacco']['Ottimo']
           - (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
     }
 
-    int difeseTotali = 0;
+    double difeseTotali = 0.0;
     for (String esito in constant.esiti) {
       difeseTotali += data["Difesa"][esito];
     }
     double difesaPositivita = 0.0;
     double difesaPerfezione = 0.0;
-    if (difeseTotali != 0) {
+    if (difeseTotali != 0.0) {
       difesaPositivita =
           (data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
               100 /
