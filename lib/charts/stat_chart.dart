@@ -10,16 +10,10 @@ class StatChart extends StatefulWidget {
   final Map<String, Map<String, double>> dataSet;
   final double scaleCoefficient;
 
-  StatChart({this.dataSet, this.scaleCoefficient}) {
-    for (String fondamentale in constant.fondamentali) {
-      for (String esito in constant.esiti) {
-        dataSet[fondamentale][esito] *= scaleCoefficient;
-      }
-    }
-  }
-
+  StatChart({this.dataSet, this.scaleCoefficient});
   @override
-  _StatChartState createState() => new _StatChartState(dataSet);
+  _StatChartState createState() =>
+      new _StatChartState(dataSet, scaleCoefficient: scaleCoefficient);
 }
 
 class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
@@ -67,10 +61,11 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
   final random = new Random();
   AnimationController animation;
 
-  Map<String, StackedBarTween> tweens = new Map<String, StackedBarTween>();
+  Map<String, StackedBar> stackedBars = new Map<String, StackedBar>();
 
+  double scaleCoefficient;
 
-  _StatChartState(this.dataSet);
+  _StatChartState(this.dataSet, {this.scaleCoefficient});
 
   @override
   void initState() {
@@ -84,18 +79,17 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
       for (String fondamentale in constant.fondamentali) {
         list = new List<Bar>();
         for (String esito in constant.esiti) {
-          list.add(new Bar(dataSet[fondamentale][esito], _colors[esito]));
+          list.add(new Bar(
+              dataSet[fondamentale][esito] * scaleCoefficient, _colors[esito]));
         }
-        tweens[fondamentale] =
-            new StackedBarTween(new StackedBar.empty(), new StackedBar(list));
+        stackedBars[fondamentale] =
+            new StackedBar(list);
       }
     } else {
       for (String fondamentale in constant.fondamentali) {
-        tweens[fondamentale] = new StackedBarTween(
-            new StackedBar.empty(), new StackedBar.random(random));
+        stackedBars[fondamentale] = new StackedBar.random(random);
       }
     }
-    animation.forward();
   }
 
   @override
@@ -112,7 +106,7 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
           new CustomPaint(
             size: new Size(barWidth, height),
             painter: new StackedBarChartPainter(
-                tweens[fondamentale].animate(animation)),
+                stackedBars[fondamentale]),
           ),
           new Text(fondamentale),
         ],

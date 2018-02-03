@@ -15,9 +15,16 @@ class MatchStats extends StatefulWidget {
 }
 
 class _MatchStatsState extends State<MatchStats> {
-  _MatchStatsState(this.match);
+  _MatchStatsState(this.match) {
+    _buildDataSet();
+  }
 
   Map<String, dynamic> match;
+
+  String _playerKeyToFilter;
+  double _scaleCoefficient = 0.0;
+  List<Map<String, Map<String, double>>> dataSet =
+      new List<Map<String, Map<String, double>>>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class _MatchStatsState extends State<MatchStats> {
         padding: const EdgeInsets.all(20.0),
         crossAxisSpacing: 10.0,
         crossAxisCount: 2,
-        children: _gridChildrenBuilder(),
+        children: _gridBuilder(),
       ),
       drawer: new Drawer(
         child: new ListView(
@@ -38,40 +45,11 @@ class _MatchStatsState extends State<MatchStats> {
     );
   }
 
-  double _computeCoefficient() {
-    Map<String, Map<String, double>> rawData =
-        new Map<String, Map<String, double>>();
+  void _buildDataSet() {
     double _maxNumberOfActions = 0.0;
     double _numberOfActions = 0.0;
-    for (Map<String, dynamic> set in match['Set']) {
-      rawData = new Map<String, Map<String, double>>();
-      for (String fondamentale in constant.fondamentali) {
-        rawData[fondamentale] = new Map<String, double>();
-        for (String esito in constant.esiti) {
-          rawData[fondamentale][esito] = 0.0;
-        }
-      }
-      for (Map<String, String> azione in set['azioni']) {
-        rawData[azione['fondamentale']][azione['esito']] += 1;
-      }
-      for (String fondamentale in constant.fondamentali) {
-        _numberOfActions = 0.0;
-        for (String esito in constant.esiti) {
-          _numberOfActions += rawData[fondamentale][esito];
-        }
-        if (_numberOfActions > _maxNumberOfActions)
-          _maxNumberOfActions = _numberOfActions;
-      }
-    }
-    return (_maxNumberOfActions != 0.0 ? 400.0 / _maxNumberOfActions : 0.0);
-  }
-
-  List<Widget> _gridChildrenBuilder() {
-    List<Widget> list = new List<Widget>();
-    double scaleCoefficient = _computeCoefficient();
     Map<String, Map<String, double>> rawData =
         new Map<String, Map<String, double>>();
-    int i = 1;
     for (Map<String, dynamic> set in match['Set']) {
       rawData = new Map<String, Map<String, double>>();
       for (String fondamentale in constant.fondamentali) {
@@ -83,15 +61,38 @@ class _MatchStatsState extends State<MatchStats> {
       // Qui bisogna recuperare ed elaborare i dati, eventualmente filtrarli
       // per giocatore
       for (Map<String, String> azione in set['azioni']) {
+        if (_playerKeyToFilter != null) {
+          if (azione['player'] != _playerKeyToFilter) continue;
+        }
         rawData[azione['fondamentale']][azione['esito']] += 1;
       }
-      list.add(_statsTableBuilder("Set $i", rawData));
-      list.add(
-          new StatChart(dataSet: rawData, scaleCoefficient: scaleCoefficient));
+      for (String fondamentale in constant.fondamentali) {
+        _numberOfActions = 0.0;
+        for (String esito in constant.esiti) {
+          _numberOfActions += rawData[fondamentale][esito];
+        }
+        if (_numberOfActions > _maxNumberOfActions)
+          _maxNumberOfActions = _numberOfActions;
+      }
+      dataSet.add(rawData);
+    }
+    if (_scaleCoefficient == 0 && _maxNumberOfActions != 0.0) {
+      _scaleCoefficient = 400.0 / _maxNumberOfActions;
+    }
+  }
+
+  List<Widget> _gridBuilder() {
+    List<Widget> _elements = new List();
+    int i = 1;
+    for (Map<String, Map<String, double>> rawData in dataSet) {
+      _elements.add(_statsTableBuilder("Set $i", rawData));
+      _elements.add(
+          new StatChart(dataSet: rawData, scaleCoefficient: _scaleCoefficient));
       i++;
     }
-    return list;
+    return _elements;
   }
+
 
   Widget _statsTableBuilder(String title, Map<String, dynamic> data) {
     double battuteTotali = 0.0;
@@ -275,8 +276,8 @@ class _MatchStatsState extends State<MatchStats> {
   Card _listEntryBuilder(Map<String, dynamic> player) {
     return new Card(
       child: new FlatButton(
-        onPressed: () async {
-          // cose
+        onPressed: () {
+          _playerKeyToFilter = player['key'];
         },
         child: new ListTile(
           leading: (player['numeroMaglia'] != null
@@ -298,8 +299,8 @@ class _MatchStatsState extends State<MatchStats> {
     return new Card(
       elevation: 0.5,
       child: new FlatButton(
-        onPressed: () async {
-          // cose
+        onPressed: () {
+          _playerKeyToFilter = null;
         },
         child: new ListTile(
           title: new Text("Rendimento di squadra"),
