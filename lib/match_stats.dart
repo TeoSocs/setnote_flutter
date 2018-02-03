@@ -59,7 +59,7 @@ class _MatchStatsState extends State<MatchStats> {
       }
       print(JSON.encode(rawData));
       list.add(_statsTableBuilder("Set $i", rawData));
-      list.add(new StatChart(rawData));
+      list.add(new StatChart(dataSet: rawData));
       i++;
     }
     return list;

@@ -9,7 +9,7 @@ import 'bar.dart';
 class StatChart extends StatefulWidget {
   final Map<String, Map<String, double>> dataSet;
 
-  StatChart(this.dataSet);
+  StatChart({this.dataSet});
 
   @override
   _StatChartState createState() => new _StatChartState(dataSet);
@@ -57,8 +57,6 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
     'Errato': Colors.red[400],
   };
 
-  
-
   final random = new Random();
   AnimationController animation;
 
@@ -73,16 +71,33 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    final StackedBar empty = new StackedBar.empty();
     if (dataSet != null) {
+      double _maxNumberOfActions = 0.0;
+      double _numberOfActions = 0.0;
+      for (String fondamentale in constant.fondamentali) {
+        _numberOfActions = 0.0;
+        for (String esito in constant.esiti) {
+          _numberOfActions += dataSet[fondamentale][esito];
+        }
+        if (_numberOfActions > _maxNumberOfActions)
+          _maxNumberOfActions = _numberOfActions;
+      }
+      double _scaleCoefficient =
+          (_maxNumberOfActions != 0.0 ? 400.0 / _maxNumberOfActions : 0.0);
+      for (String fondamentale in constant.fondamentali) {
+        for (String esito in constant.esiti) {
+          dataSet[fondamentale][esito] *= _scaleCoefficient;
+        }
+      }
       List<Bar> list = new List<Bar>();
       for (String fondamentale in constant.fondamentali) {
-        list.clear();
+        list = new List<Bar>();
         for (String esito in constant.esiti) {
-          list.add(new Bar(dataSet[fondamentale][esito],
-              _colors[esito]));
+          list.add(new Bar(dataSet[fondamentale][esito], _colors[esito]));
         }
-        tweens[fondamentale] = new StackedBarTween(empty, new StackedBar(list));
+        tweens[fondamentale] =
+            new StackedBarTween(new StackedBar.empty(), new StackedBar(list));
+        print("control");
       }
     } else {
       for (String fondamentale in constant.fondamentali) {
@@ -106,7 +121,8 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
         children: <Widget>[
           new CustomPaint(
             size: new Size(barWidth, height),
-            painter: new StackedBarChartPainter(tweens[fondamentale].animate(animation)),
+            painter: new StackedBarChartPainter(
+                tweens[fondamentale].animate(animation)),
           ),
           new Text(fondamentale),
         ],
