@@ -38,14 +38,42 @@ class _MatchStatsState extends State<MatchStats> {
     );
   }
 
+  double _computeCoefficient() {
+    Map<String, Map<String, double>> rawData =
+        new Map<String, Map<String, double>>();
+    double _maxNumberOfActions = 0.0;
+    double _numberOfActions = 0.0;
+    for (Map<String, dynamic> set in match['Set']) {
+      rawData = new Map<String, Map<String, double>>();
+      for (String fondamentale in constant.fondamentali) {
+        rawData[fondamentale] = new Map<String, double>();
+        for (String esito in constant.esiti) {
+          rawData[fondamentale][esito] = 0.0;
+        }
+      }
+      for (Map<String, String> azione in set['azioni']) {
+        rawData[azione['fondamentale']][azione['esito']] += 1;
+      }
+      for (String fondamentale in constant.fondamentali) {
+        _numberOfActions = 0.0;
+        for (String esito in constant.esiti) {
+          _numberOfActions += rawData[fondamentale][esito];
+        }
+        if (_numberOfActions > _maxNumberOfActions)
+          _maxNumberOfActions = _numberOfActions;
+      }
+    }
+    return (_maxNumberOfActions != 0.0 ? 400.0 / _maxNumberOfActions : 0.0);
+  }
+
   List<Widget> _gridChildrenBuilder() {
     List<Widget> list = new List<Widget>();
-    Map<String, Map<String, double>> rawData = new Map<String, Map<String,
-        double>>();
+    double scaleCoefficient = _computeCoefficient();
+    Map<String, Map<String, double>> rawData =
+        new Map<String, Map<String, double>>();
     int i = 1;
     for (Map<String, dynamic> set in match['Set']) {
-      rawData = new Map<String, Map<String,
-          double>>();
+      rawData = new Map<String, Map<String, double>>();
       for (String fondamentale in constant.fondamentali) {
         rawData[fondamentale] = new Map<String, double>();
         for (String esito in constant.esiti) {
@@ -58,7 +86,8 @@ class _MatchStatsState extends State<MatchStats> {
         rawData[azione['fondamentale']][azione['esito']] += 1;
       }
       list.add(_statsTableBuilder("Set $i", rawData));
-      list.add(new StatChart(dataSet: rawData));
+      list.add(
+          new StatChart(dataSet: rawData, scaleCoefficient: scaleCoefficient));
       i++;
     }
     return list;
@@ -98,8 +127,9 @@ class _MatchStatsState extends State<MatchStats> {
     double attaccoEfficienza = 0.0;
     if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
-      attaccoEfficienza += (5.0/attacchiTotali) * (data['Attacco']['Ottimo']
-          - (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
+      attaccoEfficienza += (5.0 / attacchiTotali) *
+          (data['Attacco']['Ottimo'] -
+              (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
     }
 
     double difeseTotali = 0.0;
@@ -109,10 +139,9 @@ class _MatchStatsState extends State<MatchStats> {
     double difesaPositivita = 0.0;
     double difesaPerfezione = 0.0;
     if (difeseTotali != 0.0) {
-      difesaPositivita =
-          (data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
-              100 /
-              difeseTotali;
+      difesaPositivita = (data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
+          100 /
+          difeseTotali;
 
       difesaPerfezione = data['Difesa']['Ottimo'] * 100 / difeseTotali;
     }
@@ -215,9 +244,10 @@ class _MatchStatsState extends State<MatchStats> {
               const Text("Difese totali"),
               new Text("$difeseTotali")
             ]),
-            new TableRow(
-                children: <Widget>[const Text("Errori"), new Text
-                  ("${data['Difesa']['Errato']}")]),
+            new TableRow(children: <Widget>[
+              const Text("Errori"),
+              new Text("${data['Difesa']['Errato']}")
+            ]),
             new TableRow(children: <Widget>[
               const Text("Positività"),
               new Text("$difesaPositivita%")

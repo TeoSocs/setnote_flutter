@@ -8,11 +8,13 @@ import 'bar.dart';
 
 class StatChart extends StatefulWidget {
   final Map<String, Map<String, double>> dataSet;
+  final double scaleCoefficient;
 
-  StatChart({this.dataSet});
+  StatChart({this.dataSet, this.scaleCoefficient});
 
   @override
-  _StatChartState createState() => new _StatChartState(dataSet);
+  _StatChartState createState() => new _StatChartState(dataSet,
+      scaleCoefficient: scaleCoefficient);
 }
 
 class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
@@ -62,7 +64,9 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
 
   Map<String, StackedBarTween> tweens = new Map<String, StackedBarTween>();
 
-  _StatChartState(this.dataSet);
+  final double scaleCoefficient;
+
+  _StatChartState(this.dataSet, {this.scaleCoefficient});
 
   @override
   void initState() {
@@ -72,21 +76,9 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
       vsync: this,
     );
     if (dataSet != null) {
-      double _maxNumberOfActions = 0.0;
-      double _numberOfActions = 0.0;
-      for (String fondamentale in constant.fondamentali) {
-        _numberOfActions = 0.0;
-        for (String esito in constant.esiti) {
-          _numberOfActions += dataSet[fondamentale][esito];
-        }
-        if (_numberOfActions > _maxNumberOfActions)
-          _maxNumberOfActions = _numberOfActions;
-      }
-      double _scaleCoefficient =
-          (_maxNumberOfActions != 0.0 ? 400.0 / _maxNumberOfActions : 0.0);
       for (String fondamentale in constant.fondamentali) {
         for (String esito in constant.esiti) {
-          dataSet[fondamentale][esito] *= _scaleCoefficient;
+          dataSet[fondamentale][esito] *= scaleCoefficient;
         }
       }
       List<Bar> list = new List<Bar>();
