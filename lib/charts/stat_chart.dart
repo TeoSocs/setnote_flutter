@@ -97,7 +97,6 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
         }
         tweens[fondamentale] =
             new StackedBarTween(new StackedBar.empty(), new StackedBar(list));
-        print("control");
       }
     } else {
       for (String fondamentale in constant.fondamentali) {

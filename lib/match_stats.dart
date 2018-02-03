@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'charts/stat_chart.dart';
@@ -44,8 +42,10 @@ class _MatchStatsState extends State<MatchStats> {
     List<Widget> list = new List<Widget>();
     Map<String, Map<String, double>> rawData = new Map<String, Map<String,
         double>>();
-    double i = 1.0;
+    int i = 1;
     for (Map<String, dynamic> set in match['Set']) {
+      rawData = new Map<String, Map<String,
+          double>>();
       for (String fondamentale in constant.fondamentali) {
         rawData[fondamentale] = new Map<String, double>();
         for (String esito in constant.esiti) {
@@ -57,7 +57,6 @@ class _MatchStatsState extends State<MatchStats> {
       for (Map<String, String> azione in set['azioni']) {
         rawData[azione['fondamentale']][azione['esito']] += 1;
       }
-      print(JSON.encode(rawData));
       list.add(_statsTableBuilder("Set $i", rawData));
       list.add(new StatChart(dataSet: rawData));
       i++;
