@@ -10,11 +10,16 @@ class StatChart extends StatefulWidget {
   final Map<String, Map<String, double>> dataSet;
   final double scaleCoefficient;
 
-  StatChart({this.dataSet, this.scaleCoefficient});
+  StatChart({this.dataSet, this.scaleCoefficient}) {
+    for (String fondamentale in constant.fondamentali) {
+      for (String esito in constant.esiti) {
+        dataSet[fondamentale][esito] *= scaleCoefficient;
+      }
+    }
+  }
 
   @override
-  _StatChartState createState() => new _StatChartState(dataSet,
-      scaleCoefficient: scaleCoefficient);
+  _StatChartState createState() => new _StatChartState(dataSet);
 }
 
 class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
@@ -64,9 +69,8 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
 
   Map<String, StackedBarTween> tweens = new Map<String, StackedBarTween>();
 
-  final double scaleCoefficient;
 
-  _StatChartState(this.dataSet, {this.scaleCoefficient});
+  _StatChartState(this.dataSet);
 
   @override
   void initState() {
@@ -76,11 +80,6 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
       vsync: this,
     );
     if (dataSet != null) {
-      for (String fondamentale in constant.fondamentali) {
-        for (String esito in constant.esiti) {
-          dataSet[fondamentale][esito] *= scaleCoefficient;
-        }
-      }
       List<Bar> list = new List<Bar>();
       for (String fondamentale in constant.fondamentali) {
         list = new List<Bar>();
