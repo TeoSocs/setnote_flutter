@@ -6,22 +6,24 @@ import 'local_database.dart';
 import 'setnote_widgets.dart';
 
 class MatchStats extends StatefulWidget {
-  MatchStats(this.match);
+  MatchStats(this.match, {this.playerKeyToFilter});
+
+  String playerKeyToFilter;
 
   final Map<String, dynamic> match;
 
   @override
-  State createState() => new _MatchStatsState(match);
+  State createState() => new _MatchStatsState(match, playerKeyToFilter);
 }
 
 class _MatchStatsState extends State<MatchStats> {
-  _MatchStatsState(this.match) {
+  _MatchStatsState(this.match, this.playerKeyToFilter) {
     _buildDataSet();
   }
 
   Map<String, dynamic> match;
 
-  String _playerKeyToFilter;
+  String playerKeyToFilter;
   double _scaleCoefficient = 0.0;
   List<Map<String, Map<String, double>>> dataSet =
       new List<Map<String, Map<String, double>>>();
@@ -61,8 +63,8 @@ class _MatchStatsState extends State<MatchStats> {
       // Qui bisogna recuperare ed elaborare i dati, eventualmente filtrarli
       // per giocatore
       for (Map<String, String> azione in set['azioni']) {
-        if (_playerKeyToFilter != null) {
-          if (azione['player'] != _playerKeyToFilter) continue;
+        if (playerKeyToFilter != null) {
+          if (azione['player'] != playerKeyToFilter) continue;
         }
         rawData[azione['fondamentale']][azione['esito']] += 1;
       }
@@ -92,7 +94,6 @@ class _MatchStatsState extends State<MatchStats> {
     }
     return _elements;
   }
-
 
   Widget _statsTableBuilder(String title, Map<String, dynamic> data) {
     double battuteTotali = 0.0;
@@ -265,7 +266,6 @@ class _MatchStatsState extends State<MatchStats> {
 
   List<Widget> _playerListBuilder() {
     List<Widget> playerList = new List<Widget>();
-    playerList.add(_wholeTeamEntryBuilder());
     for (Map<String, dynamic> _player
         in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
       playerList.add(_listEntryBuilder(_player));
@@ -276,8 +276,17 @@ class _MatchStatsState extends State<MatchStats> {
   Card _listEntryBuilder(Map<String, dynamic> player) {
     return new Card(
       child: new FlatButton(
-        onPressed: () {
-          _playerKeyToFilter = player['key'];
+        onPressed: () async {
+          if (playerKeyToFilter != null) {
+            await Navigator.of(context).pushReplacement(
+                new MaterialPageRoute<Null>(
+                    builder: (BuildContext context) => new MatchStats(match,
+                        playerKeyToFilter: player['key'])));
+          } else {
+            await Navigator.of(context).push(new MaterialPageRoute<Null>(
+                builder: (BuildContext context) =>
+                    new MatchStats(match, playerKeyToFilter: player['key'])));
+          }
         },
         child: new ListTile(
           leading: (player['numeroMaglia'] != null
@@ -290,20 +299,6 @@ class _MatchStatsState extends State<MatchStats> {
                 )),
           title: new Text(player['nome']),
           subtitle: new Text(player['ruolo']),
-        ),
-      ),
-    );
-  }
-
-  Card _wholeTeamEntryBuilder() {
-    return new Card(
-      elevation: 0.5,
-      child: new FlatButton(
-        onPressed: () {
-          _playerKeyToFilter = null;
-        },
-        child: new ListTile(
-          title: new Text("Rendimento di squadra"),
         ),
       ),
     );
