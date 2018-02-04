@@ -8,7 +8,7 @@ import 'setnote_widgets.dart';
 class MatchStats extends StatefulWidget {
   MatchStats(this.match, {this.playerKeyToFilter});
 
-  String playerKeyToFilter;
+  final String playerKeyToFilter;
 
   final Map<String, dynamic> match;
 

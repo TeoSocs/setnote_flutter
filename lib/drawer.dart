@@ -2,24 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
 
-/// Elemento del drawer principale.
-///
-/// Voce del menù che riporta la scritta [label] e rimanda al route indicato
-/// in [address].
-class DrawerEntry extends StatelessWidget {
-  final String label;
-  final String address;
-
-  DrawerEntry({this.label, this.address});
-
-  @override
-  Widget build(BuildContext context) {
-    return new ListTile(
-      title: new Text(label),
-      onTap: () => Navigator.of(context).pushReplacementNamed(address),
-    );
-  }
-}
 
 /// Drawer principale.
 ///
@@ -44,25 +26,25 @@ class MyDrawer extends StatelessWidget {
             color: Theme.of(context).primaryColor,
           ),
         ),
-        new DrawerEntry(
-          label: "Nuova partita",
-          address: "/match",
+        new ListTile(
+          title: new Text("Nuova partita"),
+          leading: const Icon(Icons.contacts),
+          onTap: () => Navigator.of(context).pushReplacementNamed("/match"),
         ),
-        new DrawerEntry(
-          label: "Gestione squadra",
-          address: "/team",
+        new ListTile(
+          leading: const Icon(Icons.assessment),
+          title: const Text("Gestione squadra"),
+          onTap: () => Navigator.of(context).pushReplacementNamed("/team"),
         ),
-        new DrawerEntry(
-          label: "Statistiche squadra",
-          address: "/stats",
+        new ListTile(
+          leading: const Icon(Icons.assessment),
+          title: const Text("Statistiche squadra"),
+          onTap: () => Navigator.of(context).pushReplacementNamed("/stats"),
         ),
-        new DrawerEntry(
-          label: "Archivio partite",
-          address: "/history",
-        ),
-        new DrawerEntry(
-          label: "Impostazioni",
-          address: "/settings",
+        new ListTile(
+          leading: const Icon(Icons.assessment),
+          title: const Text("Archivio partite"),
+          onTap: () => Navigator.of(context).pushReplacementNamed("/history"),
         ),
       ],
     );
