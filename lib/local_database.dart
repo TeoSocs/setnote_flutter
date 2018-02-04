@@ -46,6 +46,7 @@ abstract class LocalDB {
   ///   String ruolo;
   ///   String squadra: chiave della squadra a cui il giocatore appartiene;
   ///   JSON dataSet;
+  ///   int weight;
   /// }
   static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
 

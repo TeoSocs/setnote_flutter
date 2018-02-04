@@ -324,6 +324,9 @@ class _CollectDataState extends State<CollectData> {
       LocalDB.store();
     } else {
       LocalDB.addMatch(match);
+      Map<String, dynamic> _team = LocalDB.getTeamByKey(match['myTeam']);
+      _team['weight']++;
+      _team['ultimaModifica'] = new DateTime.now().millisecondsSinceEpoch.toString();
     }
   }
 }

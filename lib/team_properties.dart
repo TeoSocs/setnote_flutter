@@ -162,6 +162,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
     if (selectedTeam['key'] == null) {
       selectedTeam['key'] =
           new DateTime.now().millisecondsSinceEpoch.toString();
+      selectedTeam['weight'] = 1;
       LocalDB.addTeam(selectedTeam);
     } else {
       LocalDB.store();

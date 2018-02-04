@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -168,6 +169,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     newTeam['assistente'] = snapshot.value['assistente'];
     newTeam['assistente'] = snapshot.value['assistente'];
     newTeam['dataSet'] = snapshot.value['dataSet'];
+    newTeam['weight'] = snapshot.value['weight'];
     LocalDB
         .addTeam(newTeam)
         .then((foo) => _downloadPlayers(teamKey: newTeam['key']));
@@ -214,6 +216,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       team['allenatore'] = snapshot.value['allenatore'];
       team['assistente'] = snapshot.value['assistente'];
       team['dataSet'] = snapshot.value['dataSet'];
+      team['weight'] = snapshot.value['weight'];
       _downloadPlayers(teamKey: snapshot.key);
     }
   }
@@ -221,7 +224,6 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Pubblica i dati locali della squadra caricandoli nel database.
   ///
   /// Al momento l'operazione è distruttiva.
-  // TODO: integrare dati in DB invece di sovrascrivere.
   Future<Null> _clickedAheadTeam(DataSnapshot snapshot) async {
     // Chiede conferma all'utente
     bool agree = await showDialog<bool>(
@@ -261,6 +263,15 @@ class _TeamDownloaderState extends State<TeamDownloader> {
   /// Carica su firebase i dati relativi alla squadra nel complesso.
   void _updateTeam(DataSnapshot snapshot) {
     Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
+    for (String fondamentale in constant.fondamentali) {
+      for (String esito in constant.esiti) {
+        double x = team['dataSet'][fondamentale][esito];
+        double y = snapshot.value['dataSet'][fondamentale][esito];
+        team['dataSet'][fondamentale][esito] = exp(
+            ((log(x) * team['weight']) + (log(y) * snapshot.value['weight'])) /
+                (team['weight'] + snapshot.value['weight']));
+      }
+    }
     FirebaseDatabase.instance
         .reference()
         .child('squadre')
@@ -274,6 +285,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       'coloreMaglia': team['coloreMaglia'],
       'allenatore': team['allenatore'],
       'assistente': team['assistente'],
+      'dataSet': team['dataSet'],
     });
     analytics.logEvent(name: 'modificata_squadra');
   }
@@ -458,6 +470,8 @@ class _TeamUploaderState extends State<TeamUploader> {
       'coloreMaglia': team['coloreMaglia'],
       'allenatore': team['allenatore'],
       'assistente': team['assistente'],
+      'dataSet': team['dataSet'],
+      'weight': team['weight'],
     });
     analytics.logEvent(name: 'aggiunta_squadra');
   }
