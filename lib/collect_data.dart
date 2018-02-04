@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -325,6 +326,29 @@ class _CollectDataState extends State<CollectData> {
     } else {
       LocalDB.addMatch(match);
       Map<String, dynamic> _team = LocalDB.getTeamByKey(match['myTeam']);
+      Map<String, Map<String, double>> dataSet =
+      new Map<String, Map<String, double>>();
+      for (String fondamentale in constant.fondamentali) {
+        dataSet[fondamentale] = new Map<String, double>();
+        for (String esito in constant.esiti) {
+          dataSet[fondamentale][esito] = 0.0;
+        }
+      }
+      for (Map<String, dynamic> set in match['Set']) {
+        // Qui bisogna recuperare ed elaborare i dati, eventualmente filtrarli
+        // per giocatore
+        for (Map<String, String> azione in set['azioni']) {
+          dataSet[azione['fondamentale']][azione['esito']] += 1;
+        }
+      }
+      for (String fondamentale in constant.fondamentali) {
+        for (String esito in constant.esiti) {
+          double x = dataSet[fondamentale][esito];
+          double y = _team['dataSet'][fondamentale][esito];
+          x = exp((log(x) + log(y) * _team['weight']) / (_team['weight'] + 1));
+        }
+      }
+      _team['dataSet'] = dataSet;
       _team['weight']++;
       _team['ultimaModifica'] = new DateTime.now().millisecondsSinceEpoch.toString();
     }
