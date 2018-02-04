@@ -170,6 +170,15 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
     if (selectedPlayer['key'] == null) {
       selectedPlayer['key'] =
           new DateTime.now().millisecondsSinceEpoch.toString();
+      Map<String, Map<String, double>> dataSet =
+      new Map<String, Map<String, double>>();
+      for (String fondamentale in constant.fondamentali) {
+        dataSet[fondamentale] = new Map<String, double>();
+        for (String esito in constant.esiti) {
+          dataSet[fondamentale][esito] = 0.0;
+        }
+      }
+      selectedPlayer['dataSet'] = dataSet;
       LocalDB.addPlayer(selectedPlayer);
     } else {
       LocalDB.store();

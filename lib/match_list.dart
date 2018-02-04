@@ -51,11 +51,17 @@ class _MatchListState extends State<MatchList> {
 
   /// Costruisce una Card rappresentante la squadra passata in input.
   Card _newMatchListCard(Map<String, dynamic> match) {
-    String _myTeamName = LocalDB.getTeamByKey(match['myTeam'])['nome'];
-    String _opposingTeamName = (match['opposingTeam'] != '' &&
-        match['opposingTeam'] != null
-        ? match['opposingTeam']
-        : "Avversario sconosciuto");
+    Map<String, dynamic> _team = LocalDB.getTeamByKey(match['myTeam']);
+    String _myTeamName = _team['nome'];
+    Color _coloreMaglia =
+        (_team['coloreMaglia'] != 'null' && _team['coloreMaglia'] != null
+            ? new Color(
+                int.parse(_team['coloreMaglia'].substring(8, 16), radix: 16))
+            : Theme.of(context).buttonColor);
+    String _opposingTeamName =
+        (match['opposingTeam'] != '' && match['opposingTeam'] != null
+            ? match['opposingTeam']
+            : "Avversario sconosciuto");
     String manifestazione = (match['manifestation'] != null
         ? match['manifestation']
         : 'Competizione sconosciuta');
@@ -64,7 +70,10 @@ class _MatchListState extends State<MatchList> {
       child: new Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: new ListTile(
-          leading: new Icon(Icons.group),
+          leading: new Icon(
+            Icons.group,
+            color: _coloreMaglia,
+          ),
           title: new Text("$_myTeamName VS $_opposingTeamName"),
           subtitle: new Text(manifestazione + ' - ' + anno),
           onLongPress: () async {

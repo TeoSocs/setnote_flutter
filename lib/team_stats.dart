@@ -5,40 +5,115 @@ import 'constants.dart' as constant;
 import 'local_database.dart';
 import 'setnote_widgets.dart';
 
-class MatchStats extends StatefulWidget {
-  MatchStats(this.match, {this.playerKeyToFilter});
-
-  final String playerKeyToFilter;
-
-  final Map<String, dynamic> match;
-
+/// Mostra la lista di squadre presenti nel DB locale.
+///
+/// È uno StatefulWidget, per una descrizione del suo funzionamento vedere lo
+/// State corrispondente.
+class StatsTeamList extends StatefulWidget {
   @override
-  State createState() => new _MatchStatsState(match, playerKeyToFilter);
+  State createState() => new _StatsTeamListState();
 }
 
-class _MatchStatsState extends State<MatchStats> {
-  _MatchStatsState(this.match, this.playerKeyToFilter) {
-    _buildDataSet();
+/// State di [StatsTeamList].
+///
+/// Crea una lista basata sulle squadre presenti in locale.
+/// [_reloadNeeded] è una variabile ausiliaria che permette di gestire
+/// l'attesa del caricamento di alcune componenti.
+class _StatsTeamListState extends State<StatsTeamList> {
+  bool _reloadNeeded = true;
+
+  /// Costruttore di _MatchTeamPageState.
+  ///
+  /// Per prima cosa avvia la lettura dei dati nelle SharedPreferences in
+  /// quanto operazione potenzialmente lunga ed indispensabile allo
+  /// svolgimento delle funzioni base del widget. A caricamento ultimato
+  /// imposta la variabile [_reloadNeeded] in modo da aggiornare l'interfaccia.
+  _StatsTeamListState() {
+    LocalDB.readFromFile().then((x) => setState(() => _reloadNeeded = false));
   }
 
-  Map<String, dynamic> match;
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> teamList = new List<Widget>();
+    for (Map<String, dynamic> _team in LocalDB.teams) {
+      teamList.add(_newTeamPageCard(_team));
+    }
+    setState(() => _reloadNeeded = false);
+    return new SetnoteBaseLayout(
+      title: 'Scegli una squadra',
+      child: new ListView(
+        padding: constant.standard_margin,
+        children: _reloadNeeded ? [] : teamList,
+      ),
+    );
+  }
 
-  String playerKeyToFilter;
+  /// Costruisce una Card rappresentante la squadra passata in input.
+  Card _newTeamPageCard(Map<String, dynamic> team) {
+    return new Card(
+      child: new FlatButton(
+        onPressed: () async {
+          await Navigator.of(context).push(new MaterialPageRoute<Null>(
+              builder: (BuildContext context) =>
+                  new AggregateStats(team: team)));
+        },
+        child: new ListTile(
+          leading: new Icon(
+            Icons.group,
+            color: (team['coloreMaglia'] != 'null' &&
+                    team['coloreMaglia'] != null
+                ? new Color(
+                    int.parse(team['coloreMaglia'].substring(8, 16), radix: 16))
+                : Theme.of(context).buttonColor),
+          ),
+          title: new Text(team['nome']),
+          subtitle: new Text(team['categoria'] + ' - ' + team['stagione']),
+        ),
+      ),
+    );
+  }
+}
+
+class AggregateStats extends StatefulWidget {
+  AggregateStats({this.team, this.player});
+
+  final Map<String, dynamic> player;
+
+  final Map<String, dynamic> team;
+
+  @override
+  State createState() => new _AggregateStatsState(team, player);
+}
+
+class _AggregateStatsState extends State<AggregateStats> {
+  _AggregateStatsState(this.team, this.player)
+      : this.dataSet = (player == null ? team['dataSet'] : player['dataSet']) {
+    double _maxNumberOfActions = 0.0;
+    double _numberOfActions = 0.0;
+    for (String fondamentale in constant.fondamentali) {
+      _numberOfActions = 0.0;
+      for (String esito in constant.esiti) {
+        _numberOfActions += dataSet[fondamentale][esito];
+      }
+      if (_numberOfActions > _maxNumberOfActions)
+        _maxNumberOfActions = _numberOfActions;
+    }
+    if (_scaleCoefficient == 0 && _maxNumberOfActions != 0.0) {
+      _scaleCoefficient = 400.0 / _maxNumberOfActions;
+    }
+  }
+
+  Map<String, dynamic> team;
+  Map<String, dynamic> player;
+  final Map<String, Map<String, double>> dataSet;
+
   double _scaleCoefficient = 0.0;
-  List<Map<String, Map<String, double>>> dataSet =
-      new List<Map<String, Map<String, double>>>();
 
   @override
   Widget build(BuildContext context) {
     return new SetnoteBaseLayout(
-      title: 'Statistiche',
-      child: new GridView.count(
-        primary: false,
-        padding: const EdgeInsets.all(20.0),
-        crossAxisSpacing: 10.0,
-        crossAxisCount: 2,
-        children: _gridBuilder(),
-      ),
+      title: 'Statistiche squadra',
+      child: _gridBuilder(),
       drawer: new Drawer(
         child: new ListView(
           children: _playerListBuilder(),
@@ -47,52 +122,27 @@ class _MatchStatsState extends State<MatchStats> {
     );
   }
 
-  void _buildDataSet() {
-    double _maxNumberOfActions = 0.0;
-    double _numberOfActions = 0.0;
-    Map<String, Map<String, double>> rawData =
-        new Map<String, Map<String, double>>();
-    for (Map<String, dynamic> set in match['Set']) {
-      rawData = new Map<String, Map<String, double>>();
-      for (String fondamentale in constant.fondamentali) {
-        rawData[fondamentale] = new Map<String, double>();
-        for (String esito in constant.esiti) {
-          rawData[fondamentale][esito] = 0.0;
-        }
-      }
-      // Qui bisogna recuperare ed elaborare i dati, eventualmente filtrarli
-      // per giocatore
-      for (Map<String, String> azione in set['azioni']) {
-        if (playerKeyToFilter != null) {
-          if (azione['player'] != playerKeyToFilter) continue;
-        }
-        rawData[azione['fondamentale']][azione['esito']] += 1;
-      }
-      for (String fondamentale in constant.fondamentali) {
-        _numberOfActions = 0.0;
-        for (String esito in constant.esiti) {
-          _numberOfActions += rawData[fondamentale][esito];
-        }
-        if (_numberOfActions > _maxNumberOfActions)
-          _maxNumberOfActions = _numberOfActions;
-      }
-      dataSet.add(rawData);
-    }
-    if (_scaleCoefficient == 0 && _maxNumberOfActions != 0.0) {
-      _scaleCoefficient = 400.0 / _maxNumberOfActions;
-    }
-  }
-
-  List<Widget> _gridBuilder() {
-    List<Widget> _elements = new List();
-    int i = 1;
-    for (Map<String, Map<String, double>> rawData in dataSet) {
-      _elements.add(_statsTableBuilder("Set $i", rawData));
-      _elements.add(
-          new StatChart(dataSet: rawData, scaleCoefficient: _scaleCoefficient));
-      i++;
-    }
-    return _elements;
+  Widget _gridBuilder() {
+    MediaQueryData media = MediaQuery.of(context);
+    if( media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00)
+    return new GridView.count(
+      primary: false,
+      padding: const EdgeInsets.all(20.0),
+      crossAxisSpacing: 10.0,
+      crossAxisCount: 2,
+      children: <Widget>[
+        _statsTableBuilder("Media dati", dataSet),
+        new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient)
+      ],
+    );
+    else return new ListView(
+      children: <Widget>[
+      _statsTableBuilder("Media dati", dataSet),
+      new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient),
+    ],
+    padding: const EdgeInsets.all(20.0),
+    );
   }
 
   Widget _statsTableBuilder(String title, Map<String, dynamic> data) {
@@ -120,7 +170,7 @@ class _MatchStatsState extends State<MatchStats> {
 
       ricezionePerfezione =
           (data['Ricezione']['Ottimo'] * 1000 / ricezioniTotali)
-              .roundToDouble() / 10;
+                  .roundToDouble() / 10;
     }
 
     double attacchiTotali = 0.0;
@@ -144,7 +194,7 @@ class _MatchStatsState extends State<MatchStats> {
     if (difeseTotali != 0.0) {
       difesaPositivita =
           ((data['Difesa']['Ottimo'] + data['Difesa']['Buono']) * 1000 /
-              difeseTotali).roundToDouble() /10;
+          difeseTotali).roundToDouble() /10;
 
       difesaPerfezione =
           (data['Difesa']['Ottimo'] * 1000 / difeseTotali).roundToDouble() / 10;
@@ -269,38 +319,38 @@ class _MatchStatsState extends State<MatchStats> {
   List<Widget> _playerListBuilder() {
     List<Widget> playerList = new List<Widget>();
     for (Map<String, dynamic> _player
-        in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
+        in LocalDB.getPlayersOf(teamKey: team['key'])) {
       playerList.add(_listEntryBuilder(_player));
     }
     return playerList;
   }
 
-  Card _listEntryBuilder(Map<String, dynamic> player) {
+  Card _listEntryBuilder(Map<String, dynamic> _player) {
     return new Card(
       child: new FlatButton(
         onPressed: () async {
-          if (playerKeyToFilter != null) {
+          if (player != null) {
             await Navigator.of(context).pushReplacement(
                 new MaterialPageRoute<Null>(
-                    builder: (BuildContext context) => new MatchStats(match,
-                        playerKeyToFilter: player['key'])));
+                    builder: (BuildContext context) =>
+                        new AggregateStats(team: team, player: _player)));
           } else {
             await Navigator.of(context).push(new MaterialPageRoute<Null>(
                 builder: (BuildContext context) =>
-                    new MatchStats(match, playerKeyToFilter: player['key'])));
+                    new AggregateStats(team: team, player: _player)));
           }
         },
         child: new ListTile(
-          leading: (player['numeroMaglia'] != null
+          leading: (_player['numeroMaglia'] != null
               ? new Text(
-                  player['numeroMaglia'],
+                  _player['numeroMaglia'],
                   style: const TextStyle(fontSize: 33.0),
                 )
               : new Icon(
                   Icons.person,
                 )),
-          title: new Text(player['nome']),
-          subtitle: new Text(player['ruolo']),
+          title: new Text(_player['nome']),
+          subtitle: new Text(_player['ruolo']),
         ),
       ),
     );
