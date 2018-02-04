@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'chart_demo.dart';
 import 'constants.dart' as constant;
 import 'main_menu.dart';
 import 'match_list.dart';
@@ -8,6 +7,7 @@ import 'match_properties.dart';
 import 'mypage.dart';
 import 'team_list.dart';
 import 'team_properties.dart';
+import 'team_stats.dart';
 
 // import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,7 +33,7 @@ void main() {
     routes: <String, WidgetBuilder>{
       '/match': (BuildContext context) => new MatchTeamList(),
       '/team': (BuildContext context) => new TeamList(),
-      '/stats': (BuildContext context) => new ChartDemo(),
+      '/stats': (BuildContext context) => new StatsTeamList(),
       '/history': (BuildContext context) =>
           new MatchList(),
       '/settings': (BuildContext context) =>
