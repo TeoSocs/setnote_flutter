@@ -123,6 +123,9 @@ class _AggregateStatsState extends State<AggregateStats> {
   }
 
   Widget _gridBuilder() {
+    MediaQueryData media = MediaQuery.of(context);
+    if( media.orientation == Orientation.landscape &&
+        media.size.width >= 950.00)
     return new GridView.count(
       primary: false,
       padding: const EdgeInsets.all(20.0),
@@ -132,6 +135,13 @@ class _AggregateStatsState extends State<AggregateStats> {
         _statsTableBuilder("Media dati", dataSet),
         new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient)
       ],
+    );
+    else return new ListView(
+      children: <Widget>[
+      _statsTableBuilder("Media dati", dataSet),
+      new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient),
+    ],
+    padding: const EdgeInsets.all(20.0),
     );
   }
 
