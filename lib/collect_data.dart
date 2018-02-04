@@ -335,8 +335,6 @@ class _CollectDataState extends State<CollectData> {
         }
       }
       for (Map<String, dynamic> set in match['Set']) {
-        // Qui bisogna recuperare ed elaborare i dati, eventualmente filtrarli
-        // per giocatore
         for (Map<String, String> azione in set['azioni']) {
           dataSet[azione['fondamentale']][azione['esito']] += 1;
         }
@@ -351,6 +349,32 @@ class _CollectDataState extends State<CollectData> {
       _team['dataSet'] = dataSet;
       _team['weight']++;
       _team['ultimaModifica'] = new DateTime.now().millisecondsSinceEpoch.toString();
+
+      // Aggiorno i dataSet di ogni giocatore
+      for (Map<String, dynamic> _player in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
+        Map<String, Map<String, double>> _playerDataSet = new Map<String,
+            Map<String, double>>();
+        for (String fondamentale in constant.fondamentali) {
+          _playerDataSet[fondamentale] = new Map<String, double>();
+          for (String esito in constant.esiti) {
+            _playerDataSet[fondamentale][esito] = 0.0;
+          }
+        }
+        for (Map<String, dynamic> set in match['Set']) {
+          for (Map<String, String> azione in set['azioni']) {
+            if (azione['player'] != _player['key']) continue;
+            _playerDataSet[azione['fondamentale']][azione['esito']] += 1;
+          }
+        }
+        for (String fondamentale in constant.fondamentali) {
+          for (String esito in constant.esiti) {
+            double x = _playerDataSet[fondamentale][esito];
+            double y = _player['dataSet'][fondamentale][esito];
+            x = exp((log(x) + log(y) * _team['weight']) / (_team['weight'] + 1));
+          }
+        }
+        _player['dataSet'] = _playerDataSet;
+      }
     }
   }
 }
