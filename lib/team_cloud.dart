@@ -213,6 +213,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       team['coloreMaglia'] = snapshot.value['coloreMaglia'];
       team['allenatore'] = snapshot.value['allenatore'];
       team['assistente'] = snapshot.value['assistente'];
+      team['dataSet'] = snapshot.value['dataSet'];
       _downloadPlayers(teamKey: snapshot.key);
     }
   }

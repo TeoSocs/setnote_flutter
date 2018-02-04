@@ -115,11 +115,12 @@ class _MatchStatsState extends State<MatchStats> {
     double ricezionePerfezione = 0.0;
     if (ricezioniTotali != 0.0) {
       ricezionePositivita =
-          (data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
-              100 /
-              ricezioniTotali;
+          ((data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) * 1000 /
+              ricezioniTotali).roundToDouble() / 10;
 
-      ricezionePerfezione = data['Ricezione']['Ottimo'] * 100 / ricezioniTotali;
+      ricezionePerfezione =
+          (data['Ricezione']['Ottimo'] * 1000 / ricezioniTotali)
+              .roundToDouble() / 10;
     }
 
     double attacchiTotali = 0.0;
@@ -129,7 +130,7 @@ class _MatchStatsState extends State<MatchStats> {
     double attaccoEfficienza = 0.0;
     if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
-      attaccoEfficienza += (5.0 / attacchiTotali) *
+      attaccoEfficienza += (50.0 / attacchiTotali).roundToDouble() / 10 *
           (data['Attacco']['Ottimo'] -
               (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
     }
@@ -141,11 +142,12 @@ class _MatchStatsState extends State<MatchStats> {
     double difesaPositivita = 0.0;
     double difesaPerfezione = 0.0;
     if (difeseTotali != 0.0) {
-      difesaPositivita = (data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
-          100 /
-          difeseTotali;
+      difesaPositivita =
+          ((data['Difesa']['Ottimo'] + data['Difesa']['Buono']) * 1000 /
+              difeseTotali).roundToDouble() /10;
 
-      difesaPerfezione = data['Difesa']['Ottimo'] * 100 / difeseTotali;
+      difesaPerfezione =
+          (data['Difesa']['Ottimo'] * 1000 / difeseTotali).roundToDouble() / 10;
     }
 
     return new Column(

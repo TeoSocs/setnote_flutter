@@ -87,7 +87,7 @@ class AggregateStats extends StatefulWidget {
 
 class _AggregateStatsState extends State<AggregateStats> {
   _AggregateStatsState(this.team, this.player)
-      : this.dataSet = (team != null ? team['dataSet'] : player['dataSet']) {
+      : this.dataSet = (player == null ? team['dataSet'] : player['dataSet']) {
     double _maxNumberOfActions = 0.0;
     double _numberOfActions = 0.0;
     for (String fondamentale in constant.fondamentali) {
@@ -128,7 +128,7 @@ class _AggregateStatsState extends State<AggregateStats> {
       padding: const EdgeInsets.all(20.0),
       crossAxisSpacing: 10.0,
       crossAxisCount: 2,
-      children: <Widget> [
+      children: <Widget>[
         _statsTableBuilder("Media dati", dataSet),
         new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient)
       ],
@@ -155,11 +155,12 @@ class _AggregateStatsState extends State<AggregateStats> {
     double ricezionePerfezione = 0.0;
     if (ricezioniTotali != 0.0) {
       ricezionePositivita =
-          (data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
-              100 /
-              ricezioniTotali;
+          ((data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) * 1000 /
+              ricezioniTotali).roundToDouble() / 10;
 
-      ricezionePerfezione = data['Ricezione']['Ottimo'] * 100 / ricezioniTotali;
+      ricezionePerfezione =
+          (data['Ricezione']['Ottimo'] * 1000 / ricezioniTotali)
+                  .roundToDouble() / 10;
     }
 
     double attacchiTotali = 0.0;
@@ -169,7 +170,7 @@ class _AggregateStatsState extends State<AggregateStats> {
     double attaccoEfficienza = 0.0;
     if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
-      attaccoEfficienza += (5.0 / attacchiTotali) *
+      attaccoEfficienza += (50.0 / attacchiTotali).roundToDouble() / 10 *
           (data['Attacco']['Ottimo'] -
               (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
     }
@@ -181,11 +182,12 @@ class _AggregateStatsState extends State<AggregateStats> {
     double difesaPositivita = 0.0;
     double difesaPerfezione = 0.0;
     if (difeseTotali != 0.0) {
-      difesaPositivita = (data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
-          100 /
-          difeseTotali;
+      difesaPositivita =
+          ((data['Difesa']['Ottimo'] + data['Difesa']['Buono']) * 1000 /
+          difeseTotali).roundToDouble() /10;
 
-      difesaPerfezione = data['Difesa']['Ottimo'] * 100 / difeseTotali;
+      difesaPerfezione =
+          (data['Difesa']['Ottimo'] * 1000 / difeseTotali).roundToDouble() / 10;
     }
 
     return new Column(
@@ -321,11 +323,11 @@ class _AggregateStatsState extends State<AggregateStats> {
             await Navigator.of(context).pushReplacement(
                 new MaterialPageRoute<Null>(
                     builder: (BuildContext context) =>
-                        new AggregateStats(player: _player)));
+                        new AggregateStats(team: team, player: _player)));
           } else {
             await Navigator.of(context).push(new MaterialPageRoute<Null>(
                 builder: (BuildContext context) =>
-                    new AggregateStats(player: _player)));
+                    new AggregateStats(team: team, player: _player)));
           }
         },
         child: new ListTile(

@@ -25,6 +25,7 @@ abstract class LocalDB {
   ///   String stagione;
   ///   String coloreMaglia;
   ///   String ultimaModifica;
+  ///   JSON dataSet;
   /// }
   static List<Map<String, dynamic>> teams = new List<Map<String, dynamic>>();
 
@@ -44,6 +45,7 @@ abstract class LocalDB {
   ///   String peso;
   ///   String ruolo;
   ///   String squadra: chiave della squadra a cui il giocatore appartiene;
+  ///   JSON dataSet;
   /// }
   static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
 
@@ -214,6 +216,7 @@ abstract class LocalDB {
     player['peso'] = newPlayer['peso'];
     player['ruolo'] = newPlayer['ruolo'];
     player['squadra'] = newPlayer['squadra'];
+    player['dataSet'] = newPlayer['dataSet'];
     store();
   }
 
