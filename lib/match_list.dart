@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'constants.dart' as constant;
 import 'local_database.dart';
 import 'match_properties.dart';
+import 'match_stats.dart';
 import 'setnote_widgets.dart';
 
 /// Mostra le partite presenti nel DB locale.
@@ -60,17 +61,24 @@ class _MatchListState extends State<MatchList> {
         : 'Competizione sconosciuta');
     String anno = (match['year'] != null ? match['year'] : 'Anno sconosciuto');
     return new Card(
-      child: new FlatButton(
-        onPressed: () async {
-          _reloadNeeded = true;
-          await Navigator.of(context).push(new MaterialPageRoute<Null>(
-              builder: (BuildContext context) => new MatchProperties(match)));
-          setState(() => _reloadNeeded = false);
-        },
+      child: new Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: new ListTile(
           leading: new Icon(Icons.group),
           title: new Text("$_myTeamName VS $_opposingTeamName"),
           subtitle: new Text(manifestazione + ' - ' + anno),
+          onLongPress: () async {
+            _reloadNeeded = true;
+            await Navigator.of(context).push(new MaterialPageRoute<Null>(
+                builder: (BuildContext context) => new MatchProperties(match)));
+            setState(() => _reloadNeeded = false);
+          },
+          onTap: () async {
+            _reloadNeeded = true;
+            await Navigator.of(context).push(new MaterialPageRoute<Null>(
+                builder: (BuildContext context) => new MatchStats(match)));
+            setState(() => _reloadNeeded = false);
+          },
         ),
       ),
     );

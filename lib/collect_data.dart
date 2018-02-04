@@ -25,7 +25,7 @@ class _CollectDataState extends State<CollectData> {
   List<Map<String, String>> _currentPoint = new List<Map<String, String>>();
   int _myTeamPoints = 0;
   int _opponentPoints = 0;
-  Map<String, Color> _colors = {
+  final Map<String, Color> _colors = {
     'Ottimo': Colors.blue[400],
     'Buono': Colors.green[400],
     'Scarso': Colors.yellow[400],

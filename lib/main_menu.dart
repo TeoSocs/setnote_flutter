@@ -49,15 +49,6 @@ class MainMenu extends StatelessWidget {
                     onPressed: () =>
                         Navigator.of(context).pushNamed("/history")),
               ),
-              new Card(
-                child: new FlatButton(
-                    child: new ListTile(
-                      leading: const Icon(Icons.settings),
-                      title: const Text(constant.settings_label),
-                    ),
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed("/settings")),
-              ),
             ],
           ),
         ),

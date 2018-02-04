@@ -47,21 +47,27 @@ abstract class LocalDB {
   /// }
   static List<Map<String, dynamic>> players = new List<Map<String, dynamic>>();
 
-  /// Elenco dei partite.
+  /// Elenco delle partite:
   ///
   /// Template di partita inserita:
   /// {
-  ///   String squadraA;
-  ///   String squadraB;
-  ///   String codiceGara;
-  ///   String giorno;
-  ///   String mese;
-  ///   String anno;
-  ///   String manifestazione;
-  ///   String fase;
-  ///   String luogo;
-  ///   String maschile;
-  ///   String squadra: chiave della squadra a cui il giocatore appartiene;
+  ///   String key;
+  ///   String ended = 'false'
+  ///   String myTeam;
+  ///   String opposingTeam = '';
+  ///   String matchCode = '';
+  ///   String day = '';
+  ///   String month = '';
+  ///   String year = '';
+  ///   String manifestation = '';
+  ///   String phase = '';
+  ///   String place = '';
+  ///   Set = [
+  ///     {
+  ///        punteggio: "25 - 21",
+  ///        azioni: list<Map<String, String>>
+  ///     }
+  ///   ];
   /// }
   static List<Map<String, dynamic>> matches = new List<Map<String, dynamic>>();
 

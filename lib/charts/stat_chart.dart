@@ -7,12 +7,13 @@ import '../constants.dart' as constant;
 import 'bar.dart';
 
 class StatChart extends StatefulWidget {
-  final Map<String, String> dataSet;
+  final Map<String, Map<String, double>> dataSet;
+  final double scaleCoefficient;
 
-  StatChart({this.dataSet});
-
+  StatChart({this.dataSet, this.scaleCoefficient});
   @override
-  _StatChartState createState() => new _StatChartState(dataSet);
+  _StatChartState createState() =>
+      new _StatChartState(dataSet, scaleCoefficient: scaleCoefficient);
 }
 
 class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
@@ -50,21 +51,21 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
   */
   final Map<String, dynamic> dataSet;
 
-  final colors = [
-    Colors.red[400],
-    Colors.yellow[400],
-    Colors.green[400],
-    Colors.blue[400]
-  ];
-
-  
+  final Map<String, Color> _colors = {
+    'Ottimo': Colors.blue[400],
+    'Buono': Colors.green[400],
+    'Scarso': Colors.yellow[400],
+    'Errato': Colors.red[400],
+  };
 
   final random = new Random();
   AnimationController animation;
 
-  Map<String, StackedBarTween> tweens = new Map<String, StackedBarTween>();
+  Map<String, StackedBar> stackedBars = new Map<String, StackedBar>();
 
-  _StatChartState(this.dataSet);
+  double scaleCoefficient;
+
+  _StatChartState(this.dataSet, {this.scaleCoefficient});
 
   @override
   void initState() {
@@ -73,23 +74,22 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    final StackedBar empty = new StackedBar.empty();
     if (dataSet != null) {
       List<Bar> list = new List<Bar>();
       for (String fondamentale in constant.fondamentali) {
-        list.clear();
-        for (int i = 0; i < dataSet[fondamentale].length; i++) {
-          list.add(new Bar(double.parse([fondamentale][i]), colors[i]));
+        list = new List<Bar>();
+        for (String esito in constant.esiti) {
+          list.add(new Bar(
+              dataSet[fondamentale][esito] * scaleCoefficient, _colors[esito]));
         }
-        tweens[fondamentale] = new StackedBarTween(empty, new StackedBar(list));
+        stackedBars[fondamentale] =
+            new StackedBar(list);
       }
     } else {
       for (String fondamentale in constant.fondamentali) {
-        tweens[fondamentale] = new StackedBarTween(
-            new StackedBar.empty(), new StackedBar.random(random));
+        stackedBars[fondamentale] = new StackedBar.random(random);
       }
     }
-    animation.forward();
   }
 
   @override
@@ -105,7 +105,8 @@ class _StatChartState extends State<StatChart> with TickerProviderStateMixin {
         children: <Widget>[
           new CustomPaint(
             size: new Size(barWidth, height),
-            painter: new StackedBarChartPainter(tweens[fondamentale].animate(animation)),
+            painter: new StackedBarChartPainter(
+                stackedBars[fondamentale]),
           ),
           new Text(fondamentale),
         ],
