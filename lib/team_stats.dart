@@ -22,7 +22,7 @@ class StatsTeamList extends StatefulWidget {
 class _StatsTeamListState extends State<StatsTeamList> {
   bool _reloadNeeded = true;
 
-  /// Costruttore di _MatchTeamPageState.
+  /// Costruttore di [_StatsTeamListState].
   ///
   /// Per prima cosa avvia la lettura dei dati nelle SharedPreferences in
   /// quanto operazione potenzialmente lunga ed indispensabile allo
@@ -74,6 +74,11 @@ class _StatsTeamListState extends State<StatsTeamList> {
   }
 }
 
+/// Mostra le statistiche globali relative alla squadra o ad un particolare
+/// suo giocatore.
+///
+/// È uno StatefulWidget, per una descrizione del suo funzionamento vedere lo
+/// State corrispondente.
 class AggregateStats extends StatefulWidget {
   AggregateStats({this.team, this.player});
 
@@ -85,7 +90,25 @@ class AggregateStats extends StatefulWidget {
   State createState() => new _AggregateStatsState(team, player);
 }
 
+/// State di [AggregateStats].
+///
+/// In base all'oggetto passato al costruttore ([team] o [player]) mostra
+/// tabella e grafico relativo ai dati globali di una squadra o di un suo
+/// giocatore.
+/// [_scaleCoefficient] serve per scalare correttamente la dimensione del
+/// grafico.
 class _AggregateStatsState extends State<AggregateStats> {
+  Map<String, dynamic> team;
+  Map<String, dynamic> player;
+  final Map<String, Map<String, double>> dataSet;
+  double _scaleCoefficient = 0.0;
+
+  /// Costruttore di [_AggregateStatsState].
+  ///
+  /// A seconda dell'input ricevuto recupera il dataSet corrispondente.
+  /// Calcola poi [_scaleCoefficient] basandosi su dataSet di [team] per
+  /// mantenere una sensazione più accurata su quanto il giocatore impatti
+  /// nella squadra.
   _AggregateStatsState(this.team, this.player)
       : this.dataSet = (player == null ? team['dataSet'] : player['dataSet']) {
     double _maxNumberOfActions = 0.0;
@@ -93,21 +116,16 @@ class _AggregateStatsState extends State<AggregateStats> {
     for (String fondamentale in constant.fondamentali) {
       _numberOfActions = 0.0;
       for (String esito in constant.esiti) {
-        _numberOfActions += dataSet[fondamentale][esito];
+        _numberOfActions += team['dataSet'][fondamentale][esito];
       }
       if (_numberOfActions > _maxNumberOfActions)
         _maxNumberOfActions = _numberOfActions;
     }
-    if (_scaleCoefficient == 0 && _maxNumberOfActions != 0.0) {
+    if (_maxNumberOfActions != 0.0) {
       _scaleCoefficient = 400.0 / _maxNumberOfActions;
     }
   }
 
-  Map<String, dynamic> team;
-  Map<String, dynamic> player;
-  final Map<String, Map<String, double>> dataSet;
-
-  double _scaleCoefficient = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +140,8 @@ class _AggregateStatsState extends State<AggregateStats> {
     );
   }
 
+  /// Decide se visualizzare i dati in maniera più adatta ad un tablet o ad
+  /// uno smartphone.
   Widget _gridBuilder() {
     MediaQueryData media = MediaQuery.of(context);
     if( media.orientation == Orientation.landscape &&
@@ -145,6 +165,12 @@ class _AggregateStatsState extends State<AggregateStats> {
     );
   }
 
+  /// Genera la tabella con i dati.
+  ///
+  /// Per ottenerli li elabora da quelli presenti da dataSet. È tutto gestito
+  /// in un solo metodo a causa della natura relativamente semplice delle
+  /// operazioni effettuate. Nel caso di operazioni più complesse andrebbe
+  /// smembrato in più sotto-funzioni.
   Widget _statsTableBuilder(String title, Map<String, dynamic> data) {
     double battuteTotali = 0.0;
     for (String esito in constant.esiti) {
@@ -316,6 +342,7 @@ class _AggregateStatsState extends State<AggregateStats> {
     );
   }
 
+  /// Crea la lista dei giocatori da mostrare nel drawer per filtrare i dati.
   List<Widget> _playerListBuilder() {
     List<Widget> playerList = new List<Widget>();
     for (Map<String, dynamic> _player
@@ -325,6 +352,10 @@ class _AggregateStatsState extends State<AggregateStats> {
     return playerList;
   }
 
+  /// Crea la card relativa al singolo giocatore.
+  ///
+  /// Alla pressione, crea una nuova pagina per mostrare i dati relativi al
+  /// singolo giocatore selezionato.
   Card _listEntryBuilder(Map<String, dynamic> _player) {
     return new Card(
       child: new FlatButton(
