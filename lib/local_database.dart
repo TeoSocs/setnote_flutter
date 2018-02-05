@@ -269,18 +269,3 @@ abstract class LocalDB {
     }
   }
 }
-
-// Templates
-//
-// class PlayerData {
-//   List<FundamentalData> battute;
-//   List<FundamentalData> ricezioni;
-//   List<FundamentalData> attacchi;
-// }
-//
-// class FundamentalData {
-//   int doppiopiu;
-//   int piu;
-//   int meno;
-//   int doppiomeno;
-// }
