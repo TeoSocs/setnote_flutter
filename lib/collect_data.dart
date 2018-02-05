@@ -247,7 +247,6 @@ class _CollectDataState extends State<CollectData> {
                   _currentSet['punteggio'] = "$_myTeamPoints - "
                       "$_opponentPoints";
                   _saveMatch();
-                  print("Punteggio: $_myTeamPoints - $_opponentPoints");
                 });
               },
               icon: const Icon(Icons.clear),
@@ -267,7 +266,6 @@ class _CollectDataState extends State<CollectData> {
                   _currentSet['punteggio'] = "$_myTeamPoints - "
                       "$_opponentPoints";
                   _saveMatch();
-                  print("Punteggio: $_myTeamPoints - $_opponentPoints");
                 });
               },
               child: const Icon(Icons.check),
