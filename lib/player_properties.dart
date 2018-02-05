@@ -29,7 +29,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   final TextEditingController _altezzaController = new TextEditingController();
-  final TextEditingController _capitanoController = new TextEditingController();
+  //final TextEditingController _capitanoController = new TextEditingController();
   final TextEditingController _cognomeController = new TextEditingController();
   //final TextEditingController _mancinoController = new TextEditingController();
   final TextEditingController _nascitaController = new TextEditingController();
@@ -41,6 +41,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   final TextEditingController _ruoloController = new TextEditingController();
   final TextEditingController _squadraController = new TextEditingController();
   bool _enabledMancino= false;
+  bool _enabledCapitano= false;
 
   /// Costruttore di [_PlayerPropertiesState].
   ///
@@ -48,8 +49,8 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   _PlayerPropertiesState({this.selectedPlayer}) {
     if (selectedPlayer['altezza'] != null)
       _altezzaController.text = selectedPlayer['altezza'];
-    if (selectedPlayer['capitano'] != null)
-      _capitanoController.text = selectedPlayer['capitano'];
+    // if (selectedPlayer['capitano'] != null)
+    //   _capitanoController.text = selectedPlayer['capitano'];
     if (selectedPlayer['cognome'] != null)
       _cognomeController.text = selectedPlayer['cognome'];
     // if (selectedPlayer['mancino'] != null)
@@ -125,7 +126,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
           new Row(
             children: <Widget>[
               _newSwitchMancino(),
-              _newInputCapitano(),
+              _newSwitchCapitano(),
               _newInputAltezza(),
               _newInputPeso(),
             ],
@@ -151,7 +152,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
           _newInputNascita(),
           _newInputNazionalita(),
           _newSwitchMancino(),
-          _newInputCapitano(),
+          _newSwitchCapitano(),
           _newInputAltezza(),
           _newInputPeso(),
           _newDeletePlayer(),
@@ -187,10 +188,16 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
     Navigator.of(context).pop();
   }
 
-  // Metodo che aggiorna il campo isMale di [match] quando l'utente usa lo switch
+  // Metodo che aggiorna il campo mancino di [selectedPlayer] quando l'utente usa lo switch
   void _changeMancinoSwitchValue(){
     if (_enabledMancino==true) selectedPlayer['mancino']='mancino';
     else selectedPlayer['mancino']='destrorso';
+  }
+
+  // Metodo che aggiorna il campo capitano di [selectedPlayer] quando l'utente usa lo switch
+  void _changeCapitanoSwitchValue(){
+    if (_enabledCapitano==true) selectedPlayer['capitano']='capitano';
+    else selectedPlayer['capitano']='destrorso';
   }
 
   /// Genera un nuovo campo di input per il nome del giocatore.
@@ -374,11 +381,8 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
     }
   }
 
-  /// Genera un nuovo campo di input per indicare se il giocatore è mancino.
-  ///
-  /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
-
-Row _newSwitchMancino() {
+  /// Genera un nuovo switch per indicare se il giocatore è mancino.
+ Row _newSwitchMancino() {
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -401,33 +405,31 @@ Row _newSwitchMancino() {
     );
   }
 
+
   /// Genera un nuovo campo di input per indicare se il giocatore è il capitano.
   ///
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
-  Widget _newInputCapitano() {
-    Widget content = new TextFormField(
-      controller: _capitanoController,
-      initialValue: _capitanoController.text,
-      decoration: const InputDecoration(
-        labelText: 'Capitano',
-      ),
-      onSaved: (String value) {
-        selectedPlayer['capitano'] = value;
-      },
+Row _newSwitchCapitano() {
+    return new Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        new Switch(
+          value: _enabledCapitano,
+          activeColor: Colors.blue,
+          onChanged: (bool value) {
+            setState(() {
+              _enabledCapitano = value;
+              _changeCapitanoSwitchValue();
+            });
+          },
+        ),
+        new Center(
+            child: new Text(
+            'Capitano',
+          textAlign: TextAlign.center,
+        )),
+      ],
     );
-
-    MediaQueryData media = MediaQuery.of(context);
-    if (media.orientation == Orientation.landscape &&
-        media.size.width >= 950.00) {
-      return new Flexible(
-        child: new Padding(padding: constant.lateral_margin, child: content),
-      );
-    } else {
-      return new Padding(
-        padding: constant.lateral_margin,
-        child: content,
-      );
-    }
   }
 
   /// Genera un nuovo campo di input per l'altezza del giocatore.
