@@ -357,6 +357,10 @@ class _CollectDataState extends State<CollectData> {
   }
 
   /// Persiste i dati raccolti nel database locale.
+  ///
+  /// Usa un oggetto ausiliario [dataSet] che raccoglie i dati sulle azioni
+  /// da registrare. Lo usa poi per fare una media ponderata con i dati già
+  /// presenti nel DB e salvare quest'ultima, aggiornando il rispettivo peso.
   void _saveMatch() {
     match['ended'] = 'true';
     if (LocalDB.hasMatch(match['key'])) {
