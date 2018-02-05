@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -343,7 +342,7 @@ class _CollectDataState extends State<CollectData> {
         for (String esito in constant.esiti) {
           double x = dataSet[fondamentale][esito];
           double y = _team['dataSet'][fondamentale][esito];
-          x = exp((log(x) + log(y) * _team['weight']) / (_team['weight'] + 1));
+          x = (x + (y * _team['weight'])) / (_team['weight'] + 1);
         }
       }
       _team['dataSet'] = dataSet;
@@ -370,7 +369,7 @@ class _CollectDataState extends State<CollectData> {
           for (String esito in constant.esiti) {
             double x = _playerDataSet[fondamentale][esito];
             double y = _player['dataSet'][fondamentale][esito];
-            x = exp((log(x) + log(y) * _team['weight']) / (_team['weight'] + 1));
+            x = (x + (y * _team['weight'])) / (_team['weight'] + 1);
           }
         }
         _player['dataSet'] = _playerDataSet;
