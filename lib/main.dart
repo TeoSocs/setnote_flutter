@@ -4,7 +4,6 @@ import 'constants.dart' as constant;
 import 'main_menu.dart';
 import 'match_list.dart';
 import 'match_properties.dart';
-import 'mypage.dart';
 import 'team_list.dart';
 import 'team_properties.dart';
 import 'team_stats.dart';
@@ -36,10 +35,6 @@ void main() {
       '/stats': (BuildContext context) => new StatsTeamList(),
       '/history': (BuildContext context) =>
           new MatchList(),
-      '/settings': (BuildContext context) =>
-          new MyPage(title: constant.settings_label),
-      '/formations': (BuildContext context) =>
-          new MyPage(title: constant.formations_label),
       '/manage_team': (BuildContext context) => new TeamProperties(),
     },
   ));

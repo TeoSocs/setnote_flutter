@@ -16,7 +16,7 @@ class PlayerProperties extends StatefulWidget {
       new _PlayerPropertiesState(selectedPlayer: selectedPlayer);
 }
 
-/// State di PlayerProperties.
+/// State di [PlayerProperties].
 ///
 /// Riceve da costruttore [selectedPlayer], ovvero il giocatore che andrà a
 /// modificare. Questo può essere un giocatore vuota in caso di creazione
@@ -276,7 +276,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
     }
   }
 
-  /// Genera un nuovo campo di input per il ruolo del giocatore.
+  /// Genera un nuovo campo di input per il numero del giocatore.
   ///
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
   Widget _newInputNumero() {

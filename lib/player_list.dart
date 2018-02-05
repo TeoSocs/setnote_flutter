@@ -23,9 +23,6 @@ class _PlayerListState extends State<PlayerList> {
   Map<String, dynamic> team;
   bool _reloadNeeded = false;
 
-  /// Costruttore di _RosterManagerState.
-  ///
-  /// Riceve in input [team] e recupera da Firebase il riferimento [rosterDB].
   _PlayerListState({this.team});
 
   @override
@@ -42,7 +39,7 @@ class _PlayerListState extends State<PlayerList> {
               media.size.width >= 950.00
           ? "Gestisci formazione"
           : team['nome']),
-      drawer: _newRosterManagerDrawer(),
+      drawer: _playerListDrawer(),
       child: (_reloadNeeded
           ? []
           : new ListView(
@@ -65,8 +62,8 @@ class _PlayerListState extends State<PlayerList> {
     );
   }
 
-  /// Costruisce il drawer per RosterManager
-  Drawer _newRosterManagerDrawer() {
+  /// Costruisce il drawer per [PlayerList].
+  Drawer _playerListDrawer() {
     return new Drawer(
       child: new ListView(children: <Widget>[
         new DrawerHeader(
