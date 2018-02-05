@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -267,9 +266,9 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       for (String esito in constant.esiti) {
         double x = team['dataSet'][fondamentale][esito];
         double y = snapshot.value['dataSet'][fondamentale][esito];
-        team['dataSet'][fondamentale][esito] = exp(
-            ((log(x) * team['weight']) + (log(y) * snapshot.value['weight'])) /
-                (team['weight'] + snapshot.value['weight']));
+        team['dataSet'][fondamentale][esito] =
+            ((x * team['weight']) + (y * snapshot.value['weight'])) /
+                (team['weight'] + snapshot.value['weight']);
       }
     }
     FirebaseDatabase.instance
@@ -349,9 +348,9 @@ class _TeamDownloaderState extends State<TeamDownloader> {
         for (String esito in constant.esiti) {
           double x = player['dataSet'][fondamentale][esito];
           double y = e.snapshot.value['dataSet'][fondamentale][esito];
-          player['dataSet'][fondamentale][esito] = exp(
-              ((log(x) * _localWeight) + (log(y) * remoteWeight)) /
-                  (_localWeight + remoteWeight));
+          player['dataSet'][fondamentale][esito] =
+              ((x * _localWeight) + (y * remoteWeight)) /
+                  (_localWeight + remoteWeight);
         }
       }
     });
