@@ -310,32 +310,34 @@ class _CollectDataState extends State<CollectData> {
 
   Future<Null> _createNewSet() async {
     await showDialog(
-        context: context,
-        child: new AlertDialog(
-            title: const Text("Creare un nuovo set?"),
-            content: const Text("Questo creerà un nuovo set. Quello vecchio non"
-                " sarà più modificabile. Sei sicuro?"),
-            actions: <Widget>[
-              new FlatButton(
-                child: new Text('NO'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              new FlatButton(
-                child: new Text('SÌ'),
-                onPressed: () {
-                  match['Set'].add(new Map<String, dynamic>());
-                  _currentSet = match['Set'].last;
-                  _currentSet['azioni'] = new List<Map<String, String>>();
-                  setState(() {
-                    _myTeamPoints = 0;
-                    _opponentPoints = 0;
-                  });
-                  Navigator.of(context).pop();
-                },
-              ),
-            ]));
+      context: context,
+      child: new AlertDialog(
+        title: const Text("Creare un nuovo set?"),
+        content: const Text("Questo creerà un nuovo set. Quello vecchio non"
+            " sarà più modificabile. Sei sicuro?"),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text('NO'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          new FlatButton(
+            child: new Text('SÌ'),
+            onPressed: () {
+              match['Set'].add(new Map<String, dynamic>());
+              _currentSet = match['Set'].last;
+              _currentSet['azioni'] = new List<Map<String, String>>();
+              setState(() {
+                _myTeamPoints = 0;
+                _opponentPoints = 0;
+              });
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   /// Costruisce il visualizzatore del punteggio.
