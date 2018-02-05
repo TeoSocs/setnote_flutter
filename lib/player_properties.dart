@@ -283,6 +283,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
     Widget content = new TextFormField(
       controller: _numeroController,
       initialValue: _numeroController.text,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Numero Maglia',
         hintText: 'NN *',
@@ -315,6 +316,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _nascitaController.text,
       decoration: const InputDecoration(
         labelText: 'Data di nascita',
+        hintText: 'GG/MM/AAAA'
       ),
       onSaved: (String value) {
         selectedPlayer['nascita'] = value;
@@ -430,6 +432,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
     Widget content = new TextFormField(
       controller: _altezzaController,
       initialValue: _altezzaController.text,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Altezza',
         hintText: 'N.NN *',
@@ -460,6 +463,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
     Widget content = new TextFormField(
       controller: _pesoController,
       initialValue: _pesoController.text,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Peso',
         hintText: 'NN *',
