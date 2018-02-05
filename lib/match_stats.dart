@@ -103,9 +103,8 @@ class _MatchStatsState extends State<MatchStats> {
     double battutaPositivita = 0.0;
     if (battuteTotali != 0.0)
       battutaPositivita =
-          (data['Battuta']['Ottimo'] + data['Battuta']['Buono']) *
-              100 /
-              battuteTotali;
+          ((data['Battuta']['Ottimo'] + data['Battuta']['Buono']) * 1000 /
+              battuteTotali) / 10;
 
     double ricezioniTotali = 0.0;
     for (String esito in constant.esiti) {
