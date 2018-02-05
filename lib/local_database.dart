@@ -226,6 +226,7 @@ abstract class LocalDB {
   /// Si occupa di aggiornare sia la lista [teams] che le SharedPreferences.
   static Future<Null> removeTeam(String key) async {
     players.removeWhere((player) => player['squadra'] == key);
+    matches.removeWhere((match) => match['myTeam'] == key);
     teams.remove(getTeamByKey(key));
     store();
   }
