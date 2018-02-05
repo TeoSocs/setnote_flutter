@@ -32,6 +32,11 @@ class MyDrawer extends StatelessWidget {
           onTap: () => Navigator.of(context).pushReplacementNamed("/match"),
         ),
         new ListTile(
+          leading: const Icon(Icons.folder),
+          title: const Text("Archivio partite"),
+          onTap: () => Navigator.of(context).pushReplacementNamed("/history"),
+        ),
+        new ListTile(
           leading: const Icon(Icons.contacts),
           title: const Text("Gestione squadra"),
           onTap: () => Navigator.of(context).pushReplacementNamed("/team"),
@@ -40,11 +45,6 @@ class MyDrawer extends StatelessWidget {
           leading: const Icon(Icons.assessment),
           title: const Text("Statistiche squadra"),
           onTap: () => Navigator.of(context).pushReplacementNamed("/stats"),
-        ),
-        new ListTile(
-          leading: const Icon(Icons.folder),
-          title: const Text("Archivio partite"),
-          onTap: () => Navigator.of(context).pushReplacementNamed("/history"),
         ),
       ],
     );
