@@ -215,7 +215,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
       initialValue: _nomeController.text,
       decoration: const InputDecoration(
         labelText: 'Nome squadra',
-        hintText: 'CAME Casier',
+        hintText: 'Come si chiama la squadra che stai inserendo? *',
       ),
       onSaved: (String value) {
         selectedTeam['nome'] = value;
@@ -245,7 +245,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
       initialValue: _allenatoreController.text,
       decoration: const InputDecoration(
         labelText: 'Allenatore',
-        hintText: 'G. Povia',
+        hintText: 'Come si chiama l\'allenatore? *',
       ),
       onSaved: (String value) {
         selectedTeam['allenatore'] = value;
@@ -274,7 +274,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
       initialValue: _assistenteController.text,
       decoration: const InputDecoration(
         labelText: 'Assistente',
-        hintText: 'A. Uscolo',
+        hintText: 'Come si chiama l\'assistente? *',
       ),
       onSaved: (String value) {
         selectedTeam['assistente'] = value;
@@ -303,7 +303,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
       initialValue: _categoriaController.text,
       decoration: const InputDecoration(
         labelText: 'Categoria',
-        hintText: 'Serie C Maschile',
+        hintText: 'In che categoria gioca? *',
       ),
       onSaved: (String value) {
         selectedTeam['categoria'] = value;
@@ -332,7 +332,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
       initialValue: _stagioneController.text,
       decoration: const InputDecoration(
         labelText: 'Stagione',
-        hintText: '2018',
+        hintText: 'AAAA *',
       ),
       onSaved: (String value) {
         selectedTeam['stagione'] = value;

@@ -195,6 +195,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _nomeController.text,
       decoration: const InputDecoration(
         labelText: 'Nome',
+        hintText: 'Nome *',
       ),
       onSaved: (String value) {
         selectedPlayer['nome'] = value;
@@ -224,6 +225,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _cognomeController.text,
       decoration: const InputDecoration(
         labelText: 'Cognome',
+        hintText: 'Cognome *',
       ),
       onSaved: (String value) {
         selectedPlayer['cognome'] = value;
@@ -253,6 +255,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _ruoloController.text,
       decoration: const InputDecoration(
         labelText: 'Ruolo',
+        hintText: 'In che ruolo gioca? *',
       ),
       onSaved: (String value) {
         selectedPlayer['ruolo'] = value;
@@ -282,6 +285,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _numeroController.text,
       decoration: const InputDecoration(
         labelText: 'Numero Maglia',
+        hintText: 'NN *',
       ),
       onSaved: (String value) {
         selectedPlayer['numeroMaglia'] = value;
@@ -340,6 +344,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _nazionalitaController.text,
       decoration: const InputDecoration(
         labelText: 'Nazionalità',
+        hintText: 'Nazionalità *',
       ),
       onSaved: (String value) {
         selectedPlayer['nazionalita'] = value;
@@ -427,6 +432,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _altezzaController.text,
       decoration: const InputDecoration(
         labelText: 'Altezza',
+        hintText: 'N.NN *',
       ),
       onSaved: (String value) {
         selectedPlayer['altezza'] = value;
@@ -456,6 +462,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       initialValue: _pesoController.text,
       decoration: const InputDecoration(
         labelText: 'Peso',
+        hintText: 'NN *',
       ),
       onSaved: (String value) {
         selectedPlayer['peso'] = value;
