@@ -246,6 +246,7 @@ class _CollectDataState extends State<CollectData> {
                   _opponentPoints += 1;
                   _currentSet['punteggio'] = "$_myTeamPoints - "
                       "$_opponentPoints";
+                  _saveMatch();
                   print("Punteggio: $_myTeamPoints - $_opponentPoints");
                 });
               },
@@ -265,6 +266,7 @@ class _CollectDataState extends State<CollectData> {
                   _myTeamPoints += 1;
                   _currentSet['punteggio'] = "$_myTeamPoints - "
                       "$_opponentPoints";
+                  _saveMatch();
                   print("Punteggio: $_myTeamPoints - $_opponentPoints");
                 });
               },
@@ -282,10 +284,46 @@ class _CollectDataState extends State<CollectData> {
       right: 0.0,
       child: new Row(
         children: <Widget>[
+          (match["Set"].length < 5
+              ? new Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
+                  child: new RaisedButton(
+                      child: const Text('Nuovo set'), onPressed: _createNewSet),
+                )
+              : new Text("")),
           new Padding(
             padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
             child: new RaisedButton(
-                child: const Text('Nuovo set'),
+              child: new Text('Salva ed esci',
+                  style: Theme.of(context).primaryTextTheme.button),
+              onPressed: () async {
+                _saveMatch();
+                await _requestPop();
+              },
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<Null> _createNewSet() async {
+    await showDialog(
+        context: context,
+        child: new AlertDialog(
+            title: const Text("Creare un nuovo set?"),
+            content: const Text("Questo creerà un nuovo set. Quello vecchio non"
+                " sarà più modificabile. Sei sicuro?"),
+            actions: <Widget>[
+              new FlatButton(
+                child: new Text('NO'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              new FlatButton(
+                child: new Text('SÌ'),
                 onPressed: () {
                   match['Set'].add(new Map<String, dynamic>());
                   _currentSet = match['Set'].last;
@@ -294,20 +332,10 @@ class _CollectDataState extends State<CollectData> {
                     _myTeamPoints = 0;
                     _opponentPoints = 0;
                   });
-                }),
-          ),
-          new Padding(
-            padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
-            child: new RaisedButton(
-              child: new Text('Salva',
-                  style: Theme.of(context).primaryTextTheme.button),
-              onPressed: _saveMatch,
-              color: Theme.of(context).primaryColor,
-            ),
-          ),
-        ],
-      ),
-    );
+                  Navigator.of(context).pop();
+                },
+              ),
+            ]));
   }
 
   /// Costruisce il visualizzatore del punteggio.
@@ -329,8 +357,7 @@ class _CollectDataState extends State<CollectData> {
       barrierDismissible: false,
       child: new AlertDialog(
         title: new Text('Vuoi uscire?'),
-        content:
-            new Text('Uscendo ora perderai i dati non salvati. Sei sicuro?'),
+        content: new Text('Tornerai al menù principale. Sei sicuro?'),
         actions: <Widget>[
           new FlatButton(
             child: new Text('NO'),
