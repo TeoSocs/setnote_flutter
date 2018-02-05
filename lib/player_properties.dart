@@ -489,15 +489,15 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       child: new Center(
         child: new RaisedButton(
           child: const Text('Elimina giocatore'),
-          onPressed: _deleteTeam,
+          onPressed: _deletePlayer,
         ),
       ),
     );
   }
 
   /// Elimina il giocatore correntemente selezionato dal database locale.
-  void _deleteTeam() {
-    LocalDB.removeTeam(selectedPlayer['key']);
+  void _deletePlayer() {
+    LocalDB.removePlayer(selectedPlayer['key']);
     Navigator.of(context).pop();
   }
 }
