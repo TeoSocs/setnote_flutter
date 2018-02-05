@@ -187,6 +187,7 @@ class _MatchPropertiesState extends State<MatchProperties> {
   @override
   Widget build(BuildContext context) {
     return new SetnoteBaseLayout(
+      title: "Nuova partita",
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.check),
         onPressed: _handleSubmitted,

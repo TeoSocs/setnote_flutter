@@ -163,6 +163,15 @@ class _TeamPropertiesState extends State<TeamProperties> {
       selectedTeam['key'] =
           new DateTime.now().millisecondsSinceEpoch.toString();
       selectedTeam['weight'] = 1;
+      Map<String, Map<String, double>> dataSet =
+      new Map<String, Map<String, double>>();
+      for (String fondamentale in constant.fondamentali) {
+        dataSet[fondamentale] = new Map<String, double>();
+        for (String esito in constant.esiti) {
+          dataSet[fondamentale][esito] = 0.0;
+        }
+      }
+      selectedTeam['dataSet'] = dataSet;
       LocalDB.addTeam(selectedTeam);
     } else {
       LocalDB.store();
