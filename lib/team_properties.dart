@@ -339,6 +339,7 @@ class _TeamPropertiesState extends State<TeamProperties> {
     Widget content = new TextFormField(
       controller: _stagioneController,
       initialValue: _stagioneController.text,
+      keyboardType: TextInputType.number,
       decoration: const InputDecoration(
         labelText: 'Stagione',
         hintText: 'AAAA *',
