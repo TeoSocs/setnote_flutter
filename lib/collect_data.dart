@@ -31,6 +31,9 @@ class _CollectDataState extends State<CollectData> {
   List<Map<String, String>> _currentPoint = new List<Map<String, String>>();
   int _myTeamPoints = 0;
   int _opponentPoints = 0;
+  final TextEditingController _myPointsController = new TextEditingController();
+  final TextEditingController _opponentPointsController =
+      new TextEditingController();
   final Map<String, Color> _colors = {
     'Ottimo': Colors.blue[400],
     'Buono': Colors.green[400],
@@ -343,10 +346,69 @@ class _CollectDataState extends State<CollectData> {
     return new Positioned(
       top: 20.0,
       right: 30.0,
-      child: new Text(
-        "$_myTeamPoints - $_opponentPoints",
-        style: Theme.of(context).textTheme.display4,
+      child: new GestureDetector(
+        child: new Text(
+          "$_myTeamPoints - $_opponentPoints",
+          style: Theme.of(context).textTheme.display4,
+        ),
+        onLongPress: _pointEdit,
       ),
+    );
+  }
+
+  /// Permette di modificare il punteggio visualizzato.
+  Future<Null> _pointEdit() async {
+    _myPointsController.text = "$_myTeamPoints";
+    _opponentPointsController.text = "$_opponentPoints";
+    await showDialog(
+      context: context,
+      child: new AlertDialog(
+        title: new Text("Modifica punteggio"),
+        actions: [
+          new FlatButton(
+            child: new Text('OK'),
+            onPressed: () {
+              try {
+                _myTeamPoints = int.parse(_myPointsController.text);
+                _opponentPoints = int.parse(_opponentPointsController.text);
+              } catch (e) {
+                print("Errore nella lettura del nuovo punteggio.");
+              } finally {
+                Navigator.of(context).pop();
+              }
+            },
+          ),
+        ],
+        content: new IntrinsicWidth(
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 50.0),
+                  child: new TextField(
+                    controller: _myPointsController,
+                    decoration: new InputDecoration(
+                      hintText: "$_myTeamPoints",
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+                const Text(' - '),
+                new ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 50.0),
+                  child: new TextField(
+                    controller: _opponentPointsController,
+                    decoration: new InputDecoration(
+                      hintText: "$_opponentPoints",
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
     );
   }
 

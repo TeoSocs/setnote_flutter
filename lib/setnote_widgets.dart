@@ -34,6 +34,7 @@ class SetnoteBaseLayout extends StatelessWidget {
   /// Layout standard per i tablet.
   Scaffold _newTabletLayout() {
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: new AppBar(
         title: new Text(title),
       ),
@@ -57,6 +58,7 @@ class SetnoteBaseLayout extends StatelessWidget {
   /// Layout standard per gli smartphone.
   Scaffold _newPhoneLayout() {
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: new AppBar(title: new Text(title)),
       floatingActionButton: floatingActionButton,
       drawer: new Drawer(
