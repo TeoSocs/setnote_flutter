@@ -15,7 +15,7 @@ class MatchTeamList extends StatefulWidget {
   State createState() => new _MatchTeamListState();
 }
 
-/// State di TeamPage.
+/// State di [MatchTeamList].
 ///
 /// Crea una lista basata sulle squadre presenti in locale.
 /// [_reloadNeeded] è una variabile ausiliaria che permette di gestire
@@ -23,7 +23,7 @@ class MatchTeamList extends StatefulWidget {
 class _MatchTeamListState extends State<MatchTeamList> {
   bool _reloadNeeded = true;
 
-  /// Costruttore di _MatchTeamPageState.
+  /// Costruttore di [_MatchTeamListState].
   ///
   /// Per prima cosa avvia la lettura dei dati nelle SharedPreferences in
   /// quanto operazione potenzialmente lunga ed indispensabile allo
