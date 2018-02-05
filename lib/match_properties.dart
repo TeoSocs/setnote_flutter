@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'collect_data.dart';
 import 'constants.dart' as constant;
-import 'drawer.dart';
 import 'local_database.dart';
 import 'setnote_widgets.dart';
 
@@ -90,8 +89,6 @@ class MatchProperties extends StatefulWidget {
 
 class _MatchPropertiesState extends State<MatchProperties> {
   Map<String, dynamic> match;
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   final TextEditingController _opposingTeamController =
       new TextEditingController();
@@ -189,17 +186,12 @@ class _MatchPropertiesState extends State<MatchProperties> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      key: _scaffoldKey,
-      appBar: new AppBar(title: new Text("Nuova partita")),
-      drawer: new Drawer(
-        child: new MyDrawer(),
-      ),
+    return new SetnoteBaseLayout(
       floatingActionButton: new FloatingActionButton(
         child: const Icon(Icons.check),
         onPressed: _handleSubmitted,
       ),
-      body: new Center(
+      child: new Center(
         child: new ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420.0),
           child: new ListView(
