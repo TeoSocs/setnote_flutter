@@ -233,10 +233,10 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       child: _newTeamUploadConfirmationDialog(),
     );
     if (agree) {
-      // Prima carica le modifiche alla squadra
-      _updateTeam(snapshot);
-      // Poi carica o modifica tutti i giocatori appartenenti a quella squadra
+      // Prima carica o modifica tutti i giocatori appartenenti a quella squadra
       _updateAllPlayersOf(snapshot.key, snapshot.value['weight']);
+      // Poi carica le modifiche alla squadra
+      _updateTeam(snapshot);
     }
   }
 
@@ -277,6 +277,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
             ((x * teamWeight) + (y * snapWeight)) / (teamWeight + snapWeight);
       }
     }
+
     FirebaseDatabase.instance
         .reference()
         .child('squadre')

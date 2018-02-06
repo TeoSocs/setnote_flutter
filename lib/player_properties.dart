@@ -39,8 +39,8 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   final TextEditingController _numeroController = new TextEditingController();
   final TextEditingController _pesoController = new TextEditingController();
   final TextEditingController _ruoloController = new TextEditingController();
-  bool _enabledMancino= false;
-  bool _enabledCapitano= false;
+  bool _enabledMancino = false;
+  bool _enabledCapitano = false;
 
   /// Costruttore di [_PlayerPropertiesState].
   ///
@@ -170,7 +170,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       selectedPlayer['key'] =
           new DateTime.now().millisecondsSinceEpoch.toString();
       Map<String, Map<String, double>> dataSet =
-      new Map<String, Map<String, double>>();
+          new Map<String, Map<String, double>>();
       for (String fondamentale in constant.fondamentali) {
         dataSet[fondamentale] = new Map<String, double>();
         for (String esito in constant.esiti) {
@@ -186,15 +186,19 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   }
 
   // Metodo che aggiorna il campo mancino di [selectedPlayer] quando l'utente usa lo switch
-  void _changeMancinoSwitchValue(){
-    if (_enabledMancino==true) selectedPlayer['mancino']='mancino';
-    else selectedPlayer['mancino']='destrorso';
+  void _changeMancinoSwitchValue() {
+    if (_enabledMancino == true)
+      selectedPlayer['mancino'] = 'mancino';
+    else
+      selectedPlayer['mancino'] = 'destrorso';
   }
 
   // Metodo che aggiorna il campo capitano di [selectedPlayer] quando l'utente usa lo switch
-  void _changeCapitanoSwitchValue(){
-    if (_enabledCapitano==true) selectedPlayer['capitano']='capitano';
-    else selectedPlayer['capitano']='destrorso';
+  void _changeCapitanoSwitchValue() {
+    if (_enabledCapitano == true)
+      selectedPlayer['capitano'] = 'capitano';
+    else
+      selectedPlayer['capitano'] = 'destrorso';
   }
 
   /// Genera un nuovo campo di input per il nome del giocatore.
@@ -326,9 +330,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       controller: _nascitaController,
       initialValue: _nascitaController.text,
       decoration: const InputDecoration(
-        labelText: 'Data di nascita',
-        hintText: 'GG/MM/AAAA'
-      ),
+          labelText: 'Data di nascita', hintText: 'GG/MM/AAAA'),
       onSaved: (String value) {
         selectedPlayer['nascita'] = value;
       },
@@ -379,7 +381,7 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   }
 
   /// Genera un nuovo switch per indicare se il giocatore è mancino.
- Row _newSwitchMancino() {
+  Row _newSwitchMancino() {
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -395,18 +397,17 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
         ),
         new Center(
             child: new Text(
-            'Mancino',
+          'Mancino',
           textAlign: TextAlign.center,
         )),
       ],
     );
   }
 
-
   /// Genera un nuovo campo di input per indicare se il giocatore è il capitano.
   ///
   /// L'aspetto effettivo dipenderà dal form factor del dispositivo.
-Row _newSwitchCapitano() {
+  Row _newSwitchCapitano() {
     return new Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -422,7 +423,7 @@ Row _newSwitchCapitano() {
         ),
         new Center(
             child: new Text(
-            'Capitano',
+          'Capitano',
           textAlign: TextAlign.center,
         )),
       ],
@@ -512,6 +513,9 @@ Row _newSwitchCapitano() {
 
   /// Elimina il giocatore correntemente selezionato dal database locale.
   void _deletePlayer() {
+    var team = LocalDB.getTeamByKey(selectedPlayer['squadra']);
+    team['ultimaModifica'] =
+        new DateTime.now().millisecondsSinceEpoch.toString();
     LocalDB.removePlayer(selectedPlayer['key']);
     Navigator.of(context).pop();
   }
