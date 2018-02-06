@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
+import 'help.dart';
 
 /// Drawer principale.
 ///
@@ -48,6 +49,15 @@ class MyDrawer extends StatelessWidget {
           leading: const Icon(Icons.assessment),
           title: const Text("Statistiche squadra"),
           onTap: () => Navigator.of(context).pushReplacementNamed("/stats"),
+        ),
+        const Divider(),
+        new ListTile(
+          leading: const Icon(Icons.help_outline),
+          title: const Text("Manuale"),
+          onTap: () => showDialog<bool>(
+            context: context,
+            child: new HelpDialog(),
+          ),
         ),
       ],
     );

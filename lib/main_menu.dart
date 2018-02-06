@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
+import 'help.dart';
 
 /// Costruisce il menù principale
 class MainMenu extends StatelessWidget {
@@ -65,6 +66,20 @@ class MainMenu extends StatelessWidget {
               title: const Text(constant.stats_label),
             ),
             onPressed: () => Navigator.of(context).pushNamed("/stats")),
+      ),
+    );
+    list.add(const Divider());
+    list.add(
+      new Padding(
+        padding: const EdgeInsets.only(left: 20.0),
+        child: new ListTile(
+          leading: const Icon(Icons.help_outline),
+          title: const Text("Manuale"),
+          onTap: () => showDialog<bool>(
+                context: context,
+                child: new HelpDialog(),
+              ),
+        ),
       ),
     );
     return list;
