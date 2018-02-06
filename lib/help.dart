@@ -5,7 +5,8 @@ class HelpDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return new AlertDialog(
       title: new Text('Manuale'),
-      content: new Text('''
+      content: new SingleChildScrollView(
+        child: new Text('''
 ---Nuova partita---
 
 Da qui puoi creare una nuova partita.
@@ -39,7 +40,8 @@ Blu -> ottimo
 Verde -> buono
 Giallo -> scarso
 Rosso -> pessimo
-      '''
+        '''
+        ),
       ),
       actions: <Widget>[
         new FlatButton(
