@@ -129,9 +129,10 @@ class _MatchStatsState extends State<MatchStats> {
     double attaccoEfficienza = 0.0;
     if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
-      attaccoEfficienza += (50.0 / attacchiTotali).roundToDouble() / 10 *
+      attaccoEfficienza += (5.0 / attacchiTotali)*
           (data['Attacco']['Ottimo'] -
               (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
+      (attaccoEfficienza*10).roundToDouble() / 10;
     }
 
     double difeseTotali = 0.0;
