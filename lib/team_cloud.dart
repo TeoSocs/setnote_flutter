@@ -268,7 +268,8 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     for (String fondamentale in constant.fondamentali) {
       for (String esito in constant.esiti) {
         double x = team['dataSet'][fondamentale][esito];
-        double y = snapshot.value['dataSet'][fondamentale][esito];
+        double y = double.parse(snapshot
+            .value['dataSet'][fondamentale][esito].toString());
         team['dataSet'][fondamentale][esito] =
             ((x * team['weight']) + (y * snapshot.value['weight'])) /
                 (team['weight'] + snapshot.value['weight']);
@@ -484,6 +485,7 @@ class _TeamUploaderState extends State<TeamUploader> {
       oldKey: team['key'],
       newKey: newTeam.key,
     );
+    print(team['key']);
     newTeam.set({
       'ultimaModifica': team['ultimaModifica'],
       'key': team['key'],
