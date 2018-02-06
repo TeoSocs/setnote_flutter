@@ -40,7 +40,7 @@ class _MatchTeamListState extends State<MatchTeamList> {
     }
     setState(() => _reloadNeeded = false);
     return new SetnoteBaseLayout(
-      title: 'Scegli una squadra',
+      title: 'Nuova partita',
       child: new ListView(
         padding: constant.standard_margin,
         children: _reloadNeeded ? [] : teamList,

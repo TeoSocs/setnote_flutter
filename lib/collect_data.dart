@@ -502,7 +502,6 @@ class _CollectDataState extends State<CollectData> {
           double x = _playerDataSet[fondamentale][esito];
           double y =
               double.parse(_player['dataSet'][fondamentale][esito].toString());
-          ;
           x = (x + (y * _team['weight'])) / (_team['weight'] + 1);
         }
       }
