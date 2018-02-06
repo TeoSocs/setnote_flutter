@@ -12,9 +12,11 @@ class MainMenu extends StatelessWidget {
       body: new Center(
         child: new ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420.0),
-          child: new ListView(
-            shrinkWrap: media.orientation == Orientation.landscape &&
-                media.size.width >= 950.00,
+          child: new Column(
+            mainAxisSize: (media.orientation == Orientation.landscape &&
+                    media.size.width >= 950.00
+                ? MainAxisSize.min
+                : MainAxisSize.max),
             children: _menuBuilder(context, media),
           ),
         ),

@@ -23,12 +23,15 @@ class TeamDownloader extends StatefulWidget {
 /// Permette il download e l'upload dei dati delle squadre in Firebase.
 class _TeamDownloaderState extends State<TeamDownloader> {
   bool _logged = false;
-  bool _needReload = false;
+  bool _needReload = true;
   FirebaseAnimatedList _list;
 
-  _TeamDownloaderState() {
+  @override
+  void initState() {
+    super.initState();
     login();
     _list = _newTeamDownloaderFirebaseAnimatedList();
+    setState(() => _needReload = false);
   }
 
   @override
