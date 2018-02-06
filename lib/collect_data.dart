@@ -249,7 +249,6 @@ class _CollectDataState extends State<CollectData> {
                   _opponentPoints += 1;
                   _currentSet['punteggio'] = "$_myTeamPoints - "
                       "$_opponentPoints";
-                  _saveMatch();
                 });
               },
               icon: const Icon(Icons.clear),
@@ -268,7 +267,6 @@ class _CollectDataState extends State<CollectData> {
                   _myTeamPoints += 1;
                   _currentSet['punteggio'] = "$_myTeamPoints - "
                       "$_opponentPoints";
-                  _saveMatch();
                 });
               },
               child: const Icon(Icons.check),
@@ -382,33 +380,33 @@ class _CollectDataState extends State<CollectData> {
         content: new IntrinsicWidth(
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                new ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 50.0),
-                  child: new TextField(
-                    controller: _myPointsController,
-                    decoration: new InputDecoration(
-                      hintText: "$_myTeamPoints",
-                    ),
-                    keyboardType: TextInputType.number,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              new ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 50.0),
+                child: new TextField(
+                  controller: _myPointsController,
+                  decoration: new InputDecoration(
+                    hintText: "$_myTeamPoints",
                   ),
+                  keyboardType: TextInputType.number,
                 ),
-                const Text(' - '),
-                new ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 50.0),
-                  child: new TextField(
-                    controller: _opponentPointsController,
-                    decoration: new InputDecoration(
-                      hintText: "$_opponentPoints",
-                    ),
-                    keyboardType: TextInputType.number,
+              ),
+              const Text(' - '),
+              new ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 50.0),
+                child: new TextField(
+                  controller: _opponentPointsController,
+                  decoration: new InputDecoration(
+                    hintText: "$_opponentPoints",
                   ),
+                  keyboardType: TextInputType.number,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 
@@ -450,68 +448,65 @@ class _CollectDataState extends State<CollectData> {
   /// presenti nel DB e salvare quest'ultima, aggiornando il rispettivo peso.
   void _saveMatch() {
     match['ended'] = 'true';
-    if (LocalDB.hasMatch(match['key'])) {
-      // Se mi trovo qui questo metodo è già stato chiamato prima.
-      LocalDB.store();
-    } else {
-      // È il primo salvataggio dei dati raccolti.
-      LocalDB.addMatch(match);
-      Map<String, dynamic> _team = LocalDB.getTeamByKey(match['myTeam']);
-      // Creo il dataSet e ne inizializzo tutti i campi a zero.
-      Map<String, Map<String, double>> dataSet =
+    LocalDB.addMatch(match);
+    Map<String, dynamic> _team = LocalDB.getTeamByKey(match['myTeam']);
+    // Creo il dataSet e ne inizializzo tutti i campi a zero.
+    Map<String, Map<String, double>> dataSet =
+        new Map<String, Map<String, double>>();
+    for (String fondamentale in constant.fondamentali) {
+      dataSet[fondamentale] = new Map<String, double>();
+      for (String esito in constant.esiti) {
+        dataSet[fondamentale][esito] = 0.0;
+      }
+    }
+    // Riempio l'oggetto dataSet.
+    for (Map<String, dynamic> set in match['Set']) {
+      for (Map<String, String> azione in set['azioni']) {
+        dataSet[azione['fondamentale']][azione['esito']] += 1;
+      }
+    }
+    // Lo uso per fare una media pesata dei dati e aggiornare i dataSet di
+    // squadra.
+    for (String fondamentale in constant.fondamentali) {
+      for (String esito in constant.esiti) {
+        double x = dataSet[fondamentale][esito];
+        double y =
+            double.parse(_team['dataSet'][fondamentale][esito].toString());
+        x = (x + (y * _team['weight'])) / (_team['weight'] + 1);
+      }
+    }
+    _team['dataSet'] = dataSet;
+    _team['weight']++;
+    _team['ultimaModifica'] =
+        new DateTime.now().millisecondsSinceEpoch.toString();
+
+    // Aggiorno i dataSet propri di ogni giocatore
+    for (Map<String, dynamic> _player
+        in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
+      Map<String, Map<String, double>> _playerDataSet =
           new Map<String, Map<String, double>>();
       for (String fondamentale in constant.fondamentali) {
-        dataSet[fondamentale] = new Map<String, double>();
+        _playerDataSet[fondamentale] = new Map<String, double>();
         for (String esito in constant.esiti) {
-          dataSet[fondamentale][esito] = 0.0;
+          _playerDataSet[fondamentale][esito] = 0.0;
         }
       }
-      // Riempio l'oggetto dataSet.
       for (Map<String, dynamic> set in match['Set']) {
         for (Map<String, String> azione in set['azioni']) {
-          dataSet[azione['fondamentale']][azione['esito']] += 1;
+          if (azione['player'] != _player['key']) continue;
+          _playerDataSet[azione['fondamentale']][azione['esito']] += 1;
         }
       }
-      // Lo uso per fare una media pesata dei dati e aggiornare i dataSet di
-      // squadra.
       for (String fondamentale in constant.fondamentali) {
         for (String esito in constant.esiti) {
-          double x = dataSet[fondamentale][esito];
-          double y = _team['dataSet'][fondamentale][esito];
+          double x = _playerDataSet[fondamentale][esito];
+          double y =
+              double.parse(_player['dataSet'][fondamentale][esito].toString());
+          ;
           x = (x + (y * _team['weight'])) / (_team['weight'] + 1);
         }
       }
-      _team['dataSet'] = dataSet;
-      _team['weight']++;
-      _team['ultimaModifica'] =
-          new DateTime.now().millisecondsSinceEpoch.toString();
-
-      // Aggiorno i dataSet propri di ogni giocatore
-      for (Map<String, dynamic> _player
-          in LocalDB.getPlayersOf(teamKey: match['myTeam'])) {
-        Map<String, Map<String, double>> _playerDataSet =
-            new Map<String, Map<String, double>>();
-        for (String fondamentale in constant.fondamentali) {
-          _playerDataSet[fondamentale] = new Map<String, double>();
-          for (String esito in constant.esiti) {
-            _playerDataSet[fondamentale][esito] = 0.0;
-          }
-        }
-        for (Map<String, dynamic> set in match['Set']) {
-          for (Map<String, String> azione in set['azioni']) {
-            if (azione['player'] != _player['key']) continue;
-            _playerDataSet[azione['fondamentale']][azione['esito']] += 1;
-          }
-        }
-        for (String fondamentale in constant.fondamentali) {
-          for (String esito in constant.esiti) {
-            double x = _playerDataSet[fondamentale][esito];
-            double y = _player['dataSet'][fondamentale][esito];
-            x = (x + (y * _team['weight'])) / (_team['weight'] + 1);
-          }
-        }
-        _player['dataSet'] = _playerDataSet;
-      }
+      _player['dataSet'] = _playerDataSet;
     }
   }
 }
