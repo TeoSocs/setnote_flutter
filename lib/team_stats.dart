@@ -126,11 +126,12 @@ class _AggregateStatsState extends State<AggregateStats> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return new SetnoteBaseLayout(
-      title: 'Statistiche squadra',
+      title: (player == null
+          ? 'Statistiche squadra - ${team["nome"]}'
+          : 'Statistiche squadra - ${team["nome"]} - ${player["nome"]}'),
       child: _gridBuilder(),
       drawer: new Drawer(
         child: new ListView(
@@ -144,25 +145,26 @@ class _AggregateStatsState extends State<AggregateStats> {
   /// uno smartphone.
   Widget _gridBuilder() {
     MediaQueryData media = MediaQuery.of(context);
-    if( media.orientation == Orientation.landscape &&
+    if (media.orientation == Orientation.landscape &&
         media.size.width >= 950.00)
-    return new GridView.count(
-      primary: false,
-      padding: const EdgeInsets.all(20.0),
-      crossAxisSpacing: 10.0,
-      crossAxisCount: 2,
-      children: <Widget>[
-        _statsTableBuilder("Media dati", dataSet),
-        new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient)
-      ],
-    );
-    else return new ListView(
-      children: <Widget>[
-      _statsTableBuilder("Media dati", dataSet),
-      new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient),
-    ],
-    padding: const EdgeInsets.all(20.0),
-    );
+      return new GridView.count(
+        primary: false,
+        padding: const EdgeInsets.all(20.0),
+        crossAxisSpacing: 10.0,
+        crossAxisCount: 2,
+        children: <Widget>[
+          _statsTableBuilder("Media dati", dataSet),
+          new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient)
+        ],
+      );
+    else
+      return new ListView(
+        children: <Widget>[
+          _statsTableBuilder("Media dati", dataSet),
+          new StatChart(dataSet: dataSet, scaleCoefficient: _scaleCoefficient),
+        ],
+        padding: const EdgeInsets.all(20.0),
+      );
   }
 
   /// Genera la tabella con i dati.
@@ -179,8 +181,11 @@ class _AggregateStatsState extends State<AggregateStats> {
     double battutaPositivita = 0.0;
     if (battuteTotali != 0.0)
       battutaPositivita =
-          ((data['Battuta']['Ottimo'] + data['Battuta']['Buono']) * 1000 /
-              battuteTotali).roundToDouble() / 10;
+          ((data['Battuta']['Ottimo'] + data['Battuta']['Buono']) *
+                      1000 /
+                      battuteTotali)
+                  .roundToDouble() /
+              10;
 
     double ricezioniTotali = 0.0;
     for (String esito in constant.esiti) {
@@ -190,12 +195,16 @@ class _AggregateStatsState extends State<AggregateStats> {
     double ricezionePerfezione = 0.0;
     if (ricezioniTotali != 0.0) {
       ricezionePositivita =
-          ((data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) * 1000 /
-              ricezioniTotali).roundToDouble() / 10;
+          ((data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
+                      1000 /
+                      ricezioniTotali)
+                  .roundToDouble() /
+              10;
 
       ricezionePerfezione =
           (data['Ricezione']['Ottimo'] * 1000 / ricezioniTotali)
-                  .roundToDouble() / 10;
+                  .roundToDouble() /
+              10;
     }
 
     double attacchiTotali = 0.0;
@@ -205,7 +214,8 @@ class _AggregateStatsState extends State<AggregateStats> {
     double attaccoEfficienza = 0.0;
     if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
-      attaccoEfficienza += (50.0 / attacchiTotali).roundToDouble() / 10 *
+      attaccoEfficienza += (50.0 / attacchiTotali).roundToDouble() /
+          10 *
           (data['Attacco']['Ottimo'] -
               (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
     }
@@ -217,9 +227,11 @@ class _AggregateStatsState extends State<AggregateStats> {
     double difesaPositivita = 0.0;
     double difesaPerfezione = 0.0;
     if (difeseTotali != 0.0) {
-      difesaPositivita =
-          ((data['Difesa']['Ottimo'] + data['Difesa']['Buono']) * 1000 /
-          difeseTotali).roundToDouble() /10;
+      difesaPositivita = ((data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
+                  1000 /
+                  difeseTotali)
+              .roundToDouble() /
+          10;
 
       difesaPerfezione =
           (data['Difesa']['Ottimo'] * 1000 / difeseTotali).roundToDouble() / 10;
@@ -344,6 +356,11 @@ class _AggregateStatsState extends State<AggregateStats> {
   /// Crea la lista dei giocatori da mostrare nel drawer per filtrare i dati.
   List<Widget> _playerListBuilder() {
     List<Widget> playerList = new List<Widget>();
+    playerList.add(new Padding(
+      padding: const EdgeInsets.all(10.0),
+          child: new Text("Filtra per giocatore: ", style: Theme.of(context)
+          .textTheme.subhead,),
+        ));
     for (Map<String, dynamic> _player
         in LocalDB.getPlayersOf(teamKey: team['key'])) {
       playerList.add(_listEntryBuilder(_player));
