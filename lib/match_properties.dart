@@ -17,19 +17,14 @@ class MatchTeamList extends StatefulWidget {
 /// State di [MatchTeamList].
 ///
 /// Crea una lista basata sulle squadre presenti in locale.
-/// [_reloadNeeded] è una variabile ausiliaria che permette di gestire
-/// l'attesa del caricamento di alcune componenti.
 class _MatchTeamListState extends State<MatchTeamList> {
-  bool _reloadNeeded = true;
-
   /// Costruttore di [_MatchTeamListState].
   ///
   /// Per prima cosa avvia la lettura dei dati nelle SharedPreferences in
   /// quanto operazione potenzialmente lunga ed indispensabile allo
-  /// svolgimento delle funzioni base del widget. A caricamento ultimato
-  /// imposta la variabile [_reloadNeeded] in modo da aggiornare l'interfaccia.
+  /// svolgimento delle funzioni base del widget.
   _MatchTeamListState() {
-    LocalDB.readFromFile().then((x) => setState(() => _reloadNeeded = false));
+    LocalDB.readFromFile();
   }
 
   @override
@@ -38,12 +33,13 @@ class _MatchTeamListState extends State<MatchTeamList> {
     for (Map<String, dynamic> _team in LocalDB.teams) {
       teamList.add(_newTeamPageCard(_team));
     }
-    setState(() => _reloadNeeded = false);
     return new SetnoteBaseLayout(
       title: 'Nuova partita',
       child: new ListView(
         padding: constant.standard_margin,
-        children: _reloadNeeded ? [] : teamList,
+        children: teamList.isEmpty
+            ? [new Text("Nessuna squadra presente")]
+            : teamList,
       ),
     );
   }
@@ -53,14 +49,12 @@ class _MatchTeamListState extends State<MatchTeamList> {
     return new Card(
       child: new FlatButton(
         onPressed: () async {
-          _reloadNeeded = true;
           Map<String, dynamic> match = new Map<String, dynamic>();
           match['myTeam'] = team['key'];
           match['key'] = new DateTime.now().millisecondsSinceEpoch.toString();
           match['ended'] = 'false';
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) => new MatchProperties(match)));
-          setState(() => _reloadNeeded = false);
         },
         child: new ListTile(
           leading: new Icon(
@@ -106,18 +100,13 @@ class _MatchPropertiesState extends State<MatchProperties> {
   _MatchPropertiesState(this.match) {
     if (match['opposingTeam'] != null)
       _opposingTeamController.text = match['opposingTeam'];
-    if (match['day'] != null)
-      _opposingTeamController.text = match['day'];
-    if (match['month'] != null)
-      _opposingTeamController.text = match['month'];
-    if (match['year'] != null)
-      _opposingTeamController.text = match['year'];
+    if (match['day'] != null) _opposingTeamController.text = match['day'];
+    if (match['month'] != null) _opposingTeamController.text = match['month'];
+    if (match['year'] != null) _opposingTeamController.text = match['year'];
     if (match['manifestation'] != null)
       _opposingTeamController.text = match['manifestation'];
-    if (match['phase'] != null)
-      _opposingTeamController.text = match['phase'];
-    if (match['place'] != null)
-      _opposingTeamController.text = match['place'];
+    if (match['phase'] != null) _opposingTeamController.text = match['phase'];
+    if (match['place'] != null) _opposingTeamController.text = match['place'];
     _opposingTeamController.addListener(
         () => match['opposingTeam'] = _opposingTeamController.text);
     _dayController.addListener(() => match['day'] = _dayController.text);

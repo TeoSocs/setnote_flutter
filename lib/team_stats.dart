@@ -20,8 +20,6 @@ class StatsTeamList extends StatefulWidget {
 /// [_reloadNeeded] è una variabile ausiliaria che permette di gestire
 /// l'attesa del caricamento di alcune componenti.
 class _StatsTeamListState extends State<StatsTeamList> {
-  bool _reloadNeeded = true;
-
   /// Costruttore di [_StatsTeamListState].
   ///
   /// Per prima cosa avvia la lettura dei dati nelle SharedPreferences in
@@ -29,7 +27,7 @@ class _StatsTeamListState extends State<StatsTeamList> {
   /// svolgimento delle funzioni base del widget. A caricamento ultimato
   /// imposta la variabile [_reloadNeeded] in modo da aggiornare l'interfaccia.
   _StatsTeamListState() {
-    LocalDB.readFromFile().then((x) => setState(() => _reloadNeeded = false));
+    LocalDB.readFromFile();
   }
 
   @override
@@ -38,12 +36,13 @@ class _StatsTeamListState extends State<StatsTeamList> {
     for (Map<String, dynamic> _team in LocalDB.teams) {
       teamList.add(_newTeamPageCard(_team));
     }
-    setState(() => _reloadNeeded = false);
     return new SetnoteBaseLayout(
       title: 'Statistiche squadra',
       child: new ListView(
         padding: constant.standard_margin,
-        children: _reloadNeeded ? [] : teamList,
+        children: teamList.isEmpty
+            ? [new Text("Nessuna squadra presente")]
+            : teamList,
       ),
     );
   }
@@ -195,13 +194,12 @@ class _AggregateStatsState extends State<AggregateStats> {
     if (ricezioniTotali != 0.0) {
       ricezionePositivita =
           ((data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
-                      100 /
-                      ricezioniTotali)
-                  .roundToDouble();
+                  100 /
+                  ricezioniTotali)
+              .roundToDouble();
 
       ricezionePerfezione =
-          (data['Ricezione']['Ottimo'] * 100 / ricezioniTotali)
-                  .roundToDouble();
+          (data['Ricezione']['Ottimo'] * 100 / ricezioniTotali).roundToDouble();
     }
 
     double attacchiTotali = 0.0;
@@ -225,9 +223,9 @@ class _AggregateStatsState extends State<AggregateStats> {
     double difesaPerfezione = 0.0;
     if (difeseTotali != 0.0) {
       difesaPositivita = ((data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
-                  100 /
-                  difeseTotali)
-              .roundToDouble();
+              100 /
+              difeseTotali)
+          .roundToDouble();
 
       difesaPerfezione =
           (data['Difesa']['Ottimo'] * 100 / difeseTotali).roundToDouble();
