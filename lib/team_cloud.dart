@@ -497,5 +497,34 @@ class _TeamUploaderState extends State<TeamUploader> {
       'weight': team['weight'],
     });
     analytics.logEvent(name: 'aggiunta_squadra');
+    List<Map<String, dynamic>> localPlayers =
+    LocalDB.getPlayersOf(teamKey: newTeam.key);
+    for (Map<String, dynamic> local in localPlayers) {
+      _uploadSinglePlayer(local);
+    }
+  }
+
+  void _uploadSinglePlayer(Map<String, dynamic> player) {
+    DatabaseReference newPlayer =
+    FirebaseDatabase.instance.reference().child('giocatori').push();
+    LocalDB.changePlayerKey(
+      oldKey: player['key'],
+      newKey: newPlayer.key,
+    );
+    newPlayer.set({
+      'key': player['key'],
+      'altezza': player['altezza'],
+      'capitano': player['capitano'],
+      'cognome': player['cognome'],
+      'mancino': player['mancino'],
+      'nascita': player['nascita'],
+      'nazionalita': player['nazionalita'],
+      'nome': player['nome'],
+      'numeroMaglia': player['numeroMaglia'],
+      'peso': player['peso'],
+      'ruolo': player['ruolo'],
+      'squadra': player['squadra'],
+      'dataSet': player['dataSet'],
+    });
   }
 }
