@@ -39,7 +39,6 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   final TextEditingController _numeroController = new TextEditingController();
   final TextEditingController _pesoController = new TextEditingController();
   final TextEditingController _ruoloController = new TextEditingController();
-  final TextEditingController _squadraController = new TextEditingController();
   bool _enabledMancino= false;
   bool _enabledCapitano= false;
 
@@ -67,8 +66,6 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
       _pesoController.text = selectedPlayer['peso'];
     if (selectedPlayer['ruolo'] != null)
       _ruoloController.text = selectedPlayer['ruolo'];
-    if (selectedPlayer['squadra'] != null)
-      _squadraController.text = selectedPlayer['squadra'];
   }
 
   /// Costruisce la pagina.
