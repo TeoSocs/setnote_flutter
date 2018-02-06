@@ -182,10 +182,9 @@ class _AggregateStatsState extends State<AggregateStats> {
     if (battuteTotali != 0.0)
       battutaPositivita =
           ((data['Battuta']['Ottimo'] + data['Battuta']['Buono']) *
-                      1000 /
-                      battuteTotali)
-                  .roundToDouble() /
-              10;
+                  100 /
+                  battuteTotali)
+              .roundToDouble();
 
     double ricezioniTotali = 0.0;
     for (String esito in constant.esiti) {
@@ -196,15 +195,13 @@ class _AggregateStatsState extends State<AggregateStats> {
     if (ricezioniTotali != 0.0) {
       ricezionePositivita =
           ((data['Ricezione']['Ottimo'] + data['Ricezione']['Buono']) *
-                      1000 /
+                      100 /
                       ricezioniTotali)
-                  .roundToDouble() /
-              10;
+                  .roundToDouble();
 
       ricezionePerfezione =
-          (data['Ricezione']['Ottimo'] * 1000 / ricezioniTotali)
-                  .roundToDouble() /
-              10;
+          (data['Ricezione']['Ottimo'] * 100 / ricezioniTotali)
+                  .roundToDouble();
     }
 
     double attacchiTotali = 0.0;
@@ -214,10 +211,10 @@ class _AggregateStatsState extends State<AggregateStats> {
     double attaccoEfficienza = 0.0;
     if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
-      attaccoEfficienza += (5.0 / attacchiTotali)*
+      attaccoEfficienza += (5.0 / attacchiTotali) *
           (data['Attacco']['Ottimo'] -
               (data['Attacco']['Scarso'] + data['Attacco']['Errato']));
-      (attaccoEfficienza*10).roundToDouble() / 10;
+      attaccoEfficienza = attaccoEfficienza.roundToDouble();
     }
 
     double difeseTotali = 0.0;
@@ -228,13 +225,12 @@ class _AggregateStatsState extends State<AggregateStats> {
     double difesaPerfezione = 0.0;
     if (difeseTotali != 0.0) {
       difesaPositivita = ((data['Difesa']['Ottimo'] + data['Difesa']['Buono']) *
-                  1000 /
+                  100 /
                   difeseTotali)
-              .roundToDouble() /
-          10;
+              .roundToDouble();
 
       difesaPerfezione =
-          (data['Difesa']['Ottimo'] * 1000 / difeseTotali).roundToDouble() / 10;
+          (data['Difesa']['Ottimo'] * 100 / difeseTotali).roundToDouble();
     }
 
     return new Column(
@@ -358,9 +354,11 @@ class _AggregateStatsState extends State<AggregateStats> {
     List<Widget> playerList = new List<Widget>();
     playerList.add(new Padding(
       padding: const EdgeInsets.all(10.0),
-          child: new Text("Filtra per giocatore: ", style: Theme.of(context)
-          .textTheme.subhead,),
-        ));
+      child: new Text(
+        "Filtra per giocatore: ",
+        style: Theme.of(context).textTheme.subhead,
+      ),
+    ));
     for (Map<String, dynamic> _player
         in LocalDB.getPlayersOf(teamKey: team['key'])) {
       playerList.add(_listEntryBuilder(_player));
