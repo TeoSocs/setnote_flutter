@@ -131,7 +131,7 @@ class _AggregateStatsState extends State<AggregateStats> {
     return new SetnoteBaseLayout(
       title: (player == null
           ? 'Statistiche squadra - ${team["nome"]}'
-          : 'Statistiche squadra - ${team["nome"]} - ${player["nome"]}'),
+          : 'Statistiche squadra - ${team["nome"]} - ${player["nome"]} ${player["cognome"]}'),
       child: _gridBuilder(),
       drawer: new Drawer(
         child: new ListView(
@@ -396,7 +396,7 @@ class _AggregateStatsState extends State<AggregateStats> {
               : new Icon(
                   Icons.person,
                 )),
-          title: new Text(_player['nome']),
+          title: new Text("${_player['nome']}  ${_player['cognome']}"),
           subtitle: new Text(_player['ruolo']),
         ),
       ),

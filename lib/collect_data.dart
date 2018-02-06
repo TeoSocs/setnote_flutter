@@ -129,7 +129,7 @@ class _CollectDataState extends State<CollectData> {
               : new Icon(
                   Icons.person,
                 )),
-          title: new Text(player['nome']),
+          title: new Text("${player['nome']}  ${player['cognome']}"),
           subtitle: new Text(player['ruolo']),
         ),
       ),
