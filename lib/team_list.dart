@@ -47,14 +47,26 @@ class _TeamListState extends State<TeamList> {
         padding: constant.standard_margin,
         children: _reloadNeeded ? [] : teamList,
       ),
-      floatingActionButton: new FloatingActionButton(
+      floatingActionButton: new RaisedButton(
         onPressed: () async {
           _reloadNeeded = true;
           await Navigator.of(context).push(new MaterialPageRoute<Null>(
               builder: (BuildContext context) => new TeamDownloader()));
           setState(() => _reloadNeeded = false);
         },
-        child: const Icon(Icons.cloud),
+        child: new Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          new Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: new Icon(
+                Icons.cloud,
+                color: Theme.of(context).accentIconTheme.color,
+              )),
+          new Text(
+            "Squadre nel cloud",
+            style: Theme.of(context).primaryTextTheme.button,
+          ),
+        ]),
+        color: Theme.of(context).primaryColor,
       ),
     );
   }
@@ -75,8 +87,8 @@ class _TeamListState extends State<TeamList> {
             Icons.group,
             color: (team['coloreMaglia'] != 'null' &&
                     team['coloreMaglia'] != null
-                ? new Color(int.parse(team['coloreMaglia'].substring(8, 16),
-                    radix: 16))
+                ? new Color(
+                    int.parse(team['coloreMaglia'].substring(8, 16), radix: 16))
                 : Theme.of(context).buttonColor),
           ),
           title: new Text(team['nome']),
