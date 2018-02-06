@@ -267,12 +267,14 @@ class _TeamDownloaderState extends State<TeamDownloader> {
     Map<String, dynamic> team = LocalDB.getTeamByKey(snapshot.key);
     for (String fondamentale in constant.fondamentali) {
       for (String esito in constant.esiti) {
-        double x = team['dataSet'][fondamentale][esito];
-        double y = double.parse(snapshot
-            .value['dataSet'][fondamentale][esito].toString());
+        double x =
+            double.parse(team['dataSet'][fondamentale][esito].toString());
+        double y = double
+            .parse(snapshot.value['dataSet'][fondamentale][esito].toString());
+        double teamWeight = double.parse(team['weight'].toString());
+        double snapWeight = double.parse(snapshot.value['weight'].toString());
         team['dataSet'][fondamentale][esito] =
-            ((x * team['weight']) + (y * snapshot.value['weight'])) /
-                (team['weight'] + snapshot.value['weight']);
+            ((x * teamWeight) + (y * snapWeight)) / (teamWeight + snapWeight);
       }
     }
     FirebaseDatabase.instance
@@ -289,6 +291,7 @@ class _TeamDownloaderState extends State<TeamDownloader> {
       'allenatore': team['allenatore'],
       'assistente': team['assistente'],
       'dataSet': team['dataSet'],
+      'weight': team['weight'],
     });
     analytics.logEvent(name: 'modificata_squadra');
   }
@@ -500,7 +503,7 @@ class _TeamUploaderState extends State<TeamUploader> {
     });
     analytics.logEvent(name: 'aggiunta_squadra');
     List<Map<String, dynamic>> localPlayers =
-    LocalDB.getPlayersOf(teamKey: newTeam.key);
+        LocalDB.getPlayersOf(teamKey: newTeam.key);
     for (Map<String, dynamic> local in localPlayers) {
       _uploadSinglePlayer(local);
     }
@@ -508,7 +511,7 @@ class _TeamUploaderState extends State<TeamUploader> {
 
   void _uploadSinglePlayer(Map<String, dynamic> player) {
     DatabaseReference newPlayer =
-    FirebaseDatabase.instance.reference().child('giocatori').push();
+        FirebaseDatabase.instance.reference().child('giocatori').push();
     LocalDB.changePlayerKey(
       oldKey: player['key'],
       newKey: newPlayer.key,
