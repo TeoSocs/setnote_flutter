@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
 
-
 /// Drawer principale.
 ///
 /// Riprende gli elementi del menù principale e li presenta sotto forma di
@@ -17,9 +16,13 @@ class MyDrawer extends StatelessWidget {
         new DrawerHeader(
           child: new Align(
             alignment: Alignment.bottomLeft,
-            child: new Text(
-              constant.app_name,
-              style: Theme.of(context).primaryTextTheme.headline,
+            child: new FlatButton(
+              onPressed: () =>
+                  Navigator.of(context).popUntil(ModalRoute.withName('/')),
+              child: new Text(
+                constant.app_name,
+                style: Theme.of(context).primaryTextTheme.headline,
+              ),
             ),
           ),
           decoration: new BoxDecoration(

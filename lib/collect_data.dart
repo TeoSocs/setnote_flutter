@@ -438,9 +438,7 @@ class _CollectDataState extends State<CollectData> {
       ),
     );
     if (_areYouSure) {
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
+      Navigator.of(context).popUntil(ModalRoute.withName('/'));
     }
     return new Future.value(false);
   }
