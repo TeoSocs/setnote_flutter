@@ -177,6 +177,7 @@ class _AggregateStatsState extends State<AggregateStats> {
     for (String esito in constant.esiti) {
       battuteTotali += data["Battuta"][esito];
     }
+    battuteTotali = battuteTotali.roundToDouble();
     double battutaPositivita = 0.0;
     if (battuteTotali != 0.0)
       battutaPositivita =
@@ -189,6 +190,7 @@ class _AggregateStatsState extends State<AggregateStats> {
     for (String esito in constant.esiti) {
       ricezioniTotali += data["Ricezione"][esito];
     }
+    ricezioniTotali =  ricezioniTotali.roundToDouble();
     double ricezionePositivita = 0.0;
     double ricezionePerfezione = 0.0;
     if (ricezioniTotali != 0.0) {
@@ -206,6 +208,7 @@ class _AggregateStatsState extends State<AggregateStats> {
     for (String esito in constant.esiti) {
       attacchiTotali += data["Attacco"][esito];
     }
+    attacchiTotali = attacchiTotali.roundToDouble();
     double attaccoEfficienza = 0.0;
     if (attacchiTotali != 0.0) {
       attaccoEfficienza = 5.0;
@@ -219,6 +222,7 @@ class _AggregateStatsState extends State<AggregateStats> {
     for (String esito in constant.esiti) {
       difeseTotali += data["Difesa"][esito];
     }
+    difeseTotali = difeseTotali.roundToDouble();
     double difesaPositivita = 0.0;
     double difesaPerfezione = 0.0;
     if (difeseTotali != 0.0) {
@@ -253,11 +257,11 @@ class _AggregateStatsState extends State<AggregateStats> {
             ]),
             new TableRow(children: <Widget>[
               const Text("Errori"),
-              new Text("${data['Battuta']['Errato']}")
+              new Text("${data['Battuta']['Errato'].roundToDouble()}")
             ]),
             new TableRow(children: <Widget>[
               const Text("Ace"),
-              new Text("${data['Battuta']['Ottimo']}")
+              new Text("${data['Battuta']['Ottimo'].roundToDouble()}")
             ]),
             new TableRow(children: <Widget>[
               const Text("Positività"),
@@ -279,7 +283,7 @@ class _AggregateStatsState extends State<AggregateStats> {
             ]),
             new TableRow(children: <Widget>[
               const Text("Errori"),
-              new Text("${data['Ricezione']['Errato']}")
+              new Text("${data['Ricezione']['Errato'].roundToDouble()}")
             ]),
             new TableRow(children: <Widget>[
               const Text("Positività"),
@@ -305,11 +309,11 @@ class _AggregateStatsState extends State<AggregateStats> {
             ]),
             new TableRow(children: <Widget>[
               const Text("Errori"),
-              new Text("${data['Attacco']['Errato']}")
+              new Text("${data['Attacco']['Errato'].roundToDouble()}")
             ]),
             new TableRow(children: <Widget>[
               const Text("Punti"),
-              new Text("${data['Attacco']['Ottimo']}")
+              new Text("${data['Attacco']['Ottimo'].roundToDouble()}")
             ]),
             new TableRow(children: <Widget>[
               const Text("Efficienza"),
@@ -331,7 +335,7 @@ class _AggregateStatsState extends State<AggregateStats> {
             ]),
             new TableRow(children: <Widget>[
               const Text("Errori"),
-              new Text("${data['Difesa']['Errato']}")
+              new Text("${data['Difesa']['Errato'].roundToDouble()}")
             ]),
             new TableRow(children: <Widget>[
               const Text("Positività"),
