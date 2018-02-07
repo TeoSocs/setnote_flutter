@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
@@ -401,8 +403,29 @@ class _TeamPropertiesState extends State<TeamProperties> {
   }
 
   /// Elimina la squadra correntemente selezionata dal database locale.
-  void _deleteTeam() {
-    LocalDB.removeTeam(selectedTeam['key']);
-    Navigator.of(context).pop();
+  Future<Null> _deleteTeam() async {
+    await showDialog(
+      context: context,
+      child: new AlertDialog(
+        title: const Text("Eliminare giocatore?"),
+        content: const Text("Questo eliminerà il giocatore selezionato. Non è "
+            "possibile annullare l'operazione. Sei sicuro?"),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text('NO'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          new FlatButton(
+            child: new Text('SÌ'),
+            onPressed: () {
+              LocalDB.removeTeam(selectedTeam['key']);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
