@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'constants.dart' as constant;
@@ -512,11 +514,32 @@ class _PlayerPropertiesState extends State<PlayerProperties> {
   }
 
   /// Elimina il giocatore correntemente selezionato dal database locale.
-  void _deletePlayer() {
-    var team = LocalDB.getTeamByKey(selectedPlayer['squadra']);
-    team['ultimaModifica'] =
-        new DateTime.now().millisecondsSinceEpoch.toString();
-    LocalDB.removePlayer(selectedPlayer['key']);
-    Navigator.of(context).pop();
+  Future<Null> _deletePlayer() async {
+    await showDialog(
+      context: context,
+      child: new AlertDialog(
+        title: const Text("Eliminare giocatore?"),
+        content: const Text("Questo eliminerà il giocatore selezionato. Non è "
+            "possibile annullare l'operazione. Sei sicuro?"),
+        actions: <Widget>[
+          new FlatButton(
+            child: new Text('NO'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          new FlatButton(
+            child: new Text('SÌ'),
+            onPressed: () {
+              var team = LocalDB.getTeamByKey(selectedPlayer['squadra']);
+              team['ultimaModifica'] =
+                  new DateTime.now().millisecondsSinceEpoch.toString();
+              LocalDB.removePlayer(selectedPlayer['key']);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 }
